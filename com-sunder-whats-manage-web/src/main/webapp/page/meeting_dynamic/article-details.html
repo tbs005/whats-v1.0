@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <title>会议动态详情</title>
+    <link rel="stylesheet" href="../../css/style.css" th:href="@{/css/style.css}">
+</head>
+
+<body>
+	<div id='app' hidden="hidden">false</div>
+    <section class="main-cantainer">
+        <div class="article-main" id="onedynamic">
+    	
+        </div>
+    </section>
+    
+	<script id="news_jsrender" type="text/x-jsrender">
+        <article>
+                <header>
+                    <h1 class="article-title">{{:dynamicTitle}}</h1>
+                    <p class="article-info">
+                        <time>{{formateTimestamp:createTime}}</time>{{:createUser}}</p>
+                </header>
+                <div class="article-text">
+                    <h2>职业院校教学工作诊断改进制度建设研daaddsads讨</h2>
+                    <h3>关键词：专家解读、互动交流</h3>
+                    <p>{{:content}}</p>
+                </div>
+            </article>
+        </script>
+</body>
+<script src="../../js/lib/jquery.js" th:src="@{/js/lib/jquery.js}"></script>
+<script src="../../js/common.js" th:src="@{/js/common.js}"></script>
+<script src="../../js/jsrender.js" th:src="@{/js/jsrender.js}"></script>
+<script src="../../js/dateFormate.js"th:src="@{/js/dateFormate.js}"></script>
+<script type="text/javascript" th:inline="javascript">
+var onedynamic = [[${onedynamic}]];
+var tmpl = $.templates("#news_jsrender");
+var html = tmpl.render(onedynamic);
+document.getElementById("onedynamic").innerHTML = html;
+</script>
+</html>

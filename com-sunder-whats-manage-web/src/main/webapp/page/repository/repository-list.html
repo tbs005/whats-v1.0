@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <title th:text="${pType.type}">知识库</title>
+    <link rel="stylesheet" href="../../css/style.css" th:href="@{/css/style.css}">
+</head>
+
+<body>
+    <section class="main-cantainer wt">
+        <div>
+            <p class="repository-list-title"><span><img src="../../css/img/main_category.png" th:src="@{/css/img/main_category.png}" alt=""></span>[[${pType.type}]]</p>
+        </div>
+        <hr class="hr1">
+        <ul class="repository-secondList"  th:each="type:${typeList}">
+            <li>
+            	<a th:if="${type.isType!='2'}" href="javascript:;" select="true" th:class="${type.isType}">
+		            <span class="rotate0reg">
+		            	<img src="../../css/img/repository/folding_btn_second_class.png" th:src="@{/css/img/repository/folding_btn_second_class.png}" alt="">
+		            </span>[[${type.type}]]
+		            <input th:value="${type.id}" class="0" type="hidden">
+	           	</a>
+            	<a th:if="${type.isType=='2'}" th:href="@{'../knowledgeFile/list?parentId='+${type.id}}" select="true" th:class="${type.isType}">
+		            <span class="rotate0reg">
+		            	<img src="../../css/img/repository/folding_btn_second_class.png" th:src="@{/css/img/repository/folding_btn_second_class.png}" alt="">
+		            </span>[[${type.type}]]
+		            <input th:value="${type.id}" class="0" type="hidden">
+	           	</a>
+                <ul class="repository-thirdList" hidden="hidden">
+                </ul>
+            </li>
+        </ul>
+    <script src="../../js/lib/jquery.js" th:src="@{/js/lib/jquery.js}"></script>
+    <script src="../../js/common.js" th:src="@{/js/common.js}"></script>
+    <script src="../../js/knowledgebase/normal-respository.js" th:src="@{/js/knowledgebase/normal-respository.js}"></script>
+</body>
+<script type="text/javascript">
+</script>
+</html>

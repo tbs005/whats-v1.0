@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <title>导入个人会员</title>
+    <link rel="stylesheet" href="../../css/style.css" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="../../css/progressbar.css" th:href="@{/css/progressbar.css}">
+</head>
+
+<body>
+    <section class="main-cantainer">
+        <form id="excel_form" action="#" th:action="@{/material/upload}" method="post" enctype="multipart/form-data">
+            <div class="form-group inlineFileUpload ht-t1">
+                <label for="userName" class="floatl">上传:</label>
+                <input type="file" class='form-input floatr' id="excel_upload" name="file"/>
+                <input type="hidden" name="meetHallId" id="meetHallId" th:value="${hallId}">
+                <span class="floatr arrowImg"><img src="../../css/img/list_arrow.png" th:src="@{/css/img/list_arrow.png}" alt=""></span>
+                <span class='floatr form-text' id="fileText">请上传</span>
+            </div>
+            <div class="form-group">
+                <label for="userName" class="floatl">模版下载:</label>
+                <a href="" th:href="@{${unitUpload}}">
+                	<span class='floatr form-text'>点击下载模板</span>
+                </a>
+            </div>
+            <div class='btn-box'>
+                <button type="button" id="excel_btn" class="form-btn cancel-btn">上传</button>
+            </div>
+        </form>
+    </section>
+	<div th:replace="~{layout/contextPath :: contextPath}"></div>	
+	<script src="../../js/lib/jquery.js" th:src="@{/js/lib/jquery.js}"></script>
+	<script src="../../js/common.js" th:src="@{/js/common.js}"></script>
+	<script src="../../js/plug/httpPath.js" th:src="@{/js/plug/httpPath.js}"></script>
+    <script type="text/javascript">
+    $(function(){
+    	var hallId=$('#meetHallId').val();
+    	$('#excel_btn').click(function(){
+	    	var formData = new FormData($("#excel_form")[0]);
+    		var filepath=$('#excel_upload').val();
+    		var filetype=filepath.substring(filepath.lastIndexOf('.')+1);
+    		var filesize=$('#excel_upload')[0].files[0].size/1024;
+    		if(filetype!='xls'&&filetype!='xlsx'){$.prompt('只能上传excel表格');return false;}
+    		if(filesize>1024){$.prompt('文件大小不能超过1M');return false;}
+    		$.ajax({
+        		url:'/whoami/member/unit/uploadExcel',
+        		type:'post',
+        		async:false,
+        		contentType: false, //必须false才会避开jQuery对 formdata 的默认处理 XMLHttpRequest会对 formdata 进行正确的处理 
+        		processData: false, //必须false才会自动加上正确的Content-Type
+        		data:formData,
+        		success:function(data){
+        			console.log(data);
+        			if(data.errcode==0){
+        				$.prompt("上传成功",function(){
+        					location.href="/whoami/member/unit";
+        				});
+    	        	}else{
+    	        		$.prompt(data.errmsg);
+    	        	}
+        		},
+        		error:function(data){
+        			$.prompt('系统错误！');
+        		}
+        	})
+    	})
+    });
+    
+    $("#excel_upload").on('change', function() {
+    	$(this).val().match(/[^\\\/]+\.[a-zA-Z0-9]+$/);
+		$('#fileText').html($(this).val().match(/[^\\\/]+\.[a-zA-Z0-9]+$/));
+    });
+	</script>
+</body>
+
+</html>

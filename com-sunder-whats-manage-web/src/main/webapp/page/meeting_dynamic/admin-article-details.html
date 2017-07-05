@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+<meta name="format-detection" content="telephone=no">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>会议动态详情</title>
+<link rel="stylesheet" href="../../css/style.css" th:href="@{/css/style.css}">
+<link rel="stylesheet" href="../../css/lib/animate.css" th:href="@{/css/lib/animate.css}">
+</head>
+<body>
+	<div id='app' hidden="hidden">false</div>
+	<section class="main-cantainer">
+		<div class="article-main" id="onedynamic"></div>
+	</section>
+
+	<script id="news_jsrender" type="text/x-jsrender">
+        <article>
+                <header>
+                    <h1 class="article-title">{{:dynamicTitle}}</h1>
+                    <p class="article-info">
+                        <time>{{formateTimestamp:createTime}}</time>{{:createUser}}</p>
+                </header>
+                <div class="article-text">
+                    <p>{{:content}}</p>
+                </div>
+         </article>
+    </script>
+
+	<div class="float-btn-box" th:if="${permissions}==permissions">
+		<span class="float-btn"><img
+			src="../../css/img/menu_more_btn_pressed.png" alt="" th:src="@{/css/img/menu_more_btn_pressed.png}"></span>
+		<div class="float-menu-box animate fadeInUp" hidden="hidden">
+			 <a class="float-menu" href="" th:href="@{/meetingDynamic/selectDynamic(dynamicId=${onedynamic.dynamicId})}">编辑</a>
+			 <a class="float-menu js-modal-btn" href="" th:href="@{/meetingDynamic/deleteDynamic(dynamicId=${onedynamic.dynamicId},meetingId=${onedynamic.meetingId},meetHallId=${onedynamic.meetHallId})}">删除</a>
+		</div>
+	</div>
+
+<script src="../../js/lib/jquery.js" th:src="@{/js/lib/jquery.js}"></script>
+<script src="../../js/common.js" th:src="@{/js/common.js}"></script>
+<script src="../../js/jsrender.js" th:src="@{/js/jsrender.js}"></script>
+<script src="../../js/dateFormate.js"th:src="@{/js/dateFormate.js}"></script>
+<script type="text/javascript" th:inline="javascript"> 
+	var onedynamic = [[${onedynamic}]];
+	var tmpl = $.templates("#news_jsrender");
+	var html = tmpl.render(onedynamic);
+	document.getElementById("onedynamic").innerHTML = html;
+</script>
+</body>
+
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+<meta name="format-detection" content="telephone=no">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>会议动态</title>
+<link rel="stylesheet" href="../../css/style.css" th:href="@{/css/style.css}">
+<link rel="stylesheet" href="../../css/lib/animate.css" th:href="@{/css/lib/animate.css}">
+</head>
+
+<body>
+	<div id='app' hidden="hidden">false</div>
+	<section class="main-cantainer">
+		<div class="article-list-main">
+			<ul class="article-list-body" id="meetdynamicall">
+		
+			</ul>
+
+		</div>
+	</section>
+
+	<script id="news_jsrender" type="text/x-jsrender">
+    	<li class="article-item">
+				<a href="" th:href="@{/meetingDynamic/selectoneDynamic/{{:dynamicId}}}"> 
+					<span class="list-icon"></span>
+						<div class="title-box">
+							<p class="article-list-title">{{:dynamicTitle}}</p>
+							<time>{{formateTimestamp:createTime}}</time>
+						</div>
+				</a>
+		</li>
+     </script>
+	<div class="float-btn-box" id="menuMoreBtnNormal" th:if="${permissions}==permissions">
+		<span class="float-btn"><img src="../../css/img/menu_more_btn_pressed.png" alt="" th:src="@{/css/img/menu_more_btn_pressed.png}"></span>
+		<div class="float-menu-box animate fadeInUp" hidden>
+			<a class="float-menu" href="" th:href="@{/meetingDynamic/addynamic(meetingId=${meetingId},meetHallId=${meetHallId})}">添加会议动态</a> 
+			<a class="float-menu" href="link-network.html" th:href="@{/meetingDynamic/linkNetwork}">关联其他网络</a>
+		    <a class="float-menu" th:href="@{'/meetingInfo/'+${session.click_meeting.meeId}+'/'+${session.existMeeHall.hallId}}">返回会议主页</a>
+		</div>
+	</div>
+<script src="../../js/lib/jquery.js" th:src="@{/js/lib/jquery.js}"></script>
+<script src="../../js/common.js" th:src="@{/js/common.js}"></script>
+<script src="../../js/jsrender.js" th:src="@{/js/jsrender.js}"></script>
+<script src="../../js/dateFormate.js"th:src="@{/js/dateFormate.js}"></script>
+<script type="text/javascript" th:inline="javascript">
+	var permissions = [[${permissions}]];//有没有修改权限
+	console.log(permissions);
+	$(function(){
+		sessionStorage.removeItem('ShortUuid');
+		sessionStorage.removeItem('content');
+		sessionStorage.removeItem('dynamicTitle');
+		sessionStorage.removeItem('createUser');
+		 /* if (permissions!="permissions") {
+ 		  //没有会议议程的模块的管理员或是与会人员没有修改权限
+		  $("#menuMoreBtnNormal").css("display","none");			
+		} */
+	});
+    
+	var dynamic = [[${alldynamic}]];
+	var id = [[${meetingId}]];
+	var tmpl = $.templates("#news_jsrender");
+	var html = tmpl.render(dynamic);
+	document.getElementById("meetdynamicall").innerHTML = html;
+</script>
+</body>
+
+</html>

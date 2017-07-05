@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <title>会议设置</title>
+    <link href="../../css/lib/mobiscroll.css"  th:href="@{/css/lib/mobiscroll.css}" rel="stylesheet" />
+    <link href="../../css/lib/mobiscroll_date.css" th:href="@{/css/lib/mobiscroll_date.css}"  rel="stylesheet" />
+    <link rel="stylesheet" href="../../css/style.css" th:href="@{/css/style.css}">
+</head>
+
+<body>
+    <section class="main-cantainer navfixr">
+    <form id="upload_form" action="#"  method="post" enctype="multipart/form-data">
+         <div class="form-group fileUpload">
+            <label for="userName" class="floatl">会议图片:</label>
+            <input type="file" name="file" id='file_upload' onchange="showPreviewmeeting(this)" class='form-input floatr'>
+            <i class="img-box"><img id="js_uploadImg" src="../../css/img/user-img.jpeg" th:src="@{${session.click_meeting.meeCover}}" alt=""></i> 															
+        </div>    
+        <input type="hidden" name="meeId" th:value="${session.click_meeting.meeId}">
+        <div class="form-group">
+            <label class="floatl">会议名称:</label>
+            <input type="text" class='form-input floatr' name="meeName" id="meeName" placeholder="请输入" th:value="${session.click_meeting.meeName}">
+        </div>
+        <div class="form-group">
+            <label for="meeStartTime" class="floatl">开始时间:</label>
+            <input class='form-input floatr js-time meeStartTime'   onchange="setTime(this)" placeholder="请选择" th:value="${#dates.format(session.click_meeting.meeStartTime,'yyyy-MM-dd hh:mm')}" >
+            <input type="hidden" name="meeStartTime" id="meeStartTime" th:value="${session.click_meeting.meeStartTime}">
+        </div>
+        <div class="form-group">
+            <label for="meeEndTime" class="floatl">结束时间:</label>
+            <input class='form-input floatr js-time meeEndTime' onchange="setTime(this)" placeholder="请选择" th:value="${#dates.format(session.click_meeting.meeEndTime,'yyyy-MM-dd hh:mm')}">
+        	<input type="hidden" name="meeEndTime"  id="meeEndTime" th:value="${session.click_meeting.meeEndTime}"> 
+        </div>
+           <div class="form-group">
+            <label class="floatl">会议地址:</label>
+            <input type="text" class='form-input floatr' name="meeAddress" id="meeAddress"  th:value="${session.click_meeting.meeAddress}" placeholder="请输入">
+        </div>
+             <div class="form-group">
+            <label for="meeStartTime" class="floatl">报名开始时间:</label>
+            <input type="data" class='form-input floatr js-time' onchange="setTime(this)"  placeholder="请选择" th:value="${#dates.format(session.click_meeting.signupStartTime,'yyyy-MM-dd hh:mm')}">
+            <input type="hidden" name="signupStartTime" id="signupStartTime" th:value="${session.click_meeting.signupStartTime}" >
+        </div>
+        <div class="form-group">
+            <label for="meeEndTime" class="floatl">报名结束时间:</label>
+            <input type="data" class='form-input floatr js-time' onchange="setTime(this)" placeholder="请选择" th:value="${#dates.format(session.click_meeting.signupEndTime,'yyyy-MM-dd hh:mm')}">
+            <input type="hidden" name="signupEndTime" id="signupEndTime" th:value="${session.click_meeting.signupEndTime}">
+        </div>
+           
+           <div class="form-group">
+                        <label for="sex" class="floatl">是否开启审核:</label>
+                        <select class='form-input floatr' v-model="userInfo.sex | select" name="sex" id="sex" onchange="setinput(this)" >
+                            <option value="0" th:selected="${session.click_meeting.isPend}==0?true:fasle">关闭</option>
+                            <option value="1" th:selected="${session.click_meeting.isPend}==1?true:false">开启</option>
+                        </select>
+           			<input type="hidden" name="isPend" th:value="${session.click_meeting.isPend}">
+           </div>
+        <div class="info-title">
+            <p>简介</p>
+        </div>
+               <textarea class="info-txt-box" name="meeIntro" th:text="${session.click_meeting.meeIntro}"  maxlength="200">请注意我们需要开增值税发票，发票抬头写企想信息技术有限公司</textarea>
+    
+    </form>
+    </section>
+    <div th:replace="~{layout/contextPath :: contextPath}"></div>
+    <button type='button' class='btm-btn fix-btm' id="saveMeetingDetails">保存</button>
+    <script src="../../js/lib/jquery.js" th:src="@{/js/lib/jquery.js}"></script>
+    <script src="../../js/common.js" th:src="@{/js/common.js}" ></script>
+    <script src="../../js/lib/mobiscroll_date.js" th:src="@{/js/lib/mobiscroll_date.js}"></script>
+    <script src="../../js/lib/mobiscroll.js"th:src="@{/js/lib/mobiscroll.js}"></script>
+    <script src="../../js/plug/httpPath.js"  th:src="@{/js/plug/httpPath.js}"></script>
+    <script src="../../js/userinfo_validate.js" th:src="@{/js/userinfo_validate.js}"></script>
+    <script type="text/javascript" th:inline="javascript">
+        var meeParentId = [[${session.click_meeting.meeId}]];
+        var startTime = {
+       		max: null,
+       		min: null
+        };
+        $(function () {
+            $('.js-time').mobiscroll().datetime({
+                theme: "android-holo-light", // Specify theme like: theme: 'ios' or omit setting to use default 
+                mode: "scroller", //效果
+                display: "bottom", // 显示位置
+                lang: "zh", //中文
+                minDate: new Date(), //最小日期
+                maxDate: new Date(new Date().setMonth(new Date().getMonth() + 6)), //最大日期
+                dateFormat: "yy-mm-dd",
+                timeFormat: "HH:ii",
+                stepMinute: 1 // More info about stepMinute: http://docs.mobiscroll.com/2-16-1/datetime#!opt-stepMinute
+            });
+
+        });
+        
+        function getStartTime(){
+        	$.ajax({
+	    		url:contentpath+'/meeting/getStartMaxTime',
+	    		type:'post',
+	    		async:false,
+	    		contentType: false, //必须false才会避开jQuery对 formdata 的默认处理 XMLHttpRequest会对 formdata 进行正确的处理 
+	    		processData: false, //必须false才会自动加上正确的Content-Type
+	    		success:function(data){
+	    			if(data != "") startTime.max = new Date(data.replace(/-/g,'/'));
+	    			else startTime.min = new Date();
+	    		}
+	    	});
+        }
+        
+        function getEndMinTime(){
+        	var out = new Date();
+        	$.ajax({
+	    		url:contentpath+'/meeting/getEndMinTime',
+	    		type:'post',
+	    		async:false,
+	    		contentType: false, //必须false才会避开jQuery对 formdata 的默认处理 XMLHttpRequest会对 formdata 进行正确的处理 
+	    		processData: false, //必须false才会自动加上正确的Content-Type
+	    		success:function(data){
+	    			if(data != "") out = new Date(data.replace(/-/g,'/'));
+	    		}
+	    	});
+        	return out;
+        }
+        
+	    // 时间转换
+		function setTime(obj){
+			var newstr = obj.value.replace(/-/g,'/'); 
+			var date =  new Date(newstr); 
+			var time_str = date.getTime().toString();
+            $(obj).next('input').val(time_str);
+		}
+	    
+		function setinput(obj){
+			var str = obj.value;
+            $(obj).next('input').val(str);
+		}
+	    
+	    
+		  var flag;//定义一个标记用来作图片标记
+    	// 读取图片并回显
+    	function showPreviewmeeting(source) {
+    		flag = 0;  
+    		var file = source.files[0];
+    		 if (!/image\/\w+/.test(file.type)) {
+    			 flag=1;		
+    		} 
+    		 if (file.size > 5 * 1024 * 1024) {
+    			 flag=2;    			
+    		} 
+   			if (!(window.FileReader)) {
+   			 flag=3;    			   			
+   			}
+   			var fr = new FileReader();
+			fr.readAsDataURL(file);
+			fr.onloadend = function (e) {
+				document.getElementById("js_uploadImg").src = e.target.result;
+			};    	
+    	}
+    	
+        $("#saveMeetingDetails").click(function(){
+        	if(!validate_empty("meeName","会议名称")){return false;}
+        	if(!validate_empty("meeAddress","会议地点")){return false;}
+      		if(!validate_namelenth("meeName","会议名称",30)){return false;}
+      		if(!validate_modifytime("meeStartTime","meeEndTime")){return false;}
+      		if(!validate_modifytime("signupStartTime","signupEndTime")){return false;}
+      		var today = new Date();
+      		var singStr = $("#signupStartTime").val();
+      		if (today>singStr) {
+      			$.toastr("报名开始时间不正确!"); 
+			}
+      		if(!validate_image(flag)){return false;}
+        	var formData = new FormData($("#upload_form")[0]);	 	
+        	console.log(formData);
+	    	$.ajax({
+	    		url:contentpath+'/meeting/updateMeeting',
+	    		type:'post',
+	    		async:false,
+	    		contentType: false, //必须false才会避开jQuery对 formdata 的默认处理 XMLHttpRequest会对 formdata 进行正确的处理 
+	    		processData: false, //必须false才会自动加上正确的Content-Type
+	    		data:formData,
+	    		success:function(data){
+	    			if(data.errcode==6320){
+	    				$.prompt("修改会议成功!",function(){
+	    					location.href=contentpath+"/meeting/selectSubMeeByParentId_mvc?meeId="+meeParentId;				
+	    				});
+		        	}else{
+		        		$.prompt("修改会议失败!");
+		        	} 
+	    		}
+	    	})
+        });
+    </script>
+</body>
+
+</html>

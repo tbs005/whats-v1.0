@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <title>报名成功</title>
+    <link rel="stylesheet" href="../../css/style.css" th:href="@{/css/style.css}">
+</head>
+
+<body>
+	<div id='app' hidden="hidden">false</div>
+    <section class="main-cantainer">
+        <div class="success-main">
+            <div class="successImg">
+                <img src="../../css/img/success@2x.png" th:src="@{/css/img/success@2x.png}" alt="">
+            </div>
+            <p th:if="${status == '0'}">报名成功!</p>
+            <p th:if="${status == '1'}">等待管理员审核!</p>
+           <!--  <button type="button" class="cancel-btn ">查看报名信息</button> -->
+           <a href="signup/meet-index" th:href="@{'/meetingInfo/'+${session.click_meeting.meeId}+'/'+${session.click_meeting.hallId}}" class="cancel-btn" >返回主页</a>
+        </div>
+    </section>
+    <script src="../../js/lib/jquery.js" th:src="@{/js/lib/jquery.js}"></script>
+</body>
+</html>

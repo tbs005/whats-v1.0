@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <title>上传资料</title>
+    <link rel="stylesheet" href="../../css/style.css" th:href="@{/css/style.css}">
+</head>
+
+<body>
+    <section class="main-cantainer">
+        <form id="url_form" action="">
+        	<input id="parentId" name="typeId" type="hidden" th:value="${parentId}">
+            <div class="form-group">
+                <label for="" class="floatl">资料名称:</label>
+                <input id="name" name="name" type="text" class='form-input floatr' placeholder="请输入">
+            </div>
+            <div class="form-group">
+                <label for="" class="floatl">url地址:</label>
+                <input id="url" name="url" oninput="fun_checkurl(this.value);" type="text" class='form-input floatr' placeholder="请填写">
+            </div>
+            <div class='btn-box'>
+                <button id="url_btn" type="button" class="form-btn cancel-btn">保存</button>
+            </div>
+        </form>
+    </section>
+    <script src="../../js/lib/jquery.js" th:src="@{/js/lib/jquery.js}"></script>
+    <script src="../../js/common.js" th:src="@{/js/common.js}"></script>
+	<script src="../../js/plug/plug-form.js" th:src="@{/js/plug/plug-form.js}"></script>
+    <script src="../../js/userinfo_validate.js" th:src="@{/js/userinfo_validate.js}"></script>
+    <script>
+    function fun_checkurl(url){
+    	return false;
+    	if(url==''||url.length<4){return false;}
+        if (url.indexOf("http") != 0) {
+            $('#url').val("http://" + url);
+        }
+    }
+    $(function(){
+    	$('#url_btn').click(function(){
+    		//非空判断
+        	if (!validate_empty('name', '资料名称')) {
+    			return false;
+    		}
+        	if (!validate_empty('url', 'url地址')) {
+    			return false;
+    		}
+        	var data = $("#url_form").serializeJson();
+        	//ajax提交绑定链接form
+        	$.ajax({
+    			url : "bindurl",
+        		type : "POST",
+    			contentType : 'application/json',
+    			data: JSON.stringify(data),
+    			dataType : "json",
+    			success : function(data) {
+    				console.log(data);
+    				if (data.errcode == 0) {
+        				$.prompt("操作成功",function(){
+        					location.href="adminList?parentId="+"[[${parentId}]]";
+        				});
+    				} else {
+    					$.prompt("系统错误!");
+    				}
+    			}
+        	})
+    	})
+    })
+    </script>
+</body>
+
+</html>

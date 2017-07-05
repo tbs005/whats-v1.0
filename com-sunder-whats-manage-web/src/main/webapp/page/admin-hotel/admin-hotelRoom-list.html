@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <title>房间信息</title>
+   <link rel="stylesheet" th:href="@{/css/style.css}" href="../../css/style.css">
+</head>
+
+<body>
+    <section class="main-cantainer navfixr">
+        <div class="htrm-title">
+            <p th:text="${hotelInfo.hotelName}"></p>
+        </div>
+        <ul class="htrm-list" th:each="hotelroom:${hotelroomInfo}">
+            <a href="" th:href="@{'/meetingHotel/selectroomInfoByid/'+ ${hotelroom.roomId}}" style="display: inline-block;width: 100%;">
+                <li class="htrm-item">
+                    <div class="htrm-info floatl">
+                        <p class="t1" th:text="${hotelroom.roomType}"></p>
+                        <p class="t2" th:text="'房间总数:'+${hotelroom.roomNumber}"></p>
+                    </div>
+                    <div class="htrm-price floatr" th:text="'￥'+${hotelroom.cost}+'/间'"></div>
+                </li>
+            </a>
+        </ul>
+    </section>
+    <!-- <a href="admin-hotelRoom-add.html" th:href="@{'/meetingHotel//toaddRoomPage/'+${hotelInfo.hotelId}}"><button type='button' class='btm-btn fix-btm'>添加房间类型</button></a> -->
+    <div class="fix-btm flex-box">
+ 		<a href="admin-hotelRoom-add.html" class='btm-btn flex1' th:href="@{'/meetingHotel/selectRooms?hotelId='+${hotelInfo.hotelId}}"><img src="../../css/img/menu_edit@2x.png" alt="">添加房间类型</a>
+        <a class='btm-btn success-btn flex1' th:href="@{'/meetingHotel/selectHotelInfoByMeetingId/'+${session.click_meeting.meeId}}">返回酒店列表</a> 										 
+    </div> 
+    <script src="../../js/lib/jquery.js" th:src="@{/js/lib/jquery.js}"></script>
+    <script src="../../js/common.js" th:src="@{/js/common.js}"></script>
+    <script src="../../js/admin-hotel.js" th:src="@{/js/admin-hotel.js}"></script>
+</body>
+
+</html>

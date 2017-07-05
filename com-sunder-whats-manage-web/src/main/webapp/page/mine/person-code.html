@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <title>我的二维码</title>
+    <link rel="stylesheet" href="../../css/style.css" th:href="@{/css/style.css}">
+</head>
+
+<body>
+    <section class="main-cantainer">
+        <section class="bl-bg2">
+            <div class="mtrmcod-main">
+                <div class="code-body">
+                    <i class="codeBox" id="codeBox"></i>
+                    <p>
+                       	 长按保存二维码图片
+                    </p>
+                </div>
+            </div>
+        </section>
+    </section>
+    <script src="../../js/lib/jquery.js" th:src="@{/js/lib/jquery.js}"></script>
+    <script src="../../js/mine/qrcode.min.js" th:src="@{/js/mine/qrcode.min.js}"></script>
+    <script type="text/javascript" th:inline="javascript">
+    	var phone=[[${session.user.phone}]];//手机号
+        var qrcode = new QRCode("codeBox");
+        qrcode.makeCode(phone);//制作二维码
+    </script>
+</body>
+
+</html>

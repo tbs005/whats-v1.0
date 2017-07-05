@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+	http://www.springframework.org/schema/security
+	http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+
+	<!--开发时加上下面一行的配置， 可以临时取消对权限的限制 -->
+	<!--  <security:http security="none" pattern="/**/" />-->  
+	
+	<!-- 不需要控制的URL -->
+	<security:http security="none" pattern="/" />
+	<security:http security="none" pattern="/sessionTimeOutRedirect.html" />
+	<security:http security="none" pattern="/accessDeny.html" />
+	<security:http security="none" pattern="/index.html" />
+	<security:http security="none" pattern="/ajaxLogin.html" />
+	<security:http security="none" pattern="/login.jsp" />
+	<security:http security="none" pattern="/loginExt.jsp" />
+	<security:http security="none" pattern="/p13logout.jsp" />
+	<security:http security="none" pattern="/userCheckError.jsp" />
+	<security:http security="none" pattern="/lockFailure.jsp" />
+	<security:http security="none" pattern="/oneUserLockError.jsp" />	
+	<security:http security="none" pattern="/alreadyLoginError.jsp" />
+	<security:http security="none" pattern="/casLoginFailureError.jsp" />
+	<security:http security="none" pattern="/openJYUrl.jsp" />
+	<security:http security="none" pattern="/**/webservice/**" />
+	<security:http security="none" pattern="/InterfacesCommonServlet/**" />
+	<security:http security="none" pattern="/**/*.js" />
+	<security:http security="none" pattern="/**/*.gif" />
+	<security:http security="none" pattern="/**/*.dpkg" />
+	<security:http security="none" pattern="/**/*.css" />
+	<security:http security="none" pattern="/**/*.jpg" />
+	<security:http security="none" pattern="/**/*.swf" />
+	<security:http security="none" pattern="/**/*.png" />
+	<security:http security="none" pattern="/ClaimResultInterfaceServlet" />
+	<security:http security="none" pattern="/ClaimResultInterfaceJY2Servlet" />	
+	<security:http security="none" pattern="/ClaimExpenseExcelServlet" />
+	<security:http security="none" pattern="/PrivilegeAuthorizeServlet" />
+	<security:http security="none" pattern="/com.cpic.claim.web.biz.assess.VehicleJyEstimate.d"/>
+	<security:http security="none" pattern="/GISReturnServlet" />
+	<security:http security="none" pattern="/gisresult.jsp" />
+	<security:http security="none" pattern="/api/batch/job/**" />
+	<security:http security="none" pattern="/api/refreshCode" />
+	<security:http security="none" pattern="/api/refreshRole" />
+	<security:http security="none" pattern="/CaseInfo/submitAllCaseInfor" />
+	<security:http security="none" pattern="/LoginExt" />
+	<security:http security="none" pattern="/auth" />
+	<security:http security="none" pattern="/*.zip" />
+	<security:http security="none" pattern="/*.cab" />
+	<security:http security="none" pattern="/api/InjuryAPP/**" />
+	<security:http security="none" pattern="/api/appManage/**" />
+	<security:http security="none" pattern="/api/captcha/createCaptcha" />
+	<security:http security="none" pattern="/api/captcha/valifyCaptcha" />
+	<security:http security="none" pattern="/AntGroup/submitAccount" />
+	<security:http security="none" pattern="/api/syncQuotationInfo/invoke" />
+	<security:http security="none" pattern="/GuiZhouJjCheckNotificationnoServlet" />
+	<security:http security="none" pattern="/GuiZhouJjQueryHandlerResultServlet" />
+	<security:http security="none" pattern="/api/query/vehiclePrice" />
+	<security:http security="none" pattern="/InvoicenoMessServlet" />
+	<security:http security="none" pattern="/AuthenticateServlet" />
+	<security:http security="none" pattern="/webservice/kcyp/servlet/QuickPayQueryServlet" />
+	
+	<!-- Servlet 作为服务端请勿重新添加例外，将servlet地址前加入server通配如下配置 -->
+	<security:http security="none" pattern="/server/*" />
+	
+	<security:http security="none" pattern="/m6authenticate" />
+	<security:http security="none" pattern="/ccc.jsp" />
+	<!--  <security:http security="none" pattern="/com.cpic.claim.web.biz.casefolderview.CaseFolderView.d"/>-->
+	
+<!-- 	<security:http security="none" pattern="/**"/> -->
+	
+	<!-- 配置登陆的Filter，及各种URL的控制方式 -->
+	<!--security:http entry-point-ref="authenticationProcessingFilterEntryPoint" access-denied-page="/accessDeny.html" access-decision-manager-ref="accessDecisionManager"-->
+	<security:http entry-point-ref="casEntryPoint" access-denied-page="/accessDeny.html" access-decision-manager-ref="accessDecisionManager">	
+		<security:intercept-url pattern="/**" access="ROLE_USER" />
+		<!--  <security:logout logout-success-url="/sessionTimeOutRedirect.html" />  -->
+		<!-- seesion失效后的流转页面 --> 
+		<!-- <security:session-management invalid-session-url="/sessionTimeOutRedirect.html" />  -->
+		<security:session-management  session-authentication-strategy-ref="sessionAuthenticationStrategy" />  
+		<security:custom-filter before="CONCURRENT_SESSION_FILTER" ref="concurrencyFilter" />		
+		<!-- 扩展匿名用户Filter，实现匿名用户也从数据库中读取 -->
+		<security:custom-filter before="ANONYMOUS_FILTER" ref="customAnonymousAuthenticationFilter" />
+		<!-- 扩展登陆Filter，登陆成功或失败后可以加入定制化的逻辑 -->
+		<security:custom-filter position="FORM_LOGIN_FILTER" ref="customLoginFilter" />
+		<security:custom-filter position="CAS_FILTER" ref="casFilter"/>
+		<security:custom-filter position="LOGOUT_FILTER" ref="logoutFilter" />
+		<!-- caf-1.0.9 -->
+		<!-- <security:custom-filter after="EXCEPTION_TRANSLATION_FILTER" ref="exceptionTranslationFilter" /> -->
+	</security:http>
+	
+	<!-- caf-1.0.9 -->
+<!-- 	<bean id="exceptionTranslationFilter" class="org.springframework.security.web.access.ExceptionTranslationFilter">
+		<property name="authenticationEntryPoint" ref="authenticationProcessingFilterEntryPoint"/>
+		<property name="accessDeniedHandler" ref="accessDeniedHandler"/>
+	</bean> -->
+<!-- 	<bean id="accessDeniedHandler" class="com.cpic.caf.pub.security.service.authentication.CustomAccessDeniedHandler">
+		<property name="errorPage" value="/accessDeny.html"/>
+		<property name="recordIllegalAccess" value="true" />
+	</bean> -->
+	 
+	 <!--  caf-1.0.9 对登陆日志记录功能进行重构，使用策略模式进行实现，并可以通过配置进行控制是否需要记录，可以在配置文件里配置一个默认实现 start -->
+    <bean class="com.cpic.caf.pub.security.service.impl.LoginInfoStrategyDefault">
+		<property name="needRecord" value="true"/>
+	</bean>
+	<!--  caf-1.0.9 对登陆日志记录功能进行重构，使用策略模式进行实现，并可以通过配置进行控制是否需要记录，可以在配置文件里配置一个默认实现 end -->
+	
+	<bean class="com.cpic.caf.pub.security.bussiness.LoginInfoBiz"/>
+	<bean class="com.cpic.caf.pub.security.service.impl.LoginInfoServiceImpl" depends-on="caf.cacheManager"/>
+	<!-- 
+	<bean class="com.cpic.caf.pub.security.service.impl.IllegalAccessServiceImpl"/>
+	 -->
+	<bean id="logoutFilter" class="org.springframework.security.web.authentication.logout.LogoutFilter">
+		<property name="filterProcessesUrl" value="/j_spring_security_logout"/>
+	   	<constructor-arg>
+	    	<ref bean="customlogoutSuccessHandler" />
+	    </constructor-arg>
+	    <constructor-arg>
+	    	<ref bean="customLogoutHandler" />
+	    </constructor-arg>
+  	</bean>
+    
+    <bean id="customLogoutHandler" class="com.cpic.caf.pub.security.service.authentication.CustomLogoutHandler" />  
+    <bean id="customlogoutSuccessHandler" class="com.cpic.claim.config.privilege.authentication.CustomSimpleUrlLogoutSuccessHandler"> 
+    	<property name="defaultTargetUrl" value="/sessionTimeOutRedirect.html"/>
+    </bean> 
+	<!-- caf-1.0.9  未登录的切入点 --> 
+    <bean id="authenticationProcessingFilterEntryPoint" class="org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint"> 
+        <property name="loginFormUrl" value="/sessionTimeOutRedirect.html"></property>  
+    </bean> 
+<!-- SSO start-->
+    <bean id="casFilter"  class="com.cpic.claim.config.privilege.authentication.CustomCasAuthenticationFilter">    
+        <property name="authenticationManager" ref="authenticationManager"/>
+		<property name="authenticationSuccessHandler" ref="customAuthenticationSuccessHandler" />
+        <property name="authenticationFailureHandler" ref="customUrlAuthenticationFailureHandler" />
+		<property name="filterProcessesUrl" value="/j_spring_cas_security_check" />
+		<!--打开下面的配置可以实现后登陆的用户把上次的用户踢出，上次登陆的用户被迫重新登陆-->
+		<property name="sessionAuthenticationStrategy"  ref="sessionAuthenticationStrategy" />		
+    </bean>
+
+	<bean id="casEntryPoint"  class="com.cpic.claim.config.privilege.authentication.CustomCasAuthenticationEntryPoint">       
+        <property name="serviceProperties" ref="serviceProperties"/>    
+    </bean>
+	<bean id="serviceProperties"  class="com.cpic.claim.config.privilege.authentication.CustomServiceProperties">        
+    </bean>  
+
+	<bean id="casAuthenticationUserDetailsService" class="com.cpic.claim.config.privilege.authentication.CustomUserDetailsByNameServiceWrapper">    
+		<property name="userDetailsService" ref="customAuthorityService" />		
+    </bean>	
+
+    <bean id="casAuthenticationProvider" class="com.cpic.claim.config.privilege.authentication.CustomCasAuthenticationProvider">    
+        <property name="authenticationUserDetailsService" ref="casAuthenticationUserDetailsService"/>    
+        <property name="serviceProperties" ref="serviceProperties" />  
+        <property name="key" value="_cas_user_session_key_"/> 
+    </bean>   	
+<!-- SSO end-->
+	
+	<!-- 自定义匿名用户的Filter， 主要用来指定匿名用户的username，根据username从DB中查询匿名用户信息  -->
+	<bean id="customAnonymousAuthenticationFilter" class="com.cpic.caf.pub.security.service.authentication.CustomAnonymousAuthenticationFilter">
+		<constructor-arg name="key" value="CPIC" />
+		<constructor-arg name="anonymousUserName" value="anonysous" /> 
+	</bean>
+	
+	<!-- 自定义登陆Filter，指定登陆成功和失败的Handler，登陆后需要定制化的东西放在这两个Handler中处理 -->
+	<bean id="customLoginFilter" class="com.cpic.claim.config.privilege.authentication.CustomLoginFilter">
+		<property name="authenticationManager" ref="authenticationManager" />
+		<property name="authenticationSuccessHandler" ref="customAuthenticationSuccessHandler" />
+        <property name="authenticationFailureHandler" ref="customUrlAuthenticationFailureHandler" /> 
+		<property name="daoAuthenticationProvider" ref="daoAuthenticationProvider" />
+		<!--打开下面的配置可以实现后登陆的用户把上次的用户踢出，上次登陆的用户被迫重新登陆-->
+		<property name="sessionAuthenticationStrategy"  ref="sessionAuthenticationStrategy" />		
+	</bean>	
+	
+    <bean id="daoAuthenticationProvider" class="org.springframework.security.authentication.dao.DaoAuthenticationProvider"> 
+		<property name="userDetailsService" ref="customAuthorityService" /> 
+    </bean> 	
+
+	<bean id="sessionAuthenticationStrategy" class="com.cpic.claim.config.privilege.authentication.CustomConcurrentSessionControlStrategy">  
+		<constructor-arg name="sessionRegistry"  ref="sessionRegistry" />
+	</bean>  
+ 
+	<bean id="sessionRegistry" class="org.springframework.security.core.session.SessionRegistryImpl" />  
+          
+    <bean id="concurrencyFilter" class="org.springframework.security.web.session.ConcurrentSessionFilter">  
+        <property name="sessionRegistry" ref="sessionRegistry" />  
+        <property name="expiredUrl" value="/sessionTimeOutRedirect.html" />  
+    </bean> 
+	
+	<!-- 设置Authentication Provider，负责提供User,Password,Role -->
+	<security:authentication-manager alias="authenticationManager">
+		<security:authentication-provider ref="casAuthenticationProvider" />
+	</security:authentication-manager>
+
+	<bean id="rememberMeServices" class="com.cpic.claim.business.injuryapp.service.RememberedService">
+		<property name="userDetailsService" ref="customAuthorityService" />
+		<property name="key" value="file" />
+		<property name="parameter" value="_spring_security_remember_me" />
+	</bean>
+		
+	<bean id="customAuthorityService" class="com.cpic.claim.config.privilege.authentication.CustomAuthorityService" />
+	
+	<!-- 设置校验成功后流转的URL -->
+	<bean id="customAuthenticationSuccessHandler" class="com.cpic.claim.config.privilege.authentication.CustomAuthenticationSuccessHandler">
+		<property name="defaultTargetUrl" value="/index.jsp" />
+		<property name="alwaysUseDefaultTargetUrl" value="true" />
+	</bean>
+	
+	<!-- 设置校验失败后流转的URL -->
+	<bean id="customUrlAuthenticationFailureHandler" class="com.cpic.claim.config.privilege.authentication.CustomAuthenticationFailureHandler">
+		<property name="defaultFailureUrl" value="/userCheckError.jsp" />
+		<property name="lockFailureUrl" value="/lockFailure.jsp" />
+		<property name="oneUserLockFailureUrl" value="/oneUserLockError.jsp" />
+		<property name="alreadyLoginFailureUrl" value="/alreadyLoginError.jsp" />
+		<property name="casLoginFailureUrl" value="/casLoginFailureError.jsp" />
+	</bean>	
+
+	<!-- AffirmativeBased为一票通过制，只要有一个Voter通过即可-->
+	<bean id="accessDecisionManager"
+		class="org.springframework.security.access.vote.AffirmativeBased">
+		<property name="allowIfAllAbstainDecisions" value="false" />
+		<property name="decisionVoters">
+			<!-- Vote负责校验用户是否拥有访问当前URL的权限，Vote.vote()返回值：1有权限；-1无权限；0弃权 -->
+			<!-- 用户可以根据需要添加自己的Vote -->
+			<list>
+				<ref bean="doradoDecisionVoter" />
+				<ref bean="userDecisionVoter" />
+				<ref bean="urlAccessDecisionVoter" />			
+			</list>
+		</property>
+	</bean>
+	<bean id="doradoDecisionVoter" class="com.cpic.caf.pub.security.service.authorization.DoradoDecisionVoter">
+		<property name="ajaxInvocationUrl" value="dorado/view-service" />  <!-- doraodo默认ajax请求路径 -->
+	</bean>
+	<bean id="userDecisionVoter" class="com.cpic.claim.config.privilege.authentication.UserDecisionVoter" />
+
+	<bean id="urlAccessDecisionVoter" class="com.cpic.caf.pub.security.service.authorization.URLAccessDecisionVoter" >
+		<!--property name="anonymousUserName" value="anonysous" /-->
+		<!--property name="allowedAnonymousCallAjaxUrl" value="true" /-->
+		<property name="allowedNoConfigUrl" value="true" /> <!-- 在Function表没有配置过的Url是否允许访问 -->
+		<!--property name="ajaxInvocationUrl" value="dorado/view-service" /-->  <!-- doraodo默认ajax请求路径 -->
+	</bean>	
+	
+	<bean id="runningTrackRecorder" class="com.cpic.caf.core.trace.support.ThreadTrackRecorderImpl">
+		<description>项目可以覆盖此ID以便扩展</description>
+		<property name="traceHandlers">
+		<list>
+			<bean class="com.cpic.caf.core.web.HttpRequestTraceHandler" />
+			<bean class="com.cpic.caf.core.log.LogMessageHandler" />
+		</list>
+		</property>
+	</bean>
+    <bean id="captchaProducer" class="com.cpic.caf.compon.tech.utils.Captcha"></bean>
+</beans>

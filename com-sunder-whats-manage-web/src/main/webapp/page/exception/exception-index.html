@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+<meta name="format-detection" content="telephone=no">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>异常首页</title>
+<link rel="stylesheet" href="../../css/lib/swiper.min.css"
+	th:href="@{/css/lib/swiper.min.css}" />
+<link rel="stylesheet" href="../../css/style.css"
+	th:href="@{/css/style.css}" />
+</head>
+
+<body>
+	
+	<section style="margin-top:30px;">
+		<form action=""  method="post" id="queryExceptionLogsForm" style="padding:20px; ">
+			<table>
+				<tr>
+					<td>id:</td><td><input type="text" name="id" /></td>
+					<td>code:</td><td><input type="text" name="code" /></td>
+				</tr>
+				<tr>
+					<td>控制层类名:</td><td><input type="text" name="controllerClassName" /></td>
+					<td>控制层方法名:</td><td><input type="text" name="controllerMethodName" /></td>
+				</tr>
+				<tr>
+					<td>服务层类名:</td><td><input type="text" name="serviceClassName" /></td>
+					<td>服务层方法名:</td><td><input type="text" name="serviceMethodName" /></td>
+				</tr>	
+				<tr>
+                    <td>开始时间:</td>
+                    <td>
+	                    <input type="text" name="startDate" />
+                    </td>
+                    <td>结束时间:</td>
+                    <td>
+	                    <input type="text" name="endDate" />
+                    </td>                     
+                </tr>		
+			</table>
+            <div>          
+                <button type="reset" name="resetButton" id="resetButton" value="重置" />  
+                <button id="queryButton" type="button" >查询</button>
+                <input type="hidden" name="pageNum" id="pageNum"/>
+                <input type="hidden" name="pageSize" id="pageSize"/>
+                <button id="delButton" type="button" >删除</button>
+            </div>
+        </form>	
+	</section>
+	<section >
+		<ul  id="exceptionLists-head">
+			<li>
+				<table>
+					<tr>
+						<td>ID</td>
+						<td>控制层类名</td>
+						<td>控制层方法名</td>
+						<td>服务类名</td>
+						<td>服务方法名</td>
+						<td>code</td>
+						<td>msg</td>
+						<td>参数</td>
+						<td>操作</td>
+					</tr>
+				</table>
+			</li>
+		</ul>
+		<ul  id="listsDiv">
+		
+		</ul >
+		<div id="pageFooterDiv">
+		</div>
+	</section>
+	<script id="lists_jsrender" type="text/x-jsrender">
+		<li>
+			<table>
+				<tr>
+					<td>
+						<a href="" th:href="@{/exception/detail/{{:id}}}">  
+							{{:id}}
+						</a>
+					</td>
+					<td>{{:controllerClassName}}</td>
+					<td>{{:controllerMethodName}}</td>
+					<td>{{:serviceClassName}}</td>
+					<td>{{:serviceMethodName}}</td>
+					<td>{{:code}}</td>
+					<td>{{:msg}}</td>
+					<td>{{:params}}</td>
+					<td>
+						<a href="javascript:;" onclick="funcDelExceptionLogById({{:id}})">删除</a>
+					</td>
+				</tr>
+			</table>
+		</li>
+	</script>
+	<script id="pageFooter_jsrender" type="text/x-jsrender">
+		<a href="javascript:;" onclick="funcQueryexceptionLogs({{:firstPage}},{{:pageSize}})">首页</a>
+		<a href="javascript:;" onclick="funcQueryexceptionLogs({{:pageNum - 1}},{{:pageSize}})">上一页</a>
+		<a href="javascript:;" onclick="funcQueryexceptionLogs({{:nextPage}},{{:pageSize}})">下一页</a>
+		<a href="javascript:;" onclick="funcQueryexceptionLogs({{:lastPage}},{{:pageSize}})">尾页</a>  
+		第{{:pageNum}}页/共{{:lastPage}}页  
+	</script>
+	
+	<style type="text/css">		
+		td{
+			width: 12%;
+		}
+	</style>
+	
+	<div th:replace="~{layout/contextPath :: contextPath}"></div>
+	<script src="../../js/lib/jquery.js" th:src="@{/js/lib/jquery.js}"></script>
+	<script src="../../js/common.js" th:src="@{/js/common.js}"></script>
+	<script src="../../js/plug/httpPath.js" th:src="@{/js/plug/httpPath.js}"></script>
+	<script src="../../js/lib/swiper.min.js" th:src="@{/js/lib/swiper.min.js}"></script>
+	<script src="../../js/plug/plug-form.js" th:src="@{/js/plug/plug-form.js}"></script>	
+	<script src="../../js/jsrender.js" th:src="@{/js/jsrender.js}"></script>
+	<script src="../../js/dateFormate.js" th:src="@{/js/dateFormate.js}"></script>	
+	
+	<script src="../../js/exception/exception.js" th:src="@{/js/exception/exception.js}"></script>
+</body>
+<script type="text/javascript" th:inline="javascript">
+	var listsTemp 		= 	$.templates("#lists_jsrender");//异常列表
+	var pageFooterTemp 	= 	$.templates("#pageFooter_jsrender");//分页
+</script>
+</html>

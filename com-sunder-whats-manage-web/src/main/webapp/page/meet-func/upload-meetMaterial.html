@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <title>上传会议资料</title>
+    <link rel="stylesheet" href="../../css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" href="../../css/style.css" th:href="@{/css/style.css}">
+</head>
+<body>
+	<div id='app' hidden="hidden">false</div>
+      <section class="main-cantainer">
+	    <div class="form-group">
+	        <label for="realName" class="floatl">资料名称:</label>
+	        <input type="text" class='form-input floatr' name="attachName" id="attachName" placeholder="请输入">
+	        <input type="hidden" id="subMee_sel" name="submeeId" value="0">
+	        <input type="hidden" class='form-input floatr' th:value="${session.click_meeting.hallId}" name="hallId" id="hallId" >
+	        <input type="hidden" class='form-input floatr' th:value="${meeId}" name="parmeeId" id="parmeeId" >
+	        <input type="hidden" class='form-input floatr' name="flag" id="flag" value="0" />
+	        <input type="hidden" class='form-input floatr' name="attachType" id="attachType" value="2" />
+	    </div>
+	    <div class="form-group fileUpload ht-t1">
+	        <label for="userName" class="floatl">上传:</label>
+	        <input type="file" class='form-input floatr' id="data_upload">
+	        <span class="floatr arrowImg"><img src="../../css/img/list_arrow.png" th:src="@{/css/img/list_arrow.png}" alt=""></span>
+	        <div id="thelist" class="uploader-list"></div> 
+	        <span  id="filePicker" class='floatr form-text'>选择文件</span>
+	    </div>
+	    <!-- <progress id="upload_percent" class="progress" value="0" max="100">
+	    </progress> -->
+	    <!-- 上传进度条 -->
+	    <div class="progress" hidden="hidden">
+	        <div id="upload_percent1" class="progress-bar progress-bar-info progress-bar-striped active" style="width: 0%;">
+	            <div id="upload_percent2" class="progress-value">0</div>
+	        </div>
+	    </div>
+	    <div class='btn-box'>
+	        <button id="ctlBtn" class="form-btn cancel-btn">开始上传</button>
+	    </div>
+    </section>
+	<div th:replace="~{layout/contextPath :: contextPath}"></div>	
+	<!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+	<script src="../../js/lib/jquery.js" th:src="@{/js/lib/jquery.js}"></script>
+	<script src="../../js/common.js" th:src="@{/js/common.js}"></script>
+	<script src="../../js/webuploader.js" th:src="@{/js/webuploader.js}"></script>
+	<script src="../../js/plug/httpPath.js" th:src="@{/js/plug/httpPath.js}"></script>
+    <script src="../../js/userinfo_validate.js" th:src="@{/js/userinfo_validate.js}"></script>
+	<script src="../../js/meetMaterial/meet-material.js" th:src="@{/js/meetMaterial/meet-material.js}" ></script>
+</body>
+</html>

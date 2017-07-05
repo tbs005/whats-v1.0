@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <title>我管理的会议</title>
+    <link rel="stylesheet" href="../../css/style.css" th:href="@{/css/style.css}">
+</head>
+
+<body>
+	<div id='app' hidden="hidden">false</div>
+    <section class="main-cantainer navfixr">
+    
+        <section class="meet-list-main">
+            <ul class="meet-list" id="nostarted_list">
+                <li class="meet-item" th:each="mee:${list}">
+                    <a href="#" th:href="@{/meeting/selectMeeByParentId_mvc(meeId=${mee.meeId})}">
+                        <div class="left"><img src="../../css/img/pic1@2x.png" th:src="@{${mee.meeCover}}" alt="meetimg"></div>
+                        <div class="right">
+                        	<p class="meet-name"><span th:text="${mee.meeName}"></span>
+	                        </p>
+                            <p>
+	                            <time th:text="${#dates.format(mee.meeStartTime,'yyyy-MM-dd')}"></time>
+	                            <span>-</span>
+	                            <time th:text="${#dates.format(mee.meeEndTime,'yyyy-MM-dd')}"></time>
+                            </p>
+                        </div>
+                    </a>
+                </li>
+            </ul>      
+        </section>
+    </section>
+	<a  class='btm-btn fix-btm' th:href="@{/userCenter/user}">返回</a>
+	<script src="../../js/lib/jquery.js" th:src="@{/js/lib/jquery.js}"></script>
+</body>
+
+</html>

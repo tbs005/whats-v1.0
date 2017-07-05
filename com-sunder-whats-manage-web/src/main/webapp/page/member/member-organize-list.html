@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <title>组织会员</title>
+    <link rel="stylesheet" type="" href="../../css/style.css" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="../../css/lib/animate.css" th:href="@{/css/lib/animate.css}">
+</head>
+
+<body>
+    <section class="main-cantainer">
+        <div class="search-bar member-search clearfix">
+            <div class="search-body">
+                <div class="searchBox">
+                    <i class="search"><img src="../../css/img/search_icon_wt.png" th:src="@{/css/img/search_icon_wt.png}" alt=""></i>
+                    <input class="search-input" type="text" name="search" value="" th:value="${search}" placeholder="组织名称/角色">
+                    <i class="delete" id="search-delete"><img src="../../css/img/connection_search_delete_wt.png" th:src="@{/css/img/connection_search_delete_wt.png}" alt=""></i>
+                </div>
+                <button class="search-btn" type="submit">搜索</button>
+            </div>
+        </div>
+        <ul class="og-member-list">
+            <li class="info-item" th:each="unitMember:${list}">
+                <div class="info-body">
+                    <p class="t1" th:text="${unitMember.unitName}">上海万达科技有限公司</p>
+                    <p class="t3">会员角色<span th:text="${unitMember.typeName}">资深土豪公司</span></p>
+                </div>
+                <div class="item-operate clearfix">
+                    <span class="floatr"><a href="javascript:;" class="js-delMember"><input type="hidden" class="id" th:value="${unitMember.id}"><img src="../../css/img/delete_unpressed_bl.png" th:src="@{/css/img/delete_unpressed_bl.png}" alt="删除"></a></span>
+                    <span class="floatr"><a href="organize-member-edit.html" th:href="@{unit/toEdit(id=${unitMember.id})}"><img src="../../css/img/edit_unpressed_bl.png" th:src="@{/css/img/edit_unpressed_bl.png}"  alt="修改"></a></span>
+                </div>
+            </li>
+        </ul>
+    </section>
+    <div class="float-btn-box">
+        <span class="float-btn"><img src="../../css/img/menu_more_btn_normal.png" th:src="@{/css/img/menu_more_btn_normal.png}" alt=""></span>
+        <div class="float-menu-box animate fadeInUp" hidden>
+            <a class="float-menu" href="organize-member-add.html" th:href="@{/member/unit/toAdd}">添加会员</a>
+            <a class="float-menu" href="link-network.html" th:href="@{/member/unit/toExcelUpload}">导入会员</a>
+            <a class="float-menu" href="link-network.html" th:href="@{/meetingHall/tomanagepage}">返回</a>
+        </div>
+    </div>
+    <script src="../../js/lib/jquery.js" th:src="@{/js/lib/jquery.js}"></script>
+    <script src="../../js/common.js" th:src="@{/js/common.js}"></script>
+    <script type="text/javascript" th:inline="javascript">
+		$(function () {
+			$(".js-delMember").on("click", function (event) {
+				_this=$(this);
+	            var id=$(this).children("input").val();
+	            $.affirm("确认要删除么？", function () {
+	                // 这里写删除的AJAX
+					 $.ajax({
+						url:"/whoami/member/unit/delete",
+						type:"POST",
+						data:{id:id},
+						dataType:"text",
+						success:function(data){
+	                		if ("1"==data) {
+	                			$.prompt("删除组织会员成功",function(){
+	                				_this.parent().parent().parent().remove();
+	                			});
+							}else{
+								$.prompt("系统异常，请稍后再试");
+							}
+						}
+					}); 
+	            });
+	        });
+			$(".search-btn").click(function(){
+				location.href="/whoami/member/unit?search="+$(".search-input").val();
+			}); 
+		});
+	</script>
+</body>
+
+</html>

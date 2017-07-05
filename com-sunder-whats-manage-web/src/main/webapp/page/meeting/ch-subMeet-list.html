@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <title>子会议</title>
+    <link rel="stylesheet" href="../../css/style.css" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="../../css/lib/animate.css" th:href="@{/css/lib/animate.css}">
+</head>
+
+<body>
+    <section class="main-cantainer navfixr wt" id="chMeet-list">
+    	<!--主会议ID-->
+        <input type="hidden" name="meeParentId" id="meeParentId" th:value="${meetingInfo.meeParentId}">
+        <!--会议厅ID-->
+        <input type="hidden" name="hallId" id="hallId"  th:value="${meetingInfo.hallId}">
+        <ul class="">
+            <li class="info-item no-mg" th:each="meet : ${list}" th:id="mee+(${meet.meeId})">
+                <div class="info-body">
+                    <p class="t1" th:text="${meet.meeName}">淄博职业学院:三项机智院大学生创业梦</p>
+                    <p class="t4"> <span class="icon floatl"><img src="../../css/img/clock.png" th:src="@{/css/img/clock.png}" alt="时间"></span><span class="text floatl"><time th:text="${#dates.format(meet.meeStartTime, 'yyyy-MM-dd')}">开始</time>至<time th:text="${#dates.format(meet.meeEndTime, 'yyyy-MM-dd')}">子会议结束时间</time></span>
+                    </p>
+                    <p class="t4"> <span class="icon floatl"><img src="../../css/img/map.png" th:src="@{/css/img/map.png}" alt="地址"></span ><span class="text floatl" th:text="${meet.meeAddress}">上海市宝山区长逸路188号</span></p>
+                </div>
+                <span class="floatr delete-btn"  th:id="${meet.meeId}" onclick="deleteSubById(this);"><img src="../../css/img/edit_icon_delete.png" th:src="@{/css/img/edit_icon_delete.png}" alt="" ></span>
+            </li>
+        </ul>
+       
+    </section>
+    <div class="float-btn-box">
+        <span class="float-btn"><img th:src="@{/css/img/menu_more_btn_normal.png}" alt=""></span>
+        <div class="float-menu-box animate fadeInUp" hidden>
+            <a class="float-menu" href="javascript:createSubMeet();">创建子会议</a>
+            <a class="float-menu" th:href="@{/meeting/selectSubMeeByParentId_mvc(meeId=${session.click_meeting.meeId})}">返回</a>
+        </div>
+    </div>
+    
+   <!--  <div class="fix-btm flex-box">
+     <button   class='btm-btn success-btn flex1'   onclick="createSubMeet();">创建 </button>
+     <button class='btm-btn flex1' type="button" onclick="creatChMeet()" >完成</button>
+     <a class="float-menu" href="javascript:createSubMeet();">创建子会议</a>
+    </div> -->
+    
+    <div th:replace="~{layout/contextPath :: contextPath}"></div>	
+    <script src="../../js/lib/jquery.js" th:src="@{/js/lib/jquery.js}"></script>
+	<script src="../../js/lib/vue-1.0.28.js" th:src="@{/js/lib/vue-1.0.28.js}"></script>
+	<script src="../../js/common.js" th:src="@{/js/common.js}"></script>
+	<script src="../../js/plug/httpPath.js" th:src="@{/js/plug/httpPath.js}"></script>
+    <script src="../../js/ch-meet-listFun.js"  th:src="@{/js/ch-meet-listFun.js}"></script>
+</body>
+
+</html>

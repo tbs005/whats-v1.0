@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <title>添加房间类型</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="../../css/style.css">
+</head>
+
+<body>
+    <section class="main-cantainer navfixr">
+        <div class='form-main'>
+            <form action="" th:action="@{/meetingHotel/addRoom}" method="post" onsubmit="return checked()">
+            	<!-- 酒店ID -->
+            	<input type="text" name="hotelId" value="" th:value="${hotelId}" hidden="hidden">
+                <div class="form-group">
+                    <label class="floatl">房间类型:</label>
+                    <input type="text" class='form-input floatr' name="roomType" id="roomType" placeholder="请输入">
+                </div>
+                <div class="form-group">
+                    <label class="floatl">价格:</label>
+                    <input type="tel" class='form-input font-red floatr' name="cost" id="cost" placeholder="请输入">
+                </div>
+                <div class="form-group">
+                    <label class="floatl">数量:</label>
+                    <input type="text" class='form-input floatr' name="roomNumber" id="roomNumber" placeholder="请输入">
+                </div>
+                <div class="form-group">
+                    <label for="realName" class="floatl">预留数量:</label>
+                    <input type="tel" class='form-input floatr' name="roomSpare" id="roomSpare" placeholder="请输入">
+                </div>
+                <div class="form-group">
+                    <label class="floatl">备注：</label>
+                </div>
+                <textarea class="form-txtarea1" name="dsp" placeholder="请输入"></textarea>
+                <!-- <button type="submit" class='btm-btn fix-btm'>保存</button> -->
+                <div class="fix-btm flex-box">
+		 		 <button type="submit" class='btm-btn flex1'>保存房间类型</button>
+		         <a class='btm-btn success-btn flex1' th:href="@{'/meetingHotel/hotelroomInfo/'+${hotelId}}">返回房间列表</a>
+		    	</div>
+            </form>
+        </div>
+    </section>
+    <script src="../../js/lib/jquery.js" th:src="@{/js/lib/jquery.js}"></script>
+    <script src="../../js/common.js" th:src="@{/js/common.js}"></script>
+    <script src="../../js/userinfo_validate.js" th:src="@{/js/userinfo_validate.js}"></script>
+    <script type="text/javascript">
+     function checked(){
+    	   if(!validate_empty("roomType","房间类型")){return false;}
+    	   if(!validate_empty("cost","价格")){return false;}
+    	   if(!validate_money("cost")){return false;}
+    	   if(!validate_empty("roomNumber","数量")){return false;}
+    	   if(!validate_positive("roomNumber","数量")){return false;}
+    	   if(!validate_empty("roomSpare","预留数量")){return false;}
+    	   if(!validate_positive("roomSpare","预留数量")){return false;}	   
+     }
+    </script>
+</body>
+
+</html>

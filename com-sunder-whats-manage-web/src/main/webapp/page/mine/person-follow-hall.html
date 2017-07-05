@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+<meta name="format-detection" content="telephone=no">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>我关注的会议厅</title>
+<link rel="stylesheet" href="../../css/style.css" th:href="@{/css/style.css}">
+</head>
+
+<body>
+	<section class="main-cantainer navfixr">
+		<section class="meet-list-main">
+		   <ul class="meetroom-list" id="fans-list"></ul>
+		   <script id="fans_jsrender" type="text/x-jsrender">
+				<li class="meet-item">
+				 <a href="" th:href="@{/meeting/selectMeetingRoom/{{:hallId}}}">
+						<div class="left">
+							<img src="{{fastDFSurl:hallCover}}" alt="" >
+						</div>
+						<div class="right">
+							<p class="meet-name">{{:hallName}}</p>
+							<p class="meet-intro">{{formateTimestamp2:createTime}}</p>
+						</div>
+					</a>
+				</li>
+			</script>
+
+		</section>
+		
+		<div class="no-meetRoom" hidden="hidden">
+			<i><img src="../../css/img/no-meetRoom.png" th:src="@{/css/img/no-meetRoom.png}" alt=""></i>
+			<p>您还没有关注的会议厅</p>
+		</div>
+		
+	</section>
+	<!-- ${#httpServletRequest.contextPath} -->
+	<div th:replace="~{layout/contextPath :: contextPath}"></div>	
+	<script src="../../js/lib/jquery.js" th:src="@{/js/lib/jquery.js}"></script>
+	<script src="../../js/person-jionMeet.js" th:src="@{/js/person-jionMeet.js}"></script>
+	<script src="../../js/plug/httpPath.js" th:src="@{/js/plug/httpPath.js}"></script>
+	<script src="../../js/plug/plug-form.js" th:src="@{/js/plug/plug-form.js}"></script>
+	<script src="../../js/meetIndex.js" th:src="@{/js/meetIndex.js}"></script>
+	<script src="../../js/jsrender.js" th:src="@{/js/jsrender.js}"></script>
+	<script src="../../js/dateFormate.js" th:src="@{/js/dateFormate.js}"></script>
+	
+	<script src="../../js/lib/swiper.min.js" th:src="@{/js/lib/swiper.min.js}"></script>
+	<script src="../../js/common.js" th:src="@{/js/common.js}"></script>
+	<script src="../../js/weui.min.js" th:src="@{/js/weui.min.js}"></script>
+	
+	<script type="text/javascript" th:inline="javascript">
+
+	 	var tmpl = $.templates("#fans_jsrender");//模板
+		
+		//页面加载之后执行
+		$(function() {	
+			page = 1;
+			fansList();
+		});
+		
+		var fastDFSurl=null;
+		
+		function fansList(){
+			$.ajax({
+				url : contentpath + '/hallLinkUser/halls/'+page+'/10',
+				type : 'GET',
+				contentType : 'application/json',
+				success : function(data) {
+// 					console.log(data);
+					fastDFSurl = data.fastDFSurl;
+					var html = tmpl.render(data.pageInfo.list);
+					document.getElementById("fans-list").innerHTML = html;
+					itemNum();
+				},
+				error : function(data) {
+					$.prompt("系统错误");
+				}
+			})
+		}
+		
+		$.views.converters("fastDFSurl", function(url) {
+			if (null != url && "" != url && null != fastDFSurl && "" != fastDFSurl) {
+				return fastDFSurl + url;
+			}
+			return "../../css/img/pic1@2x.png"
+		});
+
+		function itemNum() {
+			var fansItem = $("#fans-list").find(".meet-item").size();
+			if (fansItem == 0) {
+				$(".no-meetRoom").show();
+			} else {
+				$(".no-meetRoom").hide();
+			}
+		}
+
+		var loading = false; //状态标记
+		$(".main-cantainer").infinite().on("infinite", function() {
+			if (loading)
+				return;
+
+			loading = true;
+			setTimeout(function() {
+				if (page != 0) {
+					page += 1;
+					$.ajax({
+						url : contentpath + '/hallLinkUser/halls/' + page + '/10',
+						type : 'GET',
+						contentType : 'application/json',
+						success : function(data) {
+							console.log(data);
+							var html = tmpl .render(data.pageInfo.list);
+							$("#fans-list").append(html);
+						},
+						error : function(data) {
+							$.prompt("系统错误");
+						}
+					})
+				}
+				loading = false;
+			}, 500); //模拟延迟
+		});
+	</script>
+</body>
+</html>

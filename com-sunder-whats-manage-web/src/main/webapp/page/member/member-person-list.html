@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <title>个人会员</title>
+    <link rel="stylesheet" type="" href="../../css/style.css" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="../../css/lib/animate.css" th:href="@{/css/lib/animate.css}">
+</head>
+
+<body>
+	<div id='app' hidden="hidden">false</div>
+    <section class="main-cantainer">
+        <div class="search-bar member-search clearfix">
+            <div class="search-body">
+                <div class="searchBox">
+                    <i class="search"><img src="../../css/img/search_icon_wt.png" alt="" th:src="@{/css/img/search_icon_wt.png}"></i>
+                    <input class="search-input" type="text" id="phone" value="" th:value="${search}" placeholder="姓名/性别/手机">
+                    <i class="delete" id="search-delete"><img src="../../css/img/connection_search_delete_wt.png" alt="" th:src="@{/css/img/connection_search_delete_wt.png}"></i>
+                </div>
+                   <input class="search-input" type="hidden" name="meetHallId" th:value="${hallId}" value=""/>
+                <input class="search-btn" id="search_btn" type="submit" value="搜索"/>
+            </div>
+        </div>
+        <ul class="">
+            <li class="info-item" th:each="person:${list}" th:data-person-Id="${person.id}">
+                <div class="info-body">
+                    <p class="t1"><span th:text="${person.personName}"></span>(<span class="small" th:text="${person.typeName}"></span>)</p>
+                    <p class="t2">
+                        <!-- <span class="icon floatl"><img src="../../css/img/gender-red.png" alt="性别" th:src="@{/css/img/gender-red.png}"></span>
+                        <span class="text floatl" th:text="${person.sex}"></span> -->
+                        <span class="icon floatl"><img src="../../css/img/cellphone.png" alt="电话" th:src="@{/css/img/cellphone.png}"></span>
+                        <span class="text floatl" th:text="${person.phone}"></span>
+                    </p>
+                </div>
+                <div class="item-operate clearfix">
+                    <span class="floatr"><a href="javascript:;" class="js-delMember" th:personId="${person.id}"><img src="../../css/img/delete_unpressed_bl.png" alt="删除" th:src="@{/css/img/delete_unpressed_bl.png}"></a></span>
+                    <span class="floatr"><a href="person-member-edit.html" th:href="@{person/toEdit(phone=${person.phone})}"><img src="../../css/img/edit_unpressed_bl.png" alt="修改" th:src="@{/css/img/edit_unpressed_bl.png}"></a></span>
+                </div>
+            </li>
+        </ul>
+    </section>
+    <div class="float-btn-box">
+        <span class="float-btn"><img src="../../css/img/menu_more_btn_normal.png" alt="" th:src="@{/css/img/menu_more_btn_normal.png}"></span>
+        <div class="float-menu-box animate fadeInUp" hidden>
+            <a class="float-menu" href="person-member-add.html" th:href="@{person/toAdd}">添加会员</a>
+            <a class="float-menu" href="link-network.html" th:href="@{person/toExcelUpload}">导入会员</a>
+            <a class="float-menu" href="link-network.html" th:href="@{/meetingHall/tomanagepage}">返回</a>
+        </div>
+    </div>
+    <div th:replace="~{layout/contextPath :: contextPath}"></div>
+    <script src="../../js/lib/jquery.js" th:src="@{/js/lib/jquery.js}"></script>
+    <script src="../../js/common.js" th:src="@{/js/common.js}"></script>
+<!-- 	<script src="../../js/plug/httpPath.js" th:src="@{/js/plug/httpPath.js}"></script> -->
+<!--     <script src="../../js/member/person-member.js" th:src="@{/js/member/person-member.js}"></script> -->
+</body>
+<script type="text/javascript">
+$(function () {
+	$(".js-delMember").on("click", function (event) {
+		_this=$(this);
+        var id=$(this).attr("personId");
+        $.affirm("确认要删除么？", function () {
+            // 这里写删除的AJAX
+			 $.ajax({
+				url:"/whoami/member/person/delete",
+				type:"POST",
+				data:{id:id},
+				dataType:"text",
+				success:function(data){
+            		if ("1"==data) {
+            			$.prompt("删除个人会员成功",function(){
+            				_this.parent().parent().parent().remove();
+            			});
+					}else{
+						$.prompt("系统异常，请稍后再试");
+					}
+				}
+			}); 
+        });
+    });
+	$(".search-btn").click(function(){
+		alert($(".search-input").val());
+		location.href="/whoami/member/person?search="+$(".search-input").val();
+	}); 
+});
+</script>
+</html>

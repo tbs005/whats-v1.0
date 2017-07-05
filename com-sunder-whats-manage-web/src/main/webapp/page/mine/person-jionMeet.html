@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <title>我参与的会议</title>
+    <link rel="stylesheet" href="../../css/style.css" th:href="@{/css/style.css}">
+</head>
+
+<body>
+	<div id='app' hidden="hidden">false</div>
+    <section class="main-cantainer navfixr">
+        <section class="index-tab">
+            <button class="index-tab-btn active js_nostart_btn">未结束</button>
+            <button class="index-tab-btn js_start_btn">已结束</button>
+        </section>
+        <section class="meet-list-main">
+            <ul class="meet-list" id="nostarted_list">
+                <li class="meet-item" th:each="mee:${meetingFuture.list}">
+                    <a th:if="${mee.meeParentId==0}" href="#" th:href="@{'/userCenter/jionMeetRoom?meeId='+${mee.meeId}}">
+                        <div class="left"><img src="../../css/img/pic1@2x.png" th:src="@{${mee.meeCover}}" alt="meetimg"></div>
+                        <div class="right">
+                            <p class="meet-name"><span th:text="${mee.meeName}">未开始</span>
+	                            <span th:if="${mee.meeStartTime<=nowDate}"><font color="gray" size="2">(进行中)</font></span>
+	                        </p>
+                            <p>
+	                            <time th:text="${#dates.format(mee.meeStartTime,'yyyy-MM-dd')}"></time>
+	                            <span>-</span>
+	                            <time th:text="${#dates.format(mee.meeEndTime,'yyyy-MM-dd')}"></time>
+                            </p>
+                        </div>
+                    </a>
+                </li>
+            </ul>
+            <ul class="meet-list" id="started_list" hidden="hidden">
+                <li class="meet-item" th:each="mee:${meetingOver.list}">
+                    <a th:if="${mee.meeParentId==0}" href="#" th:href="@{'/userCenter/jionMeetRoom?meeId='+${mee.meeId}}">
+                        <div class="left"><img src="../../css/img/pic1@2x.png" th:src="@{${mee.meeCover}}" alt="meetimg"></div>
+                        <div class="right">
+                            <p class="meet-name" th:text="${mee.meeName}">未开始</p>
+                            <p>
+	                            <time th:text="${#dates.format(mee.meeStartTime,'yyyy-MM-dd')}">2016-12-13</time>
+	                            <span>-</span>
+	                            <time th:text="${#dates.format(mee.meeEndTime,'yyyy-MM-dd')}">2016-12-13</time>
+                            </p>
+                        </div>
+                    </a>
+                </li>
+            </ul>
+        </section>
+    </section>
+
+	<script src="../../js/lib/jquery.js" th:src="@{/js/lib/jquery.js}"></script>
+    <script src="../../js/person-jionMeet.js" th:src="@{/js/person-jionMeet.js}" ></script>
+</body>
+
+</html>

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+<meta name="format-detection" content="telephone=no">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>我是谁主页</title>
+<link rel="stylesheet" href="../../css/lib/swiper.min.css"
+	th:href="@{/css/lib/swiper.min.css}">
+<link rel="stylesheet" href="../../css/style.css"
+	th:href="@{/css/style.css}">
+</head>
+
+<body>
+	<div id='app' hidden="hidden">true</div>
+	<div class="page-title">
+				<button class="top-btn" type="button">专题</button>
+				<ul class="index-type-list">
+					<li><a href="">教育</a></li>
+					<li><a href="">互联网</a></li>
+					<li><a href="">亲子</a></li>
+					<li><a href="">健康</a></li>
+					<li><a href="">医疗</a></li>
+				</ul>
+			</div>
+	<section class="main-cantainer navfixr titlefixr">
+		<header class="index-header">
+			
+			<section class="index-banner">
+				<!--swiper-->
+				<div class="swiper-container">
+					<div class="swiper-wrapper">
+						<div class="swiper-slide">
+							<img src="../../css/img/banner.png" alt="banner"
+								th:src="@{/css/img/banner.png}">
+						</div>
+						<div class="swiper-slide">
+							<img src="../../css/img/banner.png" alt="banner"
+								th:src="@{/css/img/banner.png}">
+						</div>
+					</div>
+					<!-- Add Pagination -->
+					<div class="swiper-pagination"></div>
+				</div>
+				<!--swiper-->
+			</section>
+		</header>	
+		<section class="index-tab">
+			<button class="index-tab-btn active" id="meeting">
+				<img src="../../css/img/icon_conference@2x.png" alt="tab-icon"
+					th:src="@{/css/img/icon_conference@2x.png}"><p>会议</p>
+			</button>
+			<button class="index-tab-btn" id="meetingRoom">
+				<img src="../../css/img/icon_conferencehall@2x.png" alt="tab-icon"
+					th:src="@{/css/img/icon_conferencehall@2x.png}"><p>会议厅</p>
+			</button>
+		</section>
+	
+		<section class="meet-list-main">
+			<ul class="meet-list" id="meetingInfo">
+			</ul>
+			<ul class="meetroom-list" v-show="!meetList" id="meethallInfo">
+			</ul>
+		   <p class="loading"><i><img src="../../css/img/loading_pic.png" th:src="@{/css/img/loading_pic.png}" alt=""></i><span>正在加载更多</span></p>
+		</section>
+		<script id="news_jsrender" type="text/x-jsrender">
+				<li class="meet-item">
+        		<a href="" th:href="@{/meetingInfo/{{:meeId}}/{{:hallId}}}">  
+						<div class="left">						
+							<img src="{{:meeCover}}" alt="meetimg">
+						</div>
+						<div class="right">
+							<p class="meet-name">{{:meeName}}</p>
+							<time>{{formateTimestamp:meeStartTime}} - {{formateTimestamp:meeEndTime}}</time>
+						</div>
+				 </a>
+						{{if flag ==0}}  
+								<button class="focus-btn" id="{{:meeId}}" onclick="meetingbetton(this);">关注</button>
+							{{else flag != 0}} 
+							    <button class="disfocus-btn" id="{{:meeId}}" onclick="meetingbetton(this);">已关注</button>
+							{{else}} 
+						{{/if}}	
+ 				 </li>
+        </script>
+		<script id="roomnews_jsrender" type="text/x-jsrender">
+				<li class="meet-item">
+        		<a href="" th:href="@{/meeting/selectMeetingRoom/{{:hallId}}}">  
+						<div class="left">
+							<img src="{{:hallCover}}" alt="meetimg">
+						</div>
+						<div class="right">
+							<p class="meet-name">{{:hallName}}</p>
+							<p class="meet-intro">{{:hallIntro}}</p>
+						</div>	
+				  </a>
+					{{if isFollow == 'false'}}  
+							<button class="focus-btn" id="{{:hallId}}" onclick="meetHallbetton(this);">关注</button>
+						{{else isFollow != 'false'}} 
+							<button class="disfocus-btn" id="{{:hallId}}" onclick="meetHallbetton(this);">已关注</button>
+						{{else}} 
+				  {{/if}}
+				 </li>
+        </script>
+	</section>
+	<div class="float-btn-box">
+        <span class="js_backTop backtop-btn"><img src="../../css/img/top_pressed.png" th:src="@{/css/img/top_pressed.png}" alt=""></span>
+    </div>
+	<nav class="index-nav"
+		th:replace="layout/nav :: (${session.loginType eq 'app' }? appnav : nav)">
+
+	</nav>
+	<div th:replace="~{layout/contextPath :: contextPath}"></div>	
+	<script src="../../js/lib/jquery.js" th:src="@{/js/lib/jquery.js}"></script>
+	<script src="../../js/common.js" th:src="@{/js/common.js}"></script>
+	<script src="../../js/plug/httpPath.js" th:src="@{/js/plug/httpPath.js}"></script>
+	<script src="../../js/lib/swiper.min.js" th:src="@{/js/lib/swiper.min.js}"></script>
+	<script src="../../js/plug/plug-form.js" th:src="@{/js/plug/plug-form.js}"></script>
+	<script src="../../js/meetIndex.js" th:src="@{/js/meetIndex.js}"></script>
+	<script src="../../js/mee_hall/meeting-hall.js" th:src="@{/js/mee_hall/meeting-hall.js}"></script>
+	<script src="../../js/jsrender.js" th:src="@{/js/jsrender.js}"></script>
+	<script src="../../js/dateFormate.js" th:src="@{/js/dateFormate.js}"></script>
+	<script src="../../js/weui.min.js" th:src="@{/js/weui.min.js}"></script>
+	<script src="../../js/meetIndexPage.js" th:src="@{/js/meetIndexPage.js}"></script>
+</body>
+<script type="text/javascript" th:inline="javascript">
+    sessionStorage.setItem("loginFlag",1);
+	var tmpl = $.templates("#news_jsrender");//热门会议模板
+	var tmplRoom = $.templates("#roomnews_jsrender");//热门会厅议模板
+	var meetingPage = 1;//热门会议标记
+	var meetingRoomPage = 1;//热门会议厅标记
+</script>
+</html>

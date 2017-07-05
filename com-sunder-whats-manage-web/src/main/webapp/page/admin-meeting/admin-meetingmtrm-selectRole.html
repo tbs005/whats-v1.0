@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <title>选择角色</title>
+    <link rel="stylesheet" href="../../css/lib/icheck/skins/all.css" th:href="@{/css/lib/icheck/skins/all.css}">
+    <link rel="stylesheet" href="../../css/style.css" th:href="@{/css/style.css}">
+</head>
+
+<body>
+    <section class="main-cantainer">
+        <div class="form-group" th:each="roles:${roleList}">
+            <label class="floatl" th:text="${roles.roleName}">主持人</label>
+            <span class="floatr">
+            <input type="radio" name="role" th:value="${roles.roleId}" th:checked="${roles.roleId == role.roleId}" >
+            </span>
+        </div>
+        <button type='button' class='btm-btn pst-btm' id="saveButton">确定</button>
+    </section>
+     <div th:replace="~{layout/contextPath :: contextPath}"></div>
+    <script src="../../js/lib/jquery.js" th:src="@{/js/lib/jquery.js}"></script>
+    <script src="../../js/common.js" th:src="@{/js/common.js}"></script>
+     <script src="../../js/plug/httpPath.js" th:src="@{/js/plug/httpPath.js}"></script>
+    <script src="../../js/lib/icheck.min.js" th:src="@{/js/lib/icheck.min.js}"></script>
+    <script type="text/javascript" th:inline="javascript">
+    	var userRoleLink = [[${userRoleLink}]];
+    	
+        $('input').iCheck({
+            checkboxClass: 'icheckbox_flat-red',
+            radioClass:'iradio_flat-red'
+        });			  
+        $("#saveButton").on("click",function(){
+        var checked = $("input[name='role']:checked").val();   
+        	if (checked == undefined ) {
+				$.toastr("请选择角色!");
+			}else {
+				userRoleLink.roleId = checked;
+				$.ajax({
+	    			url : contentpath + '/meeting/selectMeetingRoleSave',
+	    			type : 'POST',
+	    			data : JSON.stringify(userRoleLink),
+	    			contentType : 'application/json',
+	    			success : function(data) {
+	    				if (data) {
+	    					$.prompt("修改管理员角色成功!",function(){						
+	    						window.location.href = contentpath+"/meeting/meetingAdmin/manage";			
+	    					});
+	    				} else {
+	    					$.prompt("修改管理员角色失败!");
+	    				}
+	    			},
+	    			error : function(data) {
+	    				$.prompt("系统错误");
+	    			}
+	    		})
+			}
+        });
+     </script>
+</body>
+
+</html>

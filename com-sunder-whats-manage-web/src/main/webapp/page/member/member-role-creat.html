@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <title>创建会员角色</title>
+    <link rel="stylesheet" type="" href="../../css/style.css" th:href="@{/css/style.css}">
+</head>
+
+<body>
+    <section class="main-cantainer">
+        <div class="form-group">
+            <label for="sex" class="floatl">会员类别:</label>
+            <span class="floatr arrowImg"><img src="../../css/img/list_arrow.png" th:src="@{/css/img/list_arrow.png}" alt=""></span>
+            <select id="type" class='form-input floatr' name="">
+                 <option value="">请选择</option>
+                 <option value="1">个人</option>
+                 <option value="0">组织</option>
+             </select>
+        </div>
+        <div class="form-group">
+            <label for="" class="floatl">角色名称:</label>
+            <input id="name" type="text" class='form-input floatr' name=""  placeholder="请输入姓名">
+        </div>
+        <div class='btn-box'>
+            <button id="addBtn" type="button" class="form-btn cancel-btn">保存</button>
+        </div>
+    </section>
+  
+    <script src="../../js/lib/jquery.js" th:src="@{/js/lib/jquery.js}"></script>
+    <script src="../../js/common.js" th:src="@{/js/common.js}"></script>
+    <script src="../../js/member/member-type-func.js" th:src="@{/js/member/member-type-func.js}"></script>
+</body>
+
+</html>

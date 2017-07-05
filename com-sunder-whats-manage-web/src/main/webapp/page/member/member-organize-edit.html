@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <title>编辑组织信息</title>
+    <link rel="stylesheet" href="../../css/lib/icheck/skins/all.css" th:href="@{/css/lib/icheck/skins/all.css}">
+    <link rel="stylesheet" href="../../css/style.css" th:href="@{/css/style.css}">
+    <script src="../../js/lib/jquery.js" th:src="@{/js/lib/jquery.js}"></script>
+</head>
+
+<body>
+    <section class="main-cantainer">
+        <div class="page1">
+          <form id="unitMemberAdd" action="" method="post">
+          		<input type="hidden" name="id" th:value="${unitMember.id}">
+                <div class="form-group">
+                    <label for="" class="floatl">组织名称：</label><font id="unitNameSign"></font>
+                    <input type="text" id="unitName" name="unitName" class='form-input floatr' value="" th:value="${unitMember.unitName}" placeholder="请输入">
+                    <input type="hidden" id="flag" value="true"/>
+                </div>
+                <div class="form-group js-cutSelectrole">
+                    <label for="" class="floatl">选择角色：</label><font id="roleSign"></font>
+                    <span class="floatr arrowImg"><span id="roleName" style="color:#00a0e9" th:text="${unitMember.typeName}"></span>&nbsp;&nbsp;<img src="../../css/img/list_arrow.png" th:src="@{/css/img/list_arrow.png}" alt=""></span>
+                    <input id="roleInput" name="memberTypeId" type="hidden" th:value="${unitMember.memberTypeId}">
+                </div>
+                <div class='btn-box'>
+                    <button id="submit" type="button" class="form-btn cancel-btn">保存</button>
+                </div>
+           </form>
+        </div>
+        <div class="page2" hidden>
+            <div class="form-group" th:each="type:${typeList}" th:if="${type.type==0}">
+                <label class="floatl" th:text="${type.name}">主持人</label>
+                <span class="floatr"><input type="radio" name="role" value="" th:value="${type.id}"></span>
+            </div>
+            <div class='btn-box'>
+                <button id="roleButton" type="button" class="form-btn cancel-btn js-saveRole">保存</button>
+            </div>
+        </div>
+    </section>
+    <script src="../../js/lib/jquery.js" th:src="@{/js/lib/jquery.js}"></script>
+	<script src="../../js/common.js" th:src="@{/js/common.js}"></script>
+    <script src="../../js/lib/icheck.min.js" th:src="@{/js/lib/icheck.min.js}"></script>
+    <script src="../../js/organize-member.js" th:src="@{/js/organize-member.js}"></script>
+    <script>
+        $('input').iCheck({
+            checkboxClass: 'icheckbox_flat-red',
+            radioClass: 'iradio_flat-red',
+        });
+    </script>
+    <script type="text/javascript">
+		$("#roleButton").click(function(){
+			$(".page1").show().siblings().hide();
+			var role=$("input[name='role']:checked").val();
+			$("#roleInput").val(role);
+			$("#roleSign").css({color:"green"});
+			$("#roleSign").html("√");
+			var roleName=$("input[name='role']:checked").parent().parent().parent().children("label").html();
+			$("#roleName").text(roleName);
+		});
+		$("#unitName").blur(function(){
+			var oldName="[[${unitMember.unitName}]]";
+			if ($("#unitName").val()!="" && $("#unitName").val()!=oldName) {
+				$.ajax({
+					url:"/whoami/member/unti-member/list/verifyUnitName",
+					type:"POST",
+					data:{unitName:$("#unitName").val()},
+					dataType:"text",
+					success:function(data){
+						if("0"!=data){
+							$("#flag").val(false);
+							$("#unitNameSign").css({color:"red"});
+							$("#unitNameSign").html("×");
+							$.prompt("组织名称已存在，请更改");
+						}else{
+							$("#flag").val(true);
+							$("#unitNameSign").css({color:"green"});
+							$("#unitNameSign").html("√");
+						}
+					}
+				});
+			}
+			if ($("#unitName").val()==oldName) {
+				$("#flag").val(true);
+				$("#unitNameSign").css({color:"green"});
+				$("#unitNameSign").html("√");
+			}
+		});
+		function formSubmit(){
+			if ($("#unitName").val()!=""&&$("#roleInput").val()!="") {
+				if($("#flag").val()){
+					$("form").submit();
+				}else {
+					$.prompt("组织名称已存在，请更改");
+				}
+			}else{
+				$.prompt("组织名称和角色不能为空");
+			}
+		}
+		$("#submit").on("click",function(){
+			if ($("#unitName").val()!="" && $("#roleInput").val()!="") {
+				if($("#flag").val()){
+					$.ajax({
+						url:"edit",
+						type:"POST",
+						data:$("#unitMemberAdd").serialize(),
+						dataType:"text",
+						success:function(data){
+							if("1"==data){
+								$.prompt("组织会员修改成功",function(){
+									window.location.href="../unit";
+								});
+							}else{
+								$.toastr("组织会员修改失败，请重试");
+							}
+						},
+						error:function(){
+							$.toastr("系统异常，请稍后再试");
+						}
+					});
+				}else {
+					$.prompt("组织名称已存在，请更改");
+				}
+			}else{
+				$.prompt("组织名称和角色不能为空");
+			}
+		});
+	</script>
+</body>
+
+</html>

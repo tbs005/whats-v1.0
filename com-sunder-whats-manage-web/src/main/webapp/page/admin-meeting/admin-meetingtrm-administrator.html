@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+<meta name="format-detection" content="telephone=no">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>会议管理员</title>
+<link rel="stylesheet" href="../../css/lib/icheck/skins/all.css" th:href="@{/css/lib/icheck/skins/all.css}">
+<link rel="stylesheet" th:href="@{/css/style.css}" href="../../css/style.css">
+<link rel="stylesheet" href="../../css/lib/animate.css" th:href="@{/css/lib/animate.css}">
+</head>
+
+<body>
+    <div id='app' hidden="hidden">false</div>
+	<section class="main-cantainer navfixr">
+		<div class="creater">
+			<img class="floatl icon" src="../../css/img/user-img.jpeg" th:src="@{${createMeetinguser.headimgurl}}" alt="" >
+				<span class="name floatl" th:text="${createMeetinguser.realName}"></span>
+				 <span	class="floatr title">    
+				  <i class="grbt">创建人</i>
+				</span>
+		</div>
+		<ul class="admin-list">
+            <li class="admin" th:each="userList:${list}">
+                <img class="floatl icon" src="../../css/img/user-img.jpeg" th:src="@{${userList.headimgurl}}" alt="">
+                <div class="admin-info floatl"><span class="name" th:text="${userList.realName}">王二狗</span><!-- <span class="status">管理员</span> --></div>
+                <span class="floatr remove-btn js-remove-admin" data-admin-id="0" th:data-admin-id="${userList.userId}"><img src="../../css/img/edit_icon_delete.png"  th:src="@{/css/img/edit_icon_delete.png}"alt=""></span>
+                <a href="admin-mtrm-selectRole.html" th:href="@{/meeting/selectMeetingRole(userId=${userList.userId},meetingId= ${meeId},meetHallId= ${hallId})}" class="floatr select-role-btn">选择角色</a>
+            </li>      
+        </ul>
+	</section>
+	<div class="float-btn-box" id="menuMoreBtnNormal" >
+    <span class="float-btn"><img src="../../css/img/menu_more_btn_pressed.png" alt="" th:src="@{/css/img/menu_more_btn_pressed.png}"></span>
+     <div class="float-menu-box animate fadeInUp" hidden>
+		<a class="float-menu" href="admin-addMeetDetail.html" th:href="@{/meeting/createMeetingAdmin/manage}">会议角色设置</a> 
+	    <a class="float-menu" id="invite-admin" href="javascript:;">邀请管理员</a>
+	    <a class="float-menu" th:href="@{/meeting/selectMeeting_mvc}">返回</a>
+    </div>
+	</div>
+	        <!--添加管理员邀请-->
+    <div class='modal-main invite-modal' id="invite-modal" hidden>
+        <div class="modal-bg"></div>
+        <div class='modal-contant modal-lg'>
+            <div class="modal-header invite-modal-header">
+                	请选择管理员角色
+            </div>
+            <div class="modal-body">
+                <ul class="admin-role-list">
+                     <th:block th:each="rolelist:${role}">
+                      <li>
+                         <label th:text="${rolelist.roleName}">校长</label>
+                         <span><input type="radio" name="role" th:value="${rolelist.roleId}"></span>
+                       </li>
+                    </th:block>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="inviteTrue" class="yes">邀请</button>
+                <button type="button" class="no">取消</button>
+            </div>
+        </div>
+    </div>
+	
+	<div th:replace="~{layout/contextPath :: contextPath}"></div>	
+	<script src="../../js/lib/jquery.js" th:src="@{/js/lib/jquery.js}"></script>
+	<script src="../../js/common.js" th:src="@{/js/common.js}"></script>
+	<script src="../../js/jsrender.js" th:src="@{/js/jsrender.js}"></script>
+	<script src="../../js/plug/httpPath.js" th:src="@{/js/plug/httpPath.js}"></script>
+	<script src="../../js/admin-meeting/adminMeeting-list.js" th:src="@{/js/admin-meeting/adminMeeting-list.js}"></script>
+	<script src="../../js/lib/icheck.min.js" th:src="@{/js/lib/icheck.min.js}"></script>
+</body>
+<script type="text/javascript" th:inline="javascript">
+$('input').iCheck({
+    checkboxClass: 'icheckbox_flat-yellow',
+    radioClass: 'icheckbox_flat-yellow'
+  });
+  var meeId = [[${meeId}]];
+  var hallId = [[${hallId}]]
+</script>
+
+</html>

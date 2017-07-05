@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <title>添加酒店信息</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="../../css/style.css">
+</head>
+
+<body>
+    <section class="main-cantainer">
+        <div class='form-main' id='sign-main'>
+            <form action="" th:action="@{/meetingHotel/addHotelInfo}" method="post" onsubmit="return check()">
+            	<!-- 会议厅id -->
+            	<input type="text" name="meetingHallId" value="" th:value="${session.existMeeHall.hallId}" hidden="hidden">
+            	<!-- 会议id -->
+            	<input type="text" name="meetingId" value="" th:value="${session.click_meeting.meeId}" hidden="hidden">
+                <div class="form-group">
+                    <label for="" class="floatl">酒店名称:</label>
+                    <input type="text" name="hotelName" class='form-input floatr' th:value="${hotelName}"  placeholder="请输入" id="hotelName">
+                </div>
+                <div class="form-group">
+                    <label for="realName" class="floatl">酒店地址:</label>
+                    <input type="text" name="address" class='form-input floatr' th:value="${address}"  placeholder="请输入" id="address">
+                </div>
+                <div class="form-group">
+                    <label for="realName" class="floatl">负责人姓名:</label>
+                    <input type="text" name="person" class='form-input floatr' th:value="${person}"  placeholder="请输入" id="person">
+                </div>
+                <div class="form-group">
+                    <label for="realName" class="floatl">负责人电话:</label>
+                    <input type="tel" name="tel" class='form-input floatr' th:value="${tel}"  placeholder="请输入" id="tel">
+                </div>
+                <div class='btn-box'>
+                   <!--  <a href="admin-hotel-addroom.html" class="form-btn cancel-btn" th:href="@{/meetingHotel/addHotelInfo}">下一步</a> -->
+                    <button type="submit" class="form-btn cancel-btn">下一步</button>
+                </div>
+            </form>
+        </div>
+    </section>
+    <script src="../../js/lib/jquery.js" th:src="@{/js/lib/jquery.js}"></script>
+    <script src="../../js/common.js" th:src="@{/js/common.js}"></script>
+    <script src="../../js/userinfo_validate.js" th:src="@{/js/userinfo_validate.js}"></script>
+    <script type="text/javascript">
+   	function check(){
+   		if(!validate_empty("hotelName","酒店名称")){return false;}
+   		if(!validate_namelenth("hotelName","酒店名称",30)){return false;}   		
+   		if(!validate_empty("address","酒店地址")){return false;}
+   		if(!validate_empty("person","负责人姓名")){return false;}
+   		if(!validate_namelenth("person","负责人姓名",30)){return false;}	
+   		if(!validate_phone("tel")){return false;}	
+   	}
+   	$(function(){
+   		var x;
+   		if (x='[[${msg}]]') {
+   			$.toastr(x);
+		}
+   	})
+    </script>
+</body>
+</html>

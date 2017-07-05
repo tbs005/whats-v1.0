@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>com-sunder-whats-parent</artifactId>
+        <groupId>com.sunder.xie.whats</groupId>
+        <version>1.0-SNAPSHOT</version>
+        <relativePath>../com-sunder-whats-parent/pom.xml</relativePath>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>com-sunder-whats-manage</artifactId>
+    <packaging>pom</packaging>
+    <modules>
+        <module>../com-sunder-whats-manage-web</module>
+        <module>../com-sunder-whats-manage-common</module>
+        <module>../com-sunder-whats-manage-config</module>
+        <module>../com-sunder-whats-manage-core</module>
+        <module>../com-sunder-whats-manage-service-exception</module>
+        <module>../com-sunder-whats-manage-facade-exception</module>
+        <module>../com-sunder-whats-manage-facade-user</module>
+        <module>../com-sunder-whats-manage-service-user</module>
+        <module>../com-sunder-whats-manage-scheduler</module>
+        <module>../com-sunder-whats-manage-batch</module>
+        <module>../com-sunder-whats-manage-IFInvoke</module>
+    </modules>
+
+
+    <version>1.0-SNAPSHOT</version>
+</project>

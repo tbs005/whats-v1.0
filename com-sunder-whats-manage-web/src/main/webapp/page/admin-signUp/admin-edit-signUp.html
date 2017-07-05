@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+<meta name="format-detection" content="telephone=no">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>报名字段编辑</title>
+<link rel="stylesheet" th:href="@{/css/style.css}"
+	href="../../css/style.css">
+</head>
+
+<body>
+	<div id='app' hidden="hidden">false</div>
+	<section class="main-cantainer">
+	<form id="_form" action="" th:action="@{/meetingHall/addmanageRole}" method="post">
+		<!-- <div class="js-right-page1">
+				<div class="form-group">
+					<label for="" class="floatl">角色名称:</label> <input type="text"
+						class='form-input floatr' name="roleName" id="roleName"
+						placeholder="请输入"> <input type="text" hidden="hidden"
+						name="meetHallId" th:value="${session.existMeeHall.hallId}">
+				</div>
+
+				<div class="form-group js-set-right">
+					<label for="" class="floatl">选择权限:</label> <span
+						class="floatr arrowImg"><img
+						src="../../css/img/list_arrow.png" alt=""
+						th:src="@{/css/img/list_arrow.png}"></span>
+				</div>
+				<div class='btn-box'>
+					<button type="button" id="_btn" class="form-btn cancel-btn js-saveRole">保存并创建</button>
+				</div>
+			
+		</div> --> 
+		<input type="text" hidden="hidden" id="meeId" th:value="${session.click_meeting.meeId}">
+		<input type="text" hidden="hidden" id="hallId" th:value="${session.click_meeting.hallId}">
+		<div class="js-right-page2 wt-bg">
+			<div class="right-title">
+				<span class="floatl">已选择字段</span>
+			</div>
+			<div class="type_tab choosed clearfix">
+				<ul id="choosed">
+					<li th:data-right-id="${field.fieldId}" th:each="field:${hasChoosedFields}"><i>[[${field.fieldDsp}]]</i><span class='delBtn'></span></li>
+				</ul>
+			</div>
+			<div class="right-title">
+				<span class="floatl">所有字段</span>
+			</div>
+			<div class="type_tab choose clearfix">
+				<ul id="modules">
+					<li th:data-right-id="${field.fieldId}" th:each="field:${notChoosedFields}"><i>[[${field.fieldDsp}]]</i></li>
+				</ul>
+			</div>
+			<div class='btn-box'>
+				<button type="button" id="_btn" class="form-btn cancel-btn">保存</button>
+			</div>
+		</div>
+	</form>
+	</section>
+	<div th:replace="~{layout/contextPath :: contextPath}"></div>
+	<script src="../../js/lib/jquery.js" th:src="@{/js/lib/jquery.js}"></script>
+	<script src="../../js/common.js" th:src="@{/js/common.js}"></script>
+	<script src="../../js/plug/httpPath.js" th:src="@{/js/plug/httpPath.js}"></script>
+	<script src="../../js/user_signup/edit-signup-field.js" th:src="@{/js/user_signup/edit-signup-field.js}"></script>
+	<script src="../../js/userinfo_validate.js" th:src="@{/js/userinfo_validate.js}"></script>
+	<script src="../../js/user_signup/admin-edit-signUp.js" th:src="@{/js/user_signup/admin-edit-signUp.js}"></script>
+</body>
+</html>

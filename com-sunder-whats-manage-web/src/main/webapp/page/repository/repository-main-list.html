@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <title>知识库</title>
+    <link rel="stylesheet" href="../../css/style.css" th:href="@{/css/style.css}">
+</head>
+
+<body>
+    <section class="main-cantainer wt">
+        <ul class="repository-firstList">
+            <li th:each="type:${typeList}">
+            	<a th:if="${type.isType!='2'}" th:href="@{'list?parentId='+${type.id}}" select="true" th:class="${type.isType}">
+            		<span>
+            			<img src="../../css/img/main_category.png" th:src="@{/css/img/main_category.png}" alt="">
+            		</span>
+            		<span th:text="${type.type}">一级菜单</span>
+            	</a>
+            	<a th:if="${type.isType=='2'}" th:href="@{'../knowledgeFile/list?parentId='+${type.id}}" select="true" th:class="${type.isType}">
+            		<span>
+            			<img src="../../css/img/main_category.png" th:src="@{/css/img/main_category.png}" alt="">
+            		</span>
+            		<span th:text="${type.type}">一级菜单</span>
+            	</a>
+            </li>
+        </ul>
+    <script src="../../js/lib/jquery.js" th:src="@{/js/lib/jquery.js}"></script>
+    <script src="../../js/common.js" th:src="@{/js/common.js}"></script>
+</body>
+
+</html>

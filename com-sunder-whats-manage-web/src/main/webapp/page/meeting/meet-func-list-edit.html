@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <title>会议模块编辑</title>
+    <link rel="stylesheet" href="../../css/style.css" th:href="@{/css/style.css}">
+</head>
+
+<body>
+	 <div id='app' hidden="hidden">false</div>
+    <section class="main-cantainer">
+        <div class="wt-bg">
+            <div class="right-title"><span class="floatl">已有模块</span></div>
+            <div class="type_tab choosed clearfix" >
+                <ul id="modulesHave">
+                    
+                </ul>
+            </div>
+            <div class="right-title"><span class="floatl">可选模块</span></div>
+            <div class="type_tab choose clearfix" >
+                <ul id="modulesNoHave">
+                    
+                </ul>
+            </div>
+            <!-- 动态构建已有模块-->
+		 <script id="haveJsrender" type="text/x-jsrender" >					
+					<li data-right-id="{{:moduleId}}"><i>{{:moduleName}}</i><span class="delBtn"></span></li>	
+         </script>
+          
+         <!-- 动态构建没有模块-->
+		<script id="haveNoJsrender" type="text/x-jsrender">				
+                     <li  data-right-id="{{:moduleId}}"><i>{{:moduleName}}</i></li>  				
+        </script>
+        
+        </div>
+    </section>
+    
+    <button type='button' class='btm-btn fix-btm'>保存</button>
+	<script src="../../js/lib/jquery.js" th:src="@{/js/lib/jquery.js}"></script>
+	<script src="../../js/common.js" th:src="@{/js/common.js}"></script>
+	<script src="../../js/jsrender.js" th:src="@{/js/jsrender.js}"></script>
+    <script src="../../js/func-list-edit.js"  th:src="@{/js/func-list-edit.js}"></script>
+    <script src="../../js/userinfo_validate.js" th:src="@{/js/userinfo_validate.js}"></script> 
+	<script type="text/javascript" th:inline="javascript">  
+	 var contentpath = [[${#httpServletRequest.contextPath}]];
+		var tmplHave = $.templates("#haveJsrender");//已有动态模块模板
+		var tmplNoHave = $.templates("#haveNoJsrender");//没有动态模块
+		var meeId = [[${meeId}]];
+		var hallId = [[${hallId}]];
+		var meetingmodules =  [[${meetingmodules}]];//已有的模块		
+		var modules =  [[${Modules}]];//没有的模块	
+	
+		var htmlHave = tmplHave.render(meetingmodules);//	
+		var htmlNoHave = tmplNoHave.render(modules);//
+		
+		$(function(){
+			$("#modulesHave").append(htmlHave);
+			$("#modulesNoHave").append(htmlNoHave);
+		});
+		
+		$("button").click(function(){
+			 var moduleIds=[];
+			$("#modulesHave li").each(function(){
+			  moduleIds.push($(this).attr("data-right-id"));
+			});
+			if(!validate_arr(moduleIds)){return false;}    	
+			   console.log(moduleIds);
+			   $.ajax({
+					url : contentpath + '/meetingInfo/updateMeetingModule',
+					type : 'POST',
+					data : JSON.stringify({"module_id":moduleIds,"meet_hall_id":hallId,"meet_id":meeId}),
+					contentType : 'application/json',
+					success : function(data) {
+							if (data=="ROLEANDMQ_OK") {
+								$.prompt("修改成功",function(){									
+								  window.location.href=contentpath+"/meetingInfo/"+meeId+"/"+hallId;								 
+								});
+							}else {								
+								$.prompt("修改会议模块失败");
+							}
+					},
+					error : function(data) {
+						$.prompt("系统错误");
+					}
+				})
+		});
+	</script>
+</body>
+
+</html>

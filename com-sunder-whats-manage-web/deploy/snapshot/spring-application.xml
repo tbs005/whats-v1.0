@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="
+http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+http://www.springframework.org/schema/context
+http://www.springframework.org/schema/context/spring-context-3.0.xsd
+ http://www.springframework.org/schema/aop   
+           http://www.springframework.org/schema/aop/spring-aop-3.2.xsd"
+	default-lazy-init="false">
+	<!-- proxy-target-class默认"false",更改为"ture"使用CGLib动态代理 -->
+	<aop:aspectj-autoproxy proxy-target-class="true" />
+
+	<context:property-placeholder
+		location="classpath:service.properties,classpath:db.properties,classpath:wechat.properties,classpath:httpurl.properties,classpath:redis.properties" />
+	
+	<import resource="classpath:spring/spring-redis.xml" />
+	<import resource="classpath:dubbo-user-consumer.xml" />
+	
+	<bean class="com.bizideal.whoami.wechat.config.WechatWebConfig" id="wechatConfig">
+
+		<property name="appId" value="${appId}"></property>
+		<property name="appSecret" value="${appSecret}"></property>
+		<property name="token" value="${token}"></property>
+		<property name="aesKey" value="${aeskey}"></property>
+		<property name="partnerId" value="${partnerId}"></property>
+		<property name="partnerKey" value="${partnerKey}"></property>
+		<property name="profile" value="${profile}"></property>
+
+	</bean>
+
+	<!-- <bean class="com.bizideal.whoami.wechat.service.imp.WechatOAuth2ServiceImpl"
+		id="wechatOAuth2Service">
+		<constructor-arg name="wechatConfig" ref="wechatConfig" />
+	</bean> -->
+	
+	
+	<bean class="com.bizideal.whoami.wechat.config.WebAppConfig" id="webAppConfig">
+		<property name="appid" value="${webapp_appid}"></property>
+		<property name="scope" value="${webapp_scope}"></property>
+		<property name="state" value="${webapp_state}"></property>
+		<property name="appsecret" value="${webapp_appsecret}"></property>
+	</bean>
+</beans>

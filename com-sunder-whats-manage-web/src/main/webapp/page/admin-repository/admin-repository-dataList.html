@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <title>主类名称</title>
+    <link rel="stylesheet" href="../../css/style.css" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="../../css/lib/animate.css" th:href="@{/css/lib/animate.css}">
+</head>
+
+<body>
+    <section class="main-cantainer wt">
+        <ul class="repository-data-list">
+            <li class="repository-item clearfix" th:each="file:${fileList.list}">
+                <a href="#" th:if="${file.suffix=='url'}" th:href="@{'play/'+${file.id}}">
+                    <span class="data-icon"> <img src="../../css/img/data.png" th:src="@{/css/img/data.png}" alt=""></span>
+                    <div class="title-box">
+                        <p class="repository-title" th:text="${file.name}">全国高职高专校长联席会议特别声明 全国高职高专校长联席会议特别声明
+                        </p>
+                    </div>
+                    <div class="func-box pdl2">
+                       <time th:text="${'上传时间：'+#dates.format(file.createTime, 'yyyy-MM-dd')}">2016-06-03</time>
+                        <i class='func-btn' th:id="${file.id}" onclick="deleteType(this);return false;"><img src="../../css/img/delete_unpressed_bl.png" th:src="@{/css/img/delete_unpressed_bl.png}" alt=""></i>
+                    </div>
+                </a>
+                <a href="#" th:if="${file.suffix!='url'}" th:href="@{${fastdfsurl}+${file.url}}">
+                    <span class="data-icon"> <img src="../../css/img/data.png" th:src="@{/css/img/data.png}" alt=""></span>
+                    <div class="title-box">
+                        <p class="repository-title" th:text="${file.name}">全国高职高专校长联席会议特别声明 全国高职高专校长联席会议特别声明
+                        </p>
+                    </div>
+                    <div class="func-box pdl2">
+                       <time th:text="${'上传时间：'+#dates.format(file.createTime, 'yyyy-MM-dd')}">2016-06-03</time>
+                        <i class='func-btn' th:id="${file.id}" onclick="deleteType(this);return false;"><img src="../../css/img/delete_unpressed_bl.png" th:src="@{/css/img/delete_unpressed_bl.png}" alt=""></i>
+                    </div>
+                </a>
+            </li>
+        </ul>
+    </section>
+    <div class="float-btn-box">
+        <span class="float-btn"><img src="../../css/img/menu_more_btn_normal.png" th:src="@{/css/img/menu_more_btn_normal.png}" alt=""></span>
+        <div class="float-menu-box animate fadeInUp" hidden="hidden">
+            <a class="float-menu" href="repository-uploadData.html" th:href="@{'toAdd?parentId='+${parentId}+'&type=0'}">上传资料</a>
+            <a class="float-menu" href="repository-bandLink.html"  th:href="@{'toAdd?parentId='+${parentId}+'&type=1'}">绑定链接</a>
+             <a class="float-menu" href="#" th:href="@{'/meetingInfo/'+${session.click_meeting.meeId}+'/'+${session.existMeeHall.hallId}}">返回</a>
+        </div>
+    </div>
+    <script src="../../js/lib/jquery.js" th:src="@{/js/lib/jquery.js}"></script>
+    <script src="../../js/common.js" th:src="@{/js/common.js}"></script>
+</body>
+<script type="text/javascript">
+//ajax删除分类
+function deleteType(obj){
+	var id=$(obj).attr("id");
+	$.affirm("确认要删除该资料吗？", function(){
+		$.ajax({
+			url:"/whoami/knowledgeFile/delete",
+			async: false,
+			type:"post",
+			data:"id="+id,
+			dataType:"text",
+			success:function(data){
+				if("1"==data){
+					$.prompt("资料删除成功",function(){
+						$(obj).parent().parent().parent().remove();
+					});
+				}else{
+					$.toastr("资料删除失败，请重试");
+				}
+			},
+			error:function(){
+				$.toastr("系统异常，请稍后再试");
+			}
+		});
+		
+	});
+}
+</script>
+</html>

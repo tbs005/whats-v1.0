@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <title>我参与的会议</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+	<div id='app' hidden="hidden">false</div>
+    <section class="main-cantainer" id="mtrm-meetinof">
+<!--         <header class="header">
+            <div class="form-title"><a href="javascript:history.go(-1)"><span class="backBasic-btn"><img th:src="@{/css/img/title_arrow_back.png}" alt=""/></span></a><span>会议厅主页</span></div>
+        </header> -->
+        <section class="meet-list-main">
+            <ul class="meet-list mtrm-infolist">
+                <li class="meet-item">
+                    <a th:href="@{'/meetingInfo/'+${session.click_meeting.meeId}+'/'+${session.click_meeting.hallId}}">
+                        <div class="left"><img th:src="@{/css/img/pic1@2x.png}" alt="meetimg"></div>
+                        <div class="right">
+                            <p class="meet-name" id="meeName" th:text="${session.click_meeting.meeName}"></p>
+                            <time th:text="${#dates.format(session.click_meeting.meeStartTime,'yyyy-MM-dd')}"></time>
+                        </div>
+                        <div class="deleteItem" th:if="${permissions}=='permissions'"><a th:href="@{'/meeting/invite/'+${session.click_meeting.hallId}+'/'+${session.click_meeting.meeId}}">邀请</a></div>
+                    </a>
+                </li>
+            </ul>
+        </section>
+        <section class="meet-list-main mtrm-chlistmain">
+   <div class="mtrm-chlist-hd" @click="mtrmChlist=!mtrmChlist">
+       <i class="floatl"><img th:src="@{/css/img/icon_check_conference.png}" alt=""></i>
+       <p class="floatl">我参与的子会议</p>
+       <i class="floatr"></i>
+   </div>
+            <ul class="meet-list mtrm-infolist" v-show="mtrmChlist">
+                <li th:each="subMee:${subMeetingList}" class="meet-item">
+                    <a>
+                        <div class="left"><img th:src="@{/css/img/pic1@2x.png}" alt="meetimg"></div>
+                        <div class="right">
+                            <p class="meet-name" th:text="${subMee.meeName}">梦</p>
+                           	<time th:text="${#dates.format(subMee.meeStartTime,'yyyy-MM-dd')}">2016-06-04</time>
+                        </div>
+                       <!--  <div class="deleteItem">邀请	</div> -->
+                    </a>
+                </li>
+            </ul>
+        </section>
+    </section>
+	<div th:replace="~{layout/contextPath :: contextPath}"></div>	
+	<script src="../../js/lib/jquery.js" th:src="@{/js/lib/jquery.js}"></script>
+	<script src="../../js/common.js" th:src="@{/js/common.js}"></script>
+	<script src="../../js/plug/httpPath.js" th:src="@{/js/plug/httpPath.js}"></script>
+    <script src="../../js/plug/plug-form.js" th:src="@{/js/plug/plug-form.js}"></script>
+    <script src="../../js/mtrm-meetinfo.js" th:src="@{/js/mtrm-meetinfo.js}"></script>
+    <script src="../../js/userinfo_validate.js" th:src="@{/js/userinfo_validate.js}"></script>
+    <script type="text/javascript" th:inline="javascript">
+      var permissions=[[${permissions}]];
+      console.log(permissions);
+      if (permissions!="permissions") { //没有权限隐藏标签
+		$(".deleteItem").hide();
+	  }
+    </script>
+</body>
+	
+</html>

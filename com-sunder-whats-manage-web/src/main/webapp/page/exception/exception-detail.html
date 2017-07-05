@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <title>异常详情页面</title>
+    <link href="../../css/lib/mobiscroll.css"  th:href="@{/css/lib/mobiscroll.css}" rel="stylesheet" />
+    <link href="../../css/lib/mobiscroll_date.css" th:href="@{/css/lib/mobiscroll_date.css}"  rel="stylesheet" />
+    <link rel="stylesheet" href="../../css/style.css" th:href="@{/css/style.css}">
+</head>
+
+<body>
+    <section class="main-cantainer navfixr">     	
+     	<table>
+			<tr><td>ID</td>				<td th:text="${exceptionLog.id}"></td></tr>
+			<tr><td>控制层类名</td>			<td th:text="${exceptionLog.controllerClassName}"></td></tr>
+			<tr><td>控制层方法名</td>		<td th:text="${exceptionLog.controllerMethodName}"></td></tr>
+			<tr><td>服务类名</td>			<td th:text="${exceptionLog.serviceClassName}"></td></tr>
+			<tr><td>服务方法名</td>			<td th:text="${exceptionLog.serviceMethodName}"></td></tr>
+			<tr><td>code</td>			<td th:text="${exceptionLog.code}"></td></tr>
+			<tr><td>msg</td>			<td th:text="${exceptionLog.msg}"></td></tr>
+			<tr><td>参数</td>				<td th:text="${exceptionLog.params}"></td></tr>
+		</table>
+    </section>
+    
+    
+    <div th:replace="~{layout/contextPath :: contextPath}"></div>
+	<script src="../../js/lib/jquery.js" th:src="@{/js/lib/jquery.js}"></script>
+	<script src="../../js/common.js" th:src="@{/js/common.js}"></script>
+	<script src="../../js/plug/httpPath.js" th:src="@{/js/plug/httpPath.js}"></script>
+	<script src="../../js/lib/swiper.min.js" th:src="@{/js/lib/swiper.min.js}"></script>
+	<script src="../../js/plug/plug-form.js" th:src="@{/js/plug/plug-form.js}"></script>	
+	<script src="../../js/jsrender.js" th:src="@{/js/jsrender.js}"></script>
+	<script src="../../js/dateFormate.js" th:src="@{/js/dateFormate.js}"></script>	
+</body>
+
+
+</html>

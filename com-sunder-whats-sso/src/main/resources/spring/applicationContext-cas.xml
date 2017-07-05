@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security" xmlns:context="http://www.springframework.org/schema/context" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:p="http://www.springframework.org/schema/p" xmlns:beans="http://www.springframework.org/schema/beans"
+             xsi:schemaLocation="http://www.springframework.org/schema/context  http://www.springframework.org/schema/context/spring-context.xsd
+           http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd"
+             default-lazy-init="true">
+
+    <!-- 不要过滤图片等静态资源 -->
+    <http pattern="/**/*.jpg" security="none" />
+    <http pattern="/**/*.png" security="none" />
+    <http pattern="/**/*.gif" security="none" />
+    <http pattern="/**/*.css" security="none" />
+    <http pattern="/**/*.js" security="none" />
+
+    <!--SSO -->
+    <http entry-point-ref="casEntryPoint" auto-config="true">
+        <intercept-url pattern="/" access="IS_AUTHENTICATED_ANONYMOUSLY" />
+
+        <custom-filter ref="casFilter" after="CAS_FILTER"/>
+        <!-- 登出过滤器 -->
+        <custom-filter ref="requestSingleLogoutFilter" before="LOGOUT_FILTER" />
+        <custom-filter ref="singleLogoutFilter" before="CAS_FILTER" />
+        <!-- 权限过滤器 -->
+        <custom-filter ref="securityFilter" before="FILTER_SECURITY_INTERCEPTOR" />
+    </http>
+
+    <beans:bean id="casEntryPoint" class="org.springframework.security.cas.web.CasAuthenticationEntryPoint">
+        <beans:property name="loginUrl" value="${cas.server}/login" />
+        <beans:property name="serviceProperties" ref="serviceProperties" />
+    </beans:bean>
+    <beans:bean id="serviceProperties" class="org.springframework.security.cas.ServiceProperties">
+        <beans:property name="service" value="${cas.client}/j_spring_cas_security_check" />
+        <beans:property name="sendRenew" value="false" />
+    </beans:bean>
+
+    <beans:bean id="casFilter" class="org.springframework.security.cas.web.CasAuthenticationFilter">
+        <beans:property name="authenticationManager" ref="authenticationManager" />
+        <beans:property name="authenticationFailureHandler">
+            <beans:bean class="org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler">
+                <!-- cas登录失败跳转页面，跳转首页 -->
+                <beans:property name="defaultFailureUrl" value="${cas.client}"/>
+            </beans:bean>
+        </beans:property>
+        <!-- 登录成功处理，将用户信息存入session -->
+        <beans:property name="authenticationSuccessHandler">
+            <beans:bean class="com.whty.bwjf.framework.core.cas.CasAuthenticationSuccessHandler">
+                <!-- cas登录成功后跳转页面 -->
+                <beans:property name="defaultTargetUrl" value="/admin.jsp"/>
+                <beans:property name="usersDao" ref="resourcesDao"></beans:property>
+                <beans:property name="resDao" ref="resourcesDao"></beans:property>
+            </beans:bean>
+        </beans:property>
+    </beans:bean>
+
+    <authentication-manager alias="authenticationManager">
+        <authentication-provider ref="casAuthenticationProvider" />
+    </authentication-manager>
+
+    <beans:bean id="casAuthenticationProvider" class="org.springframework.security.cas.authentication.CasAuthenticationProvider">
+        <!-- 注入获取tsp用户的service -->
+        <beans:property name="userDetailsService" ref="tspUserDetailServiceImpl" />
+        <beans:property name="serviceProperties" ref="serviceProperties" />
+        <beans:property name="ticketValidator">
+            <beans:bean class="org.jasig.cas.client.validation.Cas20ServiceTicketValidator">
+                <beans:constructor-arg index="0" value="${cas.server}" />
+            </beans:bean>
+        </beans:property>
+        <beans:property name="key" value="an_id_for_this_auth_provider_only" />
+    </beans:bean>
+
+    <!-- 注销客户端 -->
+    <beans:bean id="singleLogoutFilter" class="org.jasig.cas.client.session.SingleSignOutFilter" />
+
+    <!-- 注销服务器端 -->
+    <beans:bean id="requestSingleLogoutFilter" class="org.springframework.security.web.authentication.logout.LogoutFilter">
+        <beans:constructor-arg value="${cas.server}/logout" />
+        <beans:constructor-arg>
+            <beans:bean class="org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler" />
+        </beans:constructor-arg>
+        <beans:property name="filterProcessesUrl" value="/j_spring_cas_security_logout" />
+    </beans:bean>
+
+    <!-- 认证过滤器 -->
+    <beans:bean id="securityFilter"
+                class="com.whty.bwjf.tsp.core.security.TspSecurityFilter">
+        <!-- 用户拥有的权限 -->
+        <beans:property name="authenticationManager" ref="authenticationManager" />
+        <!-- 用户是否拥有所请求资源的权限 -->
+        <beans:property name="accessDecisionManager" ref="tspAccessDecisionManager" />
+        <!-- 资源与权限对应关系 -->
+        <beans:property name="securityMetadataSource" ref="tspSecurityMetadataSource" />
+    </beans:bean>
+
+    <!-- 判断是否有访问权限 -->
+    <beans:bean id="tspAccessDecisionManager"
+                class="com.whty.bwjf.tsp.core.security.TspAccessDecisionManager"></beans:bean>
+    <!-- 从数据库提取权限和资源，装配到HashMap中，供Spring Security使用，用于权限校验 -->
+    <beans:bean id="tspSecurityMetadataSource"
+                class="com.whty.bwjf.tsp.core.security.TspSecurityMetadataSource">
+        <!-- 菜单表DAO -->
+        <beans:constructor-arg name="resourcesDao" ref="resourcesDao"></beans:constructor-arg>
+    </beans:bean>
+
+    <!-- 基础数据库操作类 -->
+    <beans:bean id="resourcesDao"
+                class="com.whty.bwjf.framework.core.dao.imp.BaseDao">
+        <beans:property name="sessionFactory" ref="sessionFactory"></beans:property>
+    </beans:bean>
+
+    <!-- 为Spring Security提供一个经过用户认证后的UserDetails -->
+    <beans:bean id="tspUserDetailServiceImpl"
+                class="com.whty.bwjf.tsp.core.security.TspUserDetailServiceImpl">
+        <!-- 用户表DAO -->
+        <beans:property name="usersDao" ref="resourcesDao"></beans:property>
+        <!-- 菜单表DAO -->
+        <beans:property name="resDao" ref="resourcesDao"></beans:property>
+    </beans:bean>
+</beans:beans>

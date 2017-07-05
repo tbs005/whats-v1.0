@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <title>关联其他网络</title>
+    <link rel="stylesheet" href="../../css/style.css" th:href="@{/css/style.css}">
+</head>
+
+<body>
+    <section class="main-cantainer">
+       <div class="link-network-main">
+           <i class="imgBox">
+               <img src="../../css/img/inernet.png" th:src="@{/css/img/inernet.png}" alt="">
+           </i>
+           <form id="tf" method="post" enctype="multipart/form-data">
+           		<input id="flag" type="hidden" name="flag" th:value="${flag}">
+           		<input id="crawlerId" type="hidden" name="crawlerId" th:value="${crawlerId}">
+           		<p class="link">
+	           		<input th:if="${flag==0}" id="url" name="url" class="link-input" type="text" placeholder="请输入网页地址" value=""/>
+	           		<button th:if="${flag==0}" id="crawlerBtn" class="link-btn" type="button">提交</button>
+	           		<span th:if="${flag==1}" th:text="${crawler.url}"></span>
+           		</p>
+           </form>
+           <p class="info" th:if="${flag==1}">如果需要更改网址请联系管理员</p>
+           <p class="info" th:if="${flag==0}">请联系我们做二次开发</p>
+           <a th:if="${crawler.crawlerFlag==1}" id="climb" class="btn" href="javascritp:void(0);" >导入会议动态</a>
+           <a th:if="${crawler.crawlerFlag==0}" id="notClimb" class="btn" href="javascritp:void(0);" style="background:gray">导入会议动态</a>
+           <a class="btn" href="" th:href="@{/meetingDynamic/selectallDynamic}">返回会议动态列表</a>
+       </div>
+    </section>
+    <script src="../../js/lib/jquery.js" th:src="@{/js/lib/jquery.js}"></script>
+    <script src="../../js/common.js" th:src="@{/js/common.js}"></script>
+    <script src="../../js/userinfo_validate.js" th:src="@{/js/userinfo_validate.js}"></script>  
+    <script type="text/javascript">
+    $("#crawlerBtn").click(function(){
+    	if(!validate_url("url","输入的网址")){return false;}//检验网址是否正确
+    	var form = new FormData(document.getElementById("tf"));
+    	$.ajax({
+    		url:"/whoami/meetingDynamic/crawler",
+            type:"post",
+            data:form,
+            contentType:false,
+            processData:false,
+            success:function(data){
+                if (""!=data) {
+                	$.prompt(data.msg);
+				}else{
+                	location.href="/whoami/meetingDynamic/linkNetwork";
+				}
+            }
+    	});
+    });
+    $("#climb").click(function(){
+    	 var form = new FormData(document.getElementById("tf"));
+    	$.ajax({
+    		url:"/whoami/meetingDynamic/climb",
+            type:"post",
+            data:form,
+            contentType:false,
+            processData:false,
+            error: function(XMLHttpRequest, textStatus, errorThrown){
+            	$.prompt("会议动态导入中，请返回会议动态列表页面等待");
+            },
+            success:function(data){
+                	$.prompt(data.msg);
+            }
+    	});
+    });
+    $("#notClimb").click(function(){
+    	$.prompt("请联系管理员审核");
+    });
+	</script>
+</body>
+
+</html>

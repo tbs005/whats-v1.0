@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <title>添加会员信息</title>
+    <link rel="stylesheet" href="../../css/lib/icheck/skins/all.css" th:href="@{/css/lib/icheck/skins/all.css}">
+    <link rel="stylesheet" href="../../css/style.css" th:href="@{/css/style.css}">
+</head>
+
+<body>
+	<div id='app' hidden="hidden">false</div>
+    <section class="main-cantainer">
+        <div class="page1">
+            <form action="" id="person_form">
+                <div class="form-group">
+                    <label for="" class="floatl">姓名:</label><font id="personNameSign"></font>
+                    <input type="text" class='form-input floatr' name="personName" id="personName" value="" placeholder="请输入">
+                </div>
+                <div class="form-group">
+                    <label for="" class="floatl">手机:</label><font id="phoneSign"></font>
+                    <input type="text" class='form-input floatr' name="phone" id="phone" value="" placeholder="请输入">
+                    <input type="hidden" id="flag"/>
+                </div>
+                <!-- <div class="form-group">
+                    <label for="sex" class="floatl">姓别:</label>
+                    <span class="floatr arrowImg"><img src="../../css/img/list_arrow.png" alt="" th:src="@{/css/img/list_arrow.png}"></span>
+                    <select class='form-input floatr' name="sex">
+                            <option value="男">男</option>
+                            <option value="女">女</option>
+                    </select>
+                </div> -->
+                <div class="form-group js-cutSelectrole">
+                    <label for="" class="floatl">选择角色:</label><font id="roleSign"></font>
+                    <span class="floatr arrowImg"><span id="roleName" style="color:#00a0e9">请选择</span>&nbsp;&nbsp;<img src="../../css/img/list_arrow.png" alt="" th:src="@{/css/img/list_arrow.png}"></span>
+                    <input id="roleSelect" name="memberTypeId" type="hidden">
+                </div>
+                <div class='btn-box'>
+                    <button type="button" id="person_btn" class="form-btn cancel-btn">保存</button>
+                </div>
+            </form>
+        </div>
+        <div class="page2" hidden="hidden">
+            <div class="form-group" th:each="type:${typeList}" th:if="${type.type==1}">
+                <label class="floatl" th:text="${type.name}">主持人</label>
+                <span class="floatr"><input type="radio" name="role" value="" th:value="${type.id}"></span>
+            </div>
+            <!-- <div class="form-group">
+                <label class="floatl">学生</label>
+                <span class="floatr"><input type="radio" name="role" value=""></span>
+            </div> -->
+            <div class='btn-box'>
+                <button id="roleButton" type="button" class="form-btn cancel-btn js-saveRole">保存</button>
+            </div>
+        </div>
+    </section>
+    <div th:replace="~{layout/contextPath :: contextPath}"></div>
+    <script src="../../js/lib/jquery.js" th:src="@{/js/lib/jquery.js}"></script>
+    <script src="../../js/lib/icheck.min.js" th:src="@{/js/lib/icheck.min.js}"></script>
+    <script src="../../js/common.js" th:src="@{/js/common.js}"></script>
+    <script src="../../js/plug/httpPath.js" th:src="@{/js/plug/httpPath.js}"></script>
+    <script src="../../js/plug/plug-form.js" th:src="@{/js/plug/plug-form.js}"></script>
+    <script src="../../js/userinfo_validate.js" th:src="@{/js/userinfo_validate.js}"></script>
+    <script src="../../js/validate.js" th:src="@{/js/validate.js}"></script>
+    <script src="../../js/member/person-member.js" th:src="@{/js/member/person-member.js}"></script>
+    <script src="../../js/member/person-member-add.js" th:src="@{/js/member/person-member-add.js}"></script>
+</body>
+
+</html>

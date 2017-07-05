@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <title>会议资料</title>
+    <link rel="stylesheet" href="../../css/lib/swiper.min.css" th:href="@{/css/lib/swiper.min.css}">
+    <link rel="stylesheet" href="../../css/style.css" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="../../css/lib/animate.css" th:href="@{/css/lib/animate.css}">
+</head>
+
+<body>
+    <div id='app' hidden="hidden">false</div>
+    <section class="main-cantainer">
+        <div class="article-list-main" id="material">
+            <ul class="article-list-body" th:each="material:${materials.list}">
+	            <li class="article-item clearfix" th:data-article-id="${material.attachId}">
+	                   <a href="article-details.html" th:if="${material.attachIsDown}==1" th:download="${material.attachName}" th:href="@{${material.attachUrl}}">
+	                       <span class="data-icon"> <img src="../../css/img/data.png" th:src="@{/css/img/data.png}" alt=""></span>
+	                       <div class="title-box">
+	                           <p class="article-list-title"  th:text="${material.attachName}">全国高职高专校长联席会议特别声明 全国高职高专校长联席会议特别声明
+	                           </p>
+	                       </div>
+	                       <div class="func-box pdl2">
+	                           <time th:text="${#dates.format(material.createTime, 'yyyy-MM-dd')}">2016-06-03</time>
+	                           <button class="btn-orgin  floatr js-modal-btn" th:if="${permissions}==permissions">删除</button>
+	                       </div>
+	                   </a>
+	                   <a href="article-details.html" th:if="${material.attachIsDown}!=1" th:href="@{${material.attachUrl}}">
+	                       <span class="data-icon"> <img src="../../css/img/data.png" th:src="@{/css/img/data.png}" alt=""></span>
+	                       <div class="title-box">
+	                           <p class="article-list-title"  th:text="${material.attachName}">全国高职高专校长联席会议特别声明 全国高职高专校长联席会议特别声明
+	                           </p>
+	                       </div>
+	                       <div class="func-box pdl2">
+	                           <time th:text="${#dates.format(material.createTime, 'yyyy-MM-dd')}">2016-06-03</time>
+	                           <button class="btn-orgin  floatr js-modal-btn" th:if="${permissions}==permissions">删除</button>
+	                       </div>
+	                   </a>
+	               </li>
+            </ul>
+            <p class="loading" hidden="true"><i><img src="../../css/img/loading_pic.png" th:src="@{/css/img/loading_pic.png}" alt=""></i><span>正在加载更多</span></p>
+    </section>
+			<!-- <div class="float-btn-box" id="menuMoreBtnNormal" th:if="${permissions}==permissions">
+				<a href="admin-addMeetDetail.html" th:href="@{'/material/toUploadPage/2/'}">
+					<span class="float-btn">
+					<img src="../../css/img/menu_more_btn_normal.png" th:src="@{'/css/img/menu_more_btn_normal.png'}" alt="上传会议资料" title="上传会议资料"></span>
+				</a> 
+			</div> -->
+			<div class="float-btn-box" id="menuMoreBtnNormal" th:if="${permissions}==permissions">
+		    <span class="float-btn"><img src="../../css/img/menu_more_btn_pressed.png" alt="" th:src="@{/css/img/menu_more_btn_pressed.png}"></span>
+		     <div class="float-menu-box animate fadeInUp" hidden>
+				<a class="float-menu" href="admin-addMeetDetail.html" th:href="@{'/material/toUploadPage/2/'}">上传会议资料</a> 
+				<a class="float-menu" href="admin-addMeetDetail.html" th:href="@{'/material/toBindUrlPage'}">绑定其它链接</a> 
+			    <a class="float-menu" th:href="@{'/meetingInfo/'+${session.click_meeting.meeId}+'/'+${session.existMeeHall.hallId}}">返回会议主页</a>
+		    </div>
+	 		</div>
+		</div>
+
+	<div class='modal-main' hidden>
+		<div class="modal-bg"></div>
+		<div class='modal-contant'>
+			<div class="modal-body">
+				<p class="txt text-m">是否要删除该资料?</p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="yes">是</button>
+				<button type="button" class="no">否</button>
+			</div>
+		</div>
+	</div>
+
+	<div th:replace="~{layout/contextPath :: contextPath}"></div>	
+	<script id="news_jsrender" type="text/x-jsrender">
+
+			<ul class="article-list-body">
+                <li class="article-item" data-article-id="{{:attachId}}">
+                    <!-- attachIsDown=1表示下载，只在电脑浏览器有效 -->
+						{{if attachIsDown==1}}
+						<a download="{{:attachName}}" th:href="@{{{:attachUrl}}}">
+	                       <span class="data-icon"> <img th:src="@{/css/img/data.png}" alt=""></span>
+	                       <div class="title-box">
+	                           <p class="article-list-title">{{:attachName}}
+	                           </p>
+	                       </div>
+	                       <div class="func-box pdl2">
+	                           <time>{{formateTimestamp:createTime}}</time>
+	                           <button class="btn-orgin  floatr js-modal-btn">删除</button>
+	                       </div>
+	                   </a>
+						{{else attachSuffix=='url'}}
+	                   <a th:href="@{/{{:attachUrl}}}">
+	                       <span class="data-icon"> <img th:src="@{/css/img/data.png}" alt=""></span>
+	                       <div class="title-box">
+	                           <p class="article-list-title">{{:attachName}}
+	                           </p>
+	                       </div>
+	                       <div class="func-box pdl2">
+	                           <time>{{formateTimestamp:createTime}}</time>
+	                           <button class="btn-orgin  floatr js-modal-btn">删除</button>
+	                       </div>
+	                   </a>
+						{{else}}
+						<a th:href="@{{{:attachUrl}}}">
+	                       <span class="data-icon"> <img th:src="@{/css/img/data.png}" alt=""></span>
+	                       <div class="title-box">
+	                           <p class="article-list-title">{{:attachName}}
+	                           </p>
+	                       </div>
+	                       <div class="func-box pdl2">
+	                           <time>{{formateTimestamp:createTime}}</time>
+	                           <button class="btn-orgin  floatr js-modal-btn">删除</button>
+	                       </div>
+	                   </a>
+						{{/if}}
+                </li>
+            </ul>
+        </script>
+	<script src="../../js/lib/jquery.js" th:src="@{/js/lib/jquery.js}"></script>
+	<script src="../../js/common.js" th:src="@{/js/common.js}"></script>
+	<script src="../../js/lib/swiper.min.js" th:src="@{/js/lib/swiper.min.js}"></script>
+	<script src="../../js/plug/plug-form.js" th:src="@{/js/plug/plug-form.js}"></script>
+	<script src="../../js/plug/httpPath.js" th:src="@{/js/plug/httpPath.js}"></script>
+	<script src="../../js/jsrender.js" th:src="@{/js/jsrender.js}"></script>
+	<script src="../../js/dateFormate.js" th:src="@{/js/dateFormate.js}"></script>
+    <script src="../../js/weui.min.js" th:src="@{/js/weui.min.js}"></script>
+    <script src="../../js/meet-data.js" th:src="@{/js/meet-data.js}"></script>
+    <script type="text/javascript" th:inline="javascript">
+    var permissions = [[${permissions}]];//有没有修改权限
+	console.log(permissions);
+	var tmpl = $.templates("#news_jsrender");//会议资料模板
+	var meetingPage = 1;//会议资料标记
+	//判断是web端或移动端
+	var system ={};  
+    var p = navigator.platform;    
+    system.win = p.indexOf("Win") == 0;  
+    system.mac = p.indexOf("Mac") == 0;  
+    system.x11 = (p == "X11") || (p.indexOf("Linux") == 0);     
+    if(system.win||system.mac||system.xll){
+        p="web";
+    }else{  
+        p="phone";
+    }
+    if(p=="phone"){
+    	$('a').removeAttr('download');
+    }
+	 /*  $(function(){
+		  if (permissions!="permissions") {
+		  //没有会议导读的模块的管理员或是与会人员没有修改权限
+		  $("#menuMoreBtnNormal").css("display","none");	
+		  $("[class='delete-btn js-modal-btn']").css("display","none");
+		  }
+	  }); */
+    </script>    
+</body>
+</html>

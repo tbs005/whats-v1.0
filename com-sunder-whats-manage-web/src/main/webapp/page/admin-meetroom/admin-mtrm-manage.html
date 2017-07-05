@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <title>会议厅管理</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="../../css/style.css">
+</head>
+
+<body>
+	<div id='app' hidden="hidden">false</div>
+    <section class="main-cantainer">
+                <div class="mtrm-basic-box">
+                    <div class="form-group js-mtrmName">
+                        <label for="mtrm_name" class="floatl">会议厅名:</label>
+                    	 <span id="mtrm_name" class='floatr form-text'>[[${session.existMeeHall.hallName}]]</span>	
+                    </div>
+                    <form action="#" id="upload_form" method="post" enctype="multipart/form-data">
+                    <div class="form-group fileUpload">
+                        <label for="userName" class="floatl">会议厅图片:</label>
+                        <input type="file" id='file_upload' onchange="showPreviewmeeting(this)" class='form-input floatr' name="file" >
+                        <i class="img-box"><img id="js_uploadImg" src="../../css/img/user-img.jpeg" th:src="@{${session.existMeeHall.hallCover}}"></i>
+                    </div>
+                    </form>
+                    <div class="form-group js-add-intro">
+                            <label class="floatl">会议厅简介:</label>
+                            <span class="floatr arrowImg"><img src="../../css/img/list_arrow.png" th:src="@{/css/img/list_arrow.png}" alt=""></span>
+                    </div>
+                  
+                    	<div class="form-group">
+                            <label class="floatl">会议厅邀请卡:</label>
+                              <a class=" floatl form-link" href="admin-mtrm-invite.html" th:href="@{'/meetingHall/inviteCard/'+${session.existMeeHall.hallId}}">         </a>
+                            <span class="floatr arrowImg"><img src="../../css/img/list_arrow.png"  th:src="@{/css/img/list_arrow.png}" alt=""></span>	
+                    	</div>
+
+                    
+                    	<div class="form-group">           
+                            <label class="floatl">会议厅管理员:</label>
+                            <a class=" floatl form-link" href="admin-mtrm-administrator.html" th:href="@{/meetingHall/toadminStrator}"></a>
+                            <span class="floatr arrowImg"><img src="../../css/img/list_arrow.png" th:src="@{/css/img/list_arrow.png}" alt=""></span>
+                    	</div>
+                    
+                    <div class="form-group">
+                        <label class="floatl">会议厅认证:</label>
+                        <span class="floatr arrowImg"><img src="../../css/img/list_arrow.png" th:src="@{/css/img/list_arrow.png}" alt=""></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="floatl">会议厅链接:</label>
+                         <span class="floatr arrowImg"><img src="../../css/img/list_arrow.png" th:src="@{/css/img/list_arrow.png}" alt=""></span>
+                        <a class=" floatl form-link no-target" th:href="@{${meetHallUrl}}">
+                         	<p class='floatr form-text'>[[${meetHallUrl}]]</p>
+                    	</a>
+                    </div>
+                    <div class="form-group">
+                        <label class="floatl">会议厅角色设置:</label>
+                        <a class=" floatl form-link" href="admin-mtrm-creatRole.html" th:href="@{/meetingHall/selectcreatRole}"> </a>
+                        <span class="floatr arrowImg"><img src="../../css/img/list_arrow.png" th:src="@{/css/img/list_arrow.png}" alt=""></span>
+                   	</div>
+                   
+                    
+                    	<div class="form-group">
+                            <label class="floatl">会员管理:</label>
+                            <a class=" floatl form-link" href="admin-mtrm-creatRole.html" th:href="@{/member}"></a>
+                            <span class="floatr arrowImg"><img src="../../css/img/list_arrow.png" th:src="@{/css/img/list_arrow.png}" alt=""></span>
+						</div>
+                    
+                    <div class='btn-box'>
+                          <a href="admin-mtrm-creatRole.html" th:href="@{/meetingHall/room}" class="form-btn cancel-btn" >返回</a>
+                    </div>
+                </div>
+                <div class="mtrm-intro-box" hidden="hidden">
+                    <div class="form-textarea">
+                        <textarea id='remarks_box' name="hallIntro" placeholder="请输入会议简介" maxlength="200">[[${session.existMeeHall.hallIntro}]]</textarea>
+                        <div class="textarea_counter"><span id="text-num">0</span>/200</div>
+                    </div>
+                    <div class='btn-box'>
+                          <button type="button" class="form-btn cancel-btn js-save-intro">保存</button>
+                    </div>
+                </div> 
+    </section>
+	    <div class='modal-main' hidden="hidden" id="mtrmName">
+	        <div class="modal-bg"></div>
+	        <div class='modal-contant  modal-lg'>
+	            <div class="modal-body">
+	                <p class="modal-title">会议厅名</p>
+	                <div class=modal-input><input type="text" placeholder="请输入会议厅名" id="meetinghallName"></div>
+	            </div>
+	            <div class="modal-footer">
+	                <button type="button" class="yes" id="saveMeetingHallName">确定</button>
+	                <button type="button" class="no">取消</button>
+	            </div>
+	        </div>
+	    </div>
+    <div th:replace="~{layout/contextPath :: contextPath}"></div>	
+	<script src="../../js/lib/jquery.js" th:src="@{/js/lib/jquery.js}"></script>
+	<script src="../../js/common.js" th:src="@{/js/common.js}"></script>
+	<script src="../../js/plug/httpPath.js" th:src="@{/js/plug/httpPath.js}"></script>
+    <script src="../../js/mtrm-manage.js" th:src="@{/js/mtrm-manage.js}" ></script>
+    <script src="../../js/userinfo_validate.js" th:src="@{/js/userinfo_validate.js}"></script>
+</body>
+   <script type="text/javascript" th:inline="javascript">
+   $(function(){
+	   $(".no-target").on("click",function(e){
+		   e.preventDefault();
+
+	   })
+   });
+	//更改会议厅名称
+	$("#saveMeetingHallName").on("click",function(){
+		//做会议厅名的校验	
+		if(!validate_nameconfirm("meetinghallName","mtrmName","会议厅名",30)){	
+			return false;
+		}
+		var meetingpwd=$("#meetinghallName").val().trim();
+		//做会议厅名校验  
+		//判断角色名是否重复
+		  $.ajax({
+   			url : contentpath + '/meetingHall/meetingHallQueryName',
+   			type : 'POST',
+   			data: "meetingpwd="+meetingpwd,
+   			async:false,//同步做判断
+   			success : function(data) {
+   				if (data) {
+   					//修改成功过后，返回角色列表         				
+					$.prompt("会议厅名重复！"); 							
+   					uploadFlag = true;
+   				}else {
+   					uploadFlag = false;		
+				}
+   			},
+				error : function(data) {
+					$.prompt("系统错误");
+				}        		
+           });
+	     if(uploadFlag){return;}//用户名重复禁止创建角色
+		
+		$.ajax({
+			url: contentpath + '/meeting/meetinghallName',
+			type : 'POST',
+			data: "hallName="+meetingpwd,
+			success : function(data) {
+				console.log(data.errcode);
+				if(data.errcode==1){
+				$("#mtrmName").hide();	
+				$("#mtrm_name").text(meetingpwd);
+				$.prompt('修改会议厅名称成功!');
+				} 				
+			},
+			error: function () {
+				$("#mtrmName").hide();
+				$.prompt('请求失败');
+			}
+		});		  	  
+	});
+	
+	
+	
+	// ajax上传图片和回显
+	function showPreviewmeeting(source) {
+		var file = source.files[0];
+		if (!/image\/\w+/.test(file.type)) {
+			$.prompt("请上传图片");
+			return false;
+		} else if (file.size > 5 * 1024 * 1024) {
+			$.prompt("你上传的文件太大了！");
+			return false;
+		} else {
+			if (window.FileReader) {
+				 var formData = new FormData($("#upload_form")[0]);
+			    	$.ajax({
+			    		url:contentpath+'/meeting/updateMeetingimage',
+			    		type:'post',
+			    		async:false,
+			    		contentType: false, //必须false才会避开jQuery对 formdata 的默认处理 XMLHttpRequest会对 formdata 进行正确的处理 
+			    		processData: false, //必须false才会自动加上正确的Content-Type 
+			    		data:formData,
+			    		success:function(data){
+			    			console.log(data);
+			    			if(data.errcode==1){
+			    				$.prompt("上传会议厅图片成功!");
+				        	}else{
+				        		$.prompt("上传失败!");
+				        		return false;
+				        	}
+			    		}
+			    	});
+				var fr = new FileReader();
+				fr.readAsDataURL(file);
+				fr.onloadend = function (e) {
+					document.getElementById("js_uploadImg").src = e.target.result;
+				};
+			} else {
+				$.prompt("您的设备不支持FileReader")
+			}
+		}
+
+	}
+	
+	
+	
+	
+	//修改会议厅图片
+  /*$("#file_upload").on("change",function(){
+		
+		 var formData = new FormData($("#upload_form")[0]);
+    	$.ajax({
+    		url:contentpath+'/meeting/updateMeetingimage',
+    		type:'post',
+    		async:false,
+    		contentType: false, //必须false才会避开jQuery对 formdata 的默认处理 XMLHttpRequest会对 formdata 进行正确的处理 
+    		processData: false, //必须false才会自动加上正确的Content-Type 
+    		data:formData,
+    		success:function(data){
+    			console.log(data);
+    			if(data.errcode==1){
+    				$.prompt("上传会议厅图片成功!");
+	        	}else{
+	        		$.prompt("上传失败!");
+	        	}
+    		}
+    	})
+	}); */
+	//修改会议厅简介
+	$(".js-save-intro").on("click", function () {
+		var meetingIntro = $("#remarks_box").val();
+		$.ajax({
+			url: contentpath + '/meeting/meetinghallName',
+			type : 'POST',
+			data: "hallIntro="+meetingIntro,
+			success : function(data) {
+				console.log(data.errcode);
+				if(data.errcode==1){
+				$("#remarks_box").val(meetingIntro);
+				}else{
+					$.prompt("修改会议厅简介失败!");
+				} 				
+			},
+			error: function () {
+				$.prompt('请求失败');
+			}
+		});
+	});
+	
+   </script>
+</html>

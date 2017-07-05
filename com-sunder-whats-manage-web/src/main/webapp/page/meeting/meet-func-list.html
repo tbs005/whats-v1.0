@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+<meta name="format-detection" content="telephone=no">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>[[${session.click_meeting.meeName}]]</title>
+<link rel="stylesheet" href="../../css/style.css" th:href="@{/css/style.css}">
+</head>
+
+<body>
+	 <div id='app' hidden="hidden">false</div>
+	<section class="main-cantainer">
+		<div class="meet-info-list  clearfix" id="meetingInfo">
+			
+		</div>
+		<!-- 动态构建现场投票-->
+		<script id="dynamicJsrender" type="text/x-jsrender">				
+			<div class="item">
+				<a href="" th:href="@{/{{:moduleUrl}}}"> 
+					<img th:src="@{/{{:moduleIconSrc}}}">
+					<p>{{:moduleName}} </p>
+			    </a>
+			</div>				
+        </script>
+		
+	</section>
+							  													
+    	<div class="fix-btm flex-box" id="meetFuncListEdit" th:if="${role}==SuperManager">
+        <a class='btm-btn flex1' th:href="@{'/meetingInfo/editMeetingModule/'+${meeId}+'/'+${hallId}}"><img src="../../css/img/menu_edit@2x.png" alt="">编辑模块</a>
+        <a class='btm-btn success-btn flex1' th:href="@{/signup/meet-index}">返回主页</a>
+    	</div>
+    	<div class="fix-btm flex-box" th:if="${role}!=SuperManager">
+    	<a class='btm-btn flex1' th:href="@{/signup/meet-index}">返回主页</a>
+    	</div>    		
+	<script src="../../js/lib/jquery.js" th:src="@{/js/lib/jquery.js}"></script>
+	<script src="../../js/common.js" th:src="@{/js/common.js}"></script>
+	<script src="../../js/jsrender.js" th:src="@{/js/jsrender.js}"></script>
+    <script type="text/javascript" th:inline="javascript">
+    	var tmpl = $.templates("#dynamicJsrender");//动态模块模板
+    	var role = [[${role}]];    	   	
+    	var modules =  [[${modules}]];//获取所有的模块  	
+    	var html = tmpl.render(modules);    	
+    	$(document).ready(function(){    		
+    		if (role=="SuperManager") {
+    			$("#meetingInfo").append(html);
+			}
+    		if (role=="manager") {
+    			$("#meetingInfo").append(html);
+			}
+    		if (role=="joiner") {
+    			$("#meetingInfo").append(html);
+    		}			
+		});
+    	
+	</script>
+	
+</body>
+</html>

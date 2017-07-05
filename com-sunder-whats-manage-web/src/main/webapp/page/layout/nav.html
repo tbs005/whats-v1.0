@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+	<nav class="index-nav" th:fragment="nav">
+		<ul>
+			<li><a href="meet-index.html" th:href="@{/signup/meet-index}">
+					<img src="../../css/img/home.png" alt="home"
+					th:src="@{/css/img/home.png}">
+					<p>首页</p>
+			</a></li>
+			<li><a href="meet-room.html"
+				th:href="@{'/meetingHall/room'}"> <img
+					src="../../css/img/meet.png" alt="home"
+					th:src="@{/css/img/meet.png}">
+					<p>会议厅</p>
+			</a></li>
+			<li><a href="person-center.html" th:href="@{'/userCenter/user'}">
+			<img src="../../css/img/user.png" alt="home"
+				th:src="@{/css/img/user.png}">
+				<p>我的</p>
+				</a>
+			</li>
+		</ul>
+	</nav>
+
+	<div th:fragment="appnav"></div>
+
+</body>
+</html>

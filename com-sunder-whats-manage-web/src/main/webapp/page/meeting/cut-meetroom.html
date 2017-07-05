@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+<meta name="format-detection" content="telephone=no">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>切换会议厅</title>
+<link rel="stylesheet" th:href="@{/css/style.css}" href="../../css/style.css">
+<link rel="stylesheet" href="../../css/lib/animate.css" th:href="@{/css/lib/animate.css}">
+<link rel="stylesheet" href="../../css/lib/animate.min.css" th:href="@{/css/lib/animate.min.css}">
+</head>
+<body>
+	<div id='app' hidden="hidden">false</div>
+	<section class="main-cantainer">
+		<section class="mtrm-list-main">
+			<div class="mtrm-list-hd">
+				<i class="floatl">
+					<img th:src="@{/css/img/icon_add_conference.png}" src="../../css/img/icon_add_conference.png" alt="">
+				</i>
+				<p class="floatl">我创建的会议厅</p>
+				<i class="floatr arrowicon rotate1">
+					<img th:src="@{/css/img/arrow_up.png}" src="../../css/img/arrow_up.png" alt="">
+				</i>
+			</div>
+			<ul class="mtrm-list js-mtrm-creat">
+				<li class="mtrm-item clearfix" th:each="meetinghall:${meetingHallList.list}">
+					<a href="" th:href="@{'/meetingHall/tomeetinghallIndex/'+${meetinghall.hallId}}" style="display: inline-block;width: 100%;">
+						<span class="floatl">
+							<i class="mtrm-img">
+								<img th:src="@{${meetinghall.hallCover}}" src="../../css/img/user-img.jpeg" alt=""/>
+							</i>
+						</span>
+						<span class="mtrm-name mtrm-info floatl" >
+						<span th:text="${meetinghall.hallName}">拓跋浚的会议厅</span>
+						<br/><br/><br/>
+						<time th:text="${#dates.format(meetinghall.createTime,'yyyy-MM-dd')}" class="mtrm-time">
+							创建时间:2014-12-05
+						</time>
+						</span>
+					</a>
+				</li>
+				<li class="noinfo" hidden="hidden">
+					<i>
+						<img th:src="@{/css/img/no-meetRoom.png}" src="../../css/img/no-meetRoom.png" alt="">
+					</i>您还没有创建会议厅哦
+				</li>
+			</ul>
+			<div class="mtrm-list-hd">
+				<i class="floatl">
+					<img th:src="@{/css/img/icon_manage_conference.png}" src="../../css/img/icon_manage_conference.png" alt="">
+				</i>
+				<p class="floatl">我管理的会议厅</p>
+				<i class="floatr arrowicon1 rotate">
+					<img th:src="@{/css/img/arrow_up.png}" src="../../css/img/arrow_up.png" alt="">
+				</i>
+			</div>
+			<ul class="mtrm-list js-mtrm-admin" hidden="hidden">
+				<li id="managemeetingHall"></li>
+			</ul>
+		</section>
+	</section>
+
+	<script id="news_jsrender" type="text/x-jsrender">
+		<li class="mtrm-item clearfix">
+			<a href="" th:href="@{/meetingHall/tomeetinghallIndex/{{:hallId}}}">
+				<div class="floatl">
+					<i class="mtrm-img">
+						<img th:src="@{{{:hallCover}}}" src="../../css/img/user-img.jpeg" alt=""/> 
+					</i>
+				</div>
+		        <div class="floatl">
+		        	<p class="mtrm-name">{{:hallName}}</p>
+					<time class="mtrm-time">创建时间:{{formateTimestamp:createTime}}</time>
+		        </div>
+			</a>
+		</li>
+    </script>
+    <div class="float-btn-box">
+        <span class="float-btn"><img src="../../css/img/menu_more_btn_normal.png" th:src="@{/css/img/menu_more_btn_normal.png}" alt=""></span>
+        <div class="float-menu-box animate fadeInUp" hidden="hidden">
+           <a class="float-menu" href="" th:href="@{/page/meeting/creat-meetRoom-type.html}">创建会议厅</a>
+        </div>
+    </div>
+    <div th:replace="~{layout/contextPath :: contextPath}"></div>	
+    <script src="../../js/lib/jquery.js" th:src="@{/js/lib/jquery.js}"></script>
+	<script src="../../js/common.js" th:src="@{/js/common.js}"></script>
+	<script src="../../js/plug/httpPath.js" th:src="@{/js/plug/httpPath.js}"></script>
+	<script src="../../js/jsrender.js" th:src="@{/js/jsrender.js}"></script>
+	<script src="../../js/dateFormate.js" th:src="@{/js/dateFormate.js}"></script>
+	<script src="../../js/plug/plug-form.js" th:src="@{/js/plug/plug-form.js}"></script>
+	<script src="../../js/cut-meetroom.js" th:src="@{/js/cut-meetroom.js}"></script>
+</body>
+<script type="text/javascript" th:inline="javascript">
+	var tmpl = $.templates("#news_jsrender");
+	$(function() {
+		$.ajax({
+			url : contentpath + '/meetingHall/managemeetingHall',
+			type : 'GET',
+			success : function(data) {
+				console.log(data);
+				var html = tmpl.render(data.list);
+				document.getElementById("managemeetingHall").innerHTML = html;
+			},
+			error : function(data) {
+				$.prompt("系统错误");
+			}
+		})
+	})
+</script>
+</html>

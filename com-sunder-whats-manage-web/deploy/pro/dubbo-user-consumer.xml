@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+    http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+	<!-- dubbox消费者信息 -->
+	<dubbo:application name="whoami-web" owner="programmer"
+		organization="dubbox" />
+
+	<!-- 注册中心 -->
+	<!-- <dubbo:registry protocol="zookeeper" address="127.0.0.1:2181" /> -->
+	<dubbo:registry protocol="zookeeper" address="${dubbo.registry.address}" />
+	<!-- <dubbo:registry protocol="zookeeper" address="N/A" /> -->
+
+	<!-- 所调用的dubbox服务 -->
+	<dubbo:reference id="userWeixinInfoFacade" timeout="5000"
+		interface="com.bizideal.whoami.user.facade.UserWeixinInfoFacade" 
+		check="false" />
+
+	<!-- 用户模块 -->
+	<dubbo:reference id="userInfoFacade" timeout="5000"
+		interface="com.bizideal.whoami.user.facade.UserInfoFacade" check="false" />
+
+	<!-- 会议厅 -->
+	<dubbo:reference id="meetingHallFacade" timeout="5000"
+		interface="com.bizideal.whoami.facade.meeting.service.MeetingHallFacade"
+		check="false" />
+	<!-- url="dubbo://10.1.0.23:20882" -->
+	<dubbo:reference id="meetingInfoFacade" timeout="5000" check="false" 
+		interface="com.bizideal.whoami.facade.meeting.service.MeetingInfoFacade" />
+
+	<dubbo:reference id="hallLinkUserFacade" timeout="5000" check="false" 
+		interface="com.bizideal.whoami.facade.meeting.service.HallLinkUserFacade"
+		 />
+	
+	<!-- 会议聊天群 -->
+
+		
+	<dubbo:reference id="meetingUserGroupFacade" timeout="5000" check="false" 
+		interface="com.bizideal.whoami.facade.meeting.service.MeetingUserGroupFacade" />
+		
+	<!-- url="dubbo://10.1.0.25:20882" -->
+	<dubbo:reference id="meetingLinkUserFacade" timeout="5000" check="false" 
+		interface="com.bizideal.whoami.facade.meeting.service.MeetingLinkUserFacade"
+		 />
+		
+	<!-- 消息模块 -->
+	<dubbo:reference id="mqMessageFacade"
+		interface="com.bizideal.whoami.mqnotify.facade.MqMessageFacade" check="false" />
+
+	<!-- 会议资料 -->
+	<dubbo:reference id="meetingAttachReadFacade" timeout="5000"
+		interface="com.bizideal.whoami.facade.meetingmaterial.service.MeetingAttachReadFacade"
+		check="false" />
+	<dubbo:reference id="meetingAttachWriteFacade" timeout="5000"
+		interface="com.bizideal.whoami.facade.meetingmaterial.service.MeetingAttachWriteFacade"
+		check="false" />
+
+	<!-- 会议动态 -->
+ 	<dubbo:reference id="meetingDynamicFacade" timeout="5000"
+		interface="com.bizideal.whoami.meetingdynamic.facade.MeetingDynamicFacade"
+		check="false" />	
+		
+ 	<dubbo:reference id="meetingDynamicCrawlerFacade" timeout="5000"
+		interface="com.bizideal.whoami.meetingdynamic.facade.MeetingDynamicCrawlerFacade"
+		check="false" />
+
+	<!-- 报名模块 -->
+	<dubbo:reference id="signUpInfoFacade" timeout="5000" 
+		interface="com.bizideal.whoami.signup.facade.SignUpInfoFacade" check="false" />
+	<!-- <dubbo:reference id="signUpInfoFacade" timeout="5000" interface="com.bizideal.whoami.signup.facade.SignUpInfoFacade" 
+		check="false" url="dubbo://10.1.0.23:20892"/> -->
+
+	<dubbo:reference id="dietInfoFacade" timeout="5000"
+		interface="com.bizideal.whoami.signup.facade.DietInfoFacade" check="false" />
+
+	<dubbo:reference id="signupFieldFacade" timeout="5000"
+		interface="com.bizideal.whoami.signup.facade.SignupFieldFacade" check="false" />
+
+	<!-- <dubbo:reference id="dietInfoFacade" timeout="5000" interface="com.bizideal.whoami.signup.facade.DietInfoFacade" 
+		check="false" url="dubbo://10.1.0.23:20892"/> -->
+
+	<!-- 权限模块  url="dubbo://10.1.0.19:20885"-->
+	<dubbo:reference id="roleModuleReadFacade" timeout="5000"
+		interface="com.bizideal.whoami.rolemodule.facade.RoleModuleReadFacade"
+		check="false" />
+	<dubbo:reference id="roleModuleWriteFacade" timeout="5000"
+		interface="com.bizideal.whoami.rolemodule.facade.RoleModuleWriteFacade"
+		check="false" />
+	<!-- 微信 -->
+	<dubbo:reference id="wechatUserWriteFacade" timeout="5000"
+		interface="com.bizideal.whoami.weixin.facade.WechatUserWriteFacade"
+		check="false" />
+	<dubbo:reference id="wechatUserReadFacade" timeout="5000"
+		interface="com.bizideal.whoami.weixin.facade.WechatUserReadFacade"
+		check="false" />
+
+	<!-- 会员模块 -->
+	<dubbo:reference id="memberPersonInfoFacade"
+		timeout="5000" interface="com.bizideal.whoami.member.facade.MemberPersonInfoFacade"
+		check="false" />
+	<dubbo:reference id="memberTypeInfoFacade"
+		timeout="5000" interface="com.bizideal.whoami.member.facade.MemberTypeInfoFacade"
+		check="false" />
+	<dubbo:reference id="memberUnitInfoFacade"
+		timeout="5000" interface="com.bizideal.whoami.member.facade.MemberUnitInfoFacade"
+		check="false" />
+
+	<!-- 酒店模块 -->
+	<dubbo:reference id="hotelInfoFacade" timeout="5000"
+		interface="com.bizideal.whoami.facade.hotel.facade.HotelInfoFacade"
+		check="false" />
+	<dubbo:reference id="hotelUserLinkFacade" timeout="5000"
+		interface="com.bizideal.whoami.facade.hotel.facade.HotelUserLinkFacade"
+		check="false" />
+	<dubbo:reference id="roomInfoFacade" timeout="5000"
+		interface="com.bizideal.whoami.facade.hotel.facade.RoomInfoFacade"
+		check="false" />
+	<dubbo:reference id="roomTypeInfoFacade" timeout="5000"
+		interface="com.bizideal.whoami.facade.hotel.facade.RoomTypeInfoFacade"
+		check="false" />
+
+	<!-- 会议宣传 -->
+	<dubbo:reference id="meetingLeafletsFacade" timeout="5000"
+		interface="com.bizideal.whoami.facade.leaflets.facade.MeetingLeafletsFacade"
+		check="false" />
+		
+		<!-- 异常-->
+	<dubbo:reference id="exceptionFacade" timeout="5000"
+		interface="com.bizideal.whoami.exception.facade.ExceptionFacade"
+		check="false"  />
+				
+	<!-- 知识库 -->
+	<dubbo:reference id="knowledgeTypeFacade" timeout="5000"
+		interface="com.bizideal.whoami.knowledgebase.facade.KnowledgeTypeFacade"
+		check="false" />
+	<dubbo:reference id="knowledgeFileFacade" timeout="5000"
+		interface="com.bizideal.whoami.knowledgebase.facade.KnowledgeFileFacade"
+		check="false" />
+	<dubbo:reference id="knowledgeCollectionFacade" timeout="5000"
+		interface="com.bizideal.whoami.knowledgebase.facade.KnowledgeCollectionFacade"
+		check="false" />
+		
+	<!-- 可靠消息接口 -->
+	<dubbo:reference id="transactionMessageService" timeout="5000" interface="com.bizideal.whoami.message.service.TransactionMessageService" check="false" />
+	
+	<!-- 报名身份接口 -->
+	<dubbo:reference id="identityFacade" timeout="5000" interface="com.bizideal.whoami.signup.facade.IdentityFacade" check="false" />
+	
+	<!-- 好友信息处理 -->
+	<dubbo:reference id="huanxinFriendFacade" timeout="5000" interface="com.bizideal.whoami.user.facade.HuanxinFriendFacade" check="false" />
+</beans>

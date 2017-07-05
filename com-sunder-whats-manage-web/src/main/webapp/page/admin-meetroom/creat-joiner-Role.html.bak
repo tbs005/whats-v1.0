@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+<meta name="format-detection" content="telephone=no">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>创建角色</title>
+<link rel="stylesheet" th:href="@{/css/style.css}"
+	href="../../css/style.css">
+</head>
+
+<body>
+	<div id='app' hidden="hidden">false</div>
+	<section class="main-cantainer">
+		<form id="_form" action="" th:action="@{/meetingHall/addjoinerRole}" method="post">
+		<div class="js-right-page1">
+				<div class="form-group">
+					<label for="" class="floatl">角色名称:</label> <input type="text"
+						class='form-input floatr' name="roleName" id="roleName"
+						placeholder="请输入"> <input type="text" hidden="hidden"
+						name="meetHallId" th:value="${session.existMeeHall.hallId}">
+				</div>
+
+				<div class="form-group js-set-right">
+					<label for="" class="floatl">选择权限:</label> <span
+						class="floatr arrowImg"><img
+						src="../../css/img/list_arrow.png" alt=""
+						th:src="@{/css/img/list_arrow.png}"></span>
+				</div>
+				<div class='btn-box'>
+					<button type="button" id="_btn" class="form-btn cancel-btn js-saveRole">保存并创建</button>
+				</div>
+		</div>
+
+		<div class="js-right-page2 wt-bg" hidden>
+			<div class="right-title">
+				<span class="floatl">已有权限</span>
+			</div>
+			<div class="type_tab choosed clearfix">
+				<ul id="abc"></ul>
+			</div>
+			<div class="right-title">
+				<span class="floatl">所有权限</span>
+			</div>
+			<div class="type_tab choose clearfix">
+				<ul id="modules">
+					<li th:each="module:${allModules}" th:data-right-id="${module.moduleId}"><i th:text="${module.moduleName}">233</i><input  type="checkbox" name="moduleIds" checked="checked" th:value="${module.moduleId}" hidden="hidden"></li>
+				</ul>
+			</div>
+			<div class='btn-box'>
+				<button type="button" class="form-btn cancel-btn js-saveRight">保存</button>
+			</div>
+			<input type="hidden" name="ids" id="ids"/>
+		</div>
+		</form>
+	</section>
+	
+	<script src="../../js/lib/jquery.js" th:src="@{/js/lib/jquery.js}"></script>
+	<script src="../../js/common.js" th:src="@{/js/common.js}"></script>
+	<script src="../../js/creatRole.js" th:src="@{/js/creatRole.js}"></script>
+	<script src="../../js/jsrender.js" th:src="@{/js/jsrender.js}"></script>
+	<script src="../../js/userinfo_validate.js" th:src="@{/js/userinfo_validate.js}"></script>
+<script type="text/javascript" th:inline="javascript">
+	$(function(){
+		$('#_btn').click(function(){
+			var ids="";
+			$('#abc').find('input').each(function(){
+				ids+=$(this).val()+",";
+				$(this).attr('disable',true);
+			})
+			ids=ids.substring(0,ids.lastIndexOf(","));
+			$('#ids').val(ids);
+			//做角色名称校验的
+			if(!validate_empty("roleName","角色名称")){return false;}
+            if(!validate_namelenth("roleName","角色名称",30)){return false;}
+            if(!validate_permission("abc")){return false;}
+			$('#_form').submit();
+		})
+	})
+</script>
+</body>
+</html>

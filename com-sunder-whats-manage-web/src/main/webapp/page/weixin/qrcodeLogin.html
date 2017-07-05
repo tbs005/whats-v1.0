@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+<meta name="format-detection" content="telephone=no">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>手机二维码</title>
+<link rel="stylesheet" href="css/style.css" th:href="@{/css/style.css}">
+</head>
+<body>
+
+	
+	<section class="main-cantainer wt">
+        <div class="phoneCode">
+            <p class="p1"> 手机扫码登录</p>
+            <div class="phoneCodeBox" id="appcodeBox"></div>
+         <p class="p2">请使用我是谁手机APP扫面二维码登录</p>
+         <p class="p2">"我是谁"</p>
+        </div>
+         <div class="wechatCode text-m" id="wechatWebApp">
+           
+        </div>
+    </section>
+	<div th:replace="~{layout/contextPath :: contextPath}"></div>	
+	<script src="../../js/lib/jquery.js" th:src="@{/js/lib/jquery.js}"></script>
+	<script src="../../js/common.js" th:src="@{/js/common.js}"></script>
+	<script src="../../js/plug/httpPath.js" th:src="@{/js/plug/httpPath.js}"></script>
+	<script src="../../js/qrcode.min.js" th:src="@{/js/qrcode.min.js}"></script>
+	<script src="http://res.wx.qq.com/connect/zh_CN/htmledition/js/wxLogin.js"></script>
+	<script src="../../js/weixin/qrcodeLogin.js" th:src="@{/js/weixin/qrcodeLogin.js}"></script>
+	<script type="text/javascript" th:inline="javascript">
+	
+var redirect = [[${redirect}]];
+var webAppConfig = [[${webAppConfig}]];
+/* var weixinoauthUrl = [[${weixinoauthUrl}]]; */
+var dubboxResult = [[${dubboxResult}]];
+	</script>
+</body>
+
+</html>

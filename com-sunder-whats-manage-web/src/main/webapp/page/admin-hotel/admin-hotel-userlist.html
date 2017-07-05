@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+<meta name="format-detection" content="telephone=no">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>参会人员</title>
+<link rel="stylesheet" th:href="@{/css/style.css}"
+	href="../../css/style.css">
+<link rel="stylesheet" href="../../css/lib/animate.css" th:href="@{/css/lib/animate.css}">
+</head>
+
+<body>
+	<section class="main-cantainer navfixr">
+		<div class="search-bar clearfix">
+			<form action="" th:action="@{/meetingUserRoom/selectUserRoomInfo}"
+				method="post">
+				<div class="search-body">
+					<div class="searchBox">
+						<i class="search"><img src="../../css/img/search_icon.png"
+							alt="" th:src="@{/css/img/search_icon.png}"></i> <input
+							class="search-input" type="text" name="parm" value=""
+							placeholder="姓名/性别/手机"> <i class="delete"
+							id="search-delete"><img
+							src="../../css/img/connection_search_delete.png" alt=""
+							th:src="@{/css/img/connection_search_delete.png}"></i>
+					</div>
+					<button class="search-btn success-btn" type="submit">搜索</button>
+				</div>
+			</form>
+		</div>
+		<ul class="user-hotel-list"
+			th:each="hoteluserroomList:${hotelUserLinkList}">
+			<li class="info-item">
+				<div class="info-body">
+					<p class="t1" th:text="${hoteluserroomList.userName}">
+						王校长<span class="mgl2" th:text="${hoteluserroomList.unitName}">上海万达</span>
+					</p>
+					<p class="t2">
+						<span class="icon floatl"><img
+							src="../../css/img/gender-red.png" alt="性别"
+							th:src="@{/css/img/gender-red.png}"></span> <span
+							class="text floatl" th:text="${hoteluserroomList.sex}">男</span> <span
+							class="icon floatl"><img src="../../css/img/cellphone.png"
+							alt="电话" th:src="@{/css/img/cellphone.png}"></span> <span
+							class="text floatl" th:text="${hoteluserroomList.phone}">13854124587</span>
+					</p>
+					<p class="t3">
+						所选房间类型：<span th:text="${hoteluserroomList.roomType}">单人间</span>
+					</p>
+				</div>
+				<div class="item-operate clearfix">
+					<span class="floatr">
+					<a href="javascript:;" class="js-delUserHotel" th:id="${hoteluserroomList.hUId}">
+						<img src="../../css/img/delete_pressed.png" alt="删除" th:src="@{/css/img/delete_pressed.png}">
+					</a>
+					</span> 
+					<span class="floatr">
+					<a href="admin-userhotel-edit.html" th:href="@{'/meetingUserRoom/selectUserRoomInfo/'+${hoteluserroomList.hUId}}">
+						<img src="../../css/img/edit_pressed.png" alt="修改" th:src="@{/css/img/edit_pressed.png}">
+					</a>
+					</span>
+				</div>
+			</li>
+		</ul>
+		<p class="loading" hidden="hidden">
+			<i><img src="../../css/img/loading_pic.png" alt=""
+				th:src="@{/css/img/loading_pic.png}"></i>正在加载更多
+		</p>
+	</section>
+    <div class="float-btn-box">
+        <span class="float-btn"><img src="../../css/img/menu_more_btn_normal.png" alt="" th:src="@{/css/img/menu_more_btn_normal.png}"></span>
+        <div class="float-menu-box animate fadeInUp" hidden="hidden">
+        	<a class="float-menu" href="javascript:;" id="export">导出表</a>
+            <a class="float-menu" th:href="@{'/meetingInfo/'+${session.click_meeting.meeId}+'/'+${session.existMeeHall.hallId}}">返回会议主页</a>
+        </div> 
+    </div>
+	<div th:replace="~{layout/contextPath :: contextPath}"></div>	
+	<script src="../../js/lib/jquery.js" th:src="@{/js/lib/jquery.js}"></script>
+	<script src="../../js/common.js" th:src="@{/js/common.js}"></script>
+	<script src="../../js/plug/httpPath.js" th:src="@{/js/plug/httpPath.js}"></script>
+	<script src="../../js/admin-hotel.js" th:src="@{/js/admin-hotel.js}"></script>
+</body>
+<script>
+	$(function() {
+		$("#export").click(function(){ 
+			$.ajax({
+				url : contentpath + '/meetingUserRoom/exportUserRoomInfo',
+				type : 'get',
+				success : function(data) {
+					console.log(data);
+					window.open(contentpath + "/" +data);
+					} 
+			})
+		})
+	})
+</script>
+</html>

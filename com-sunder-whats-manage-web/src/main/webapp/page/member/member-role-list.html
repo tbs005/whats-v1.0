@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <title>会员角色</title>
+    <link rel="stylesheet" type="" href="../../css/style.css" th:href="@{/css/style.css}">
+</head>
+
+<body>
+    <section class="main-cantainer wt navfixr">
+        <div class="cutBtnBox">
+            <button type="button" class="cutActive" id="js_cutList1">组织会员信息</button>
+            <button type="button" id="js_cutList2">个人会员信息</button>
+        </div>
+        <ul class="member-role-list js_List1">
+            <li th:each="type:${list}" th:if="${type.type==0}">
+            	<font th:text="${type.name}">资深媒体组织</font>
+            	<span class="floatr">
+            		<img click="delete" th:typeId="${type.id}" src="../../css/img/delete_unpressed_bl.png" th:src="@{/css/img/delete_unpressed_bl.png}" alt="删除">
+            	</span>
+            	<span class="floatr">
+            		<img click="update" th:typeId="${type.id}" src="../../css/img/edit_unpressed_bl.png" th:src="@{/css/img/edit_unpressed_bl.png}" alt="修改">
+            	</span>
+            </li>  
+            
+        </ul>
+        <ul class="member-role-list js_List2" hidden>
+            <li th:each="type:${list}" th:if="${type.type==1}">
+				<font th:text="${type.name}">资深媒体人</font>
+            	<span class="floatr">
+            		<img click="delete" th:typeId="${type.id}" src="../../css/img/delete_unpressed_bl.png" th:src="@{/css/img/delete_unpressed_bl.png}" alt="删除">
+            	</span>
+                <span class="floatr">
+                	<img click="update" th:typeId="${type.id}" src="../../css/img/edit_unpressed_bl.png" th:src="@{/css/img/edit_unpressed_bl.png}" alt="修改">
+                </span>
+            </li>
+
+        </ul>
+    </section>
+    
+    <div class="fix-btm flex-box" >
+	    <a class='btm-btn success-btn flex1' th:href="@{/meetingHall/tomanagepage}">返回会议厅管理</a>
+	    <a href="creat-member-role.html" th:href="@{type/toAdd}" class='btm-btn flex1'>创建会员角色</a>
+    </div>
+    
+    <script src="../../js/lib/jquery.js" th:src="@{/js/lib/jquery.js}"></script>
+    <script src="../../js/common.js" th:src="@{/js/common.js}"></script>
+</body>
+<script type="text/javascript">
+	$("[click=update]").on("click",function(){
+		location.href="type/toEdit?id="+$(this).attr("typeId");
+	});
+	$("[click=delete]").on("click",function(){
+		var _this=$(this);
+		$.affirm("确认删除该会员角色么", function(){
+			$.ajax({
+				url:"type/delete",
+				type:"post",
+				data:"id="+_this.attr("typeId"),
+				dataType:"text",
+				success:function(data){
+					if("1"==data){
+						$.prompt("会员角色删除成功",function(){
+							_this.parent().parent().remove();
+						});
+					}else{
+						$.toastr("会员角色删除失败，请重试");
+					}
+				},
+				error:function(){
+					$.toastr("系统异常，请稍后再试");
+				}
+			});
+		}); 
+	});
+	if ([[${addType}]]==1) {
+		$("#js_cutList2").addClass("cutActive").siblings().removeClass("cutActive");
+		$(".js_List2").show().siblings("ul").hide();
+	}
+</script>
+</html>

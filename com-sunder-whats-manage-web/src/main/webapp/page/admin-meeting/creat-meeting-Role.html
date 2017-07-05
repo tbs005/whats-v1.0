@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <title>创建管理员</title>
+    <link rel="stylesheet" href="../../css/style.css" th:href="@{/css/style.css}">
+</head>
+
+<body>
+    <section class="main-cantainer">
+        <div class="js-right-page1">
+            <div class="form-group">
+                <label for="" class="floatl">角色名称:</label>
+                <input type="text" class='form-input floatr' name="" id="mtrm_name" placeholder="请输入">
+            </div>
+            <div class="form-group js-set-right">
+                <label for="" class="floatl">选择权限:</label>
+                <span class="floatr arrowImg"><img src="../../css/img/list_arrow.png" th:src="@{/css/img/list_arrow.png}"alt=""></span>
+            </div>
+             <div class='btn-box'>
+                    <button type="button" class="form-btn cancel-btn js-saveRole" id="saveButton" >保存并创建</button>
+             </div>
+        </div>
+        <div class="js-right-page2 wt-bg" hidden="hidden">
+            <div class="right-title"><span class="floatl">已有权限</span></div>
+            <div class="type_tab choosed clearfix">
+                <ul>
+                    <!--<li><i>会议资料</i><span class="delBtn"></span></li>-->
+                </ul>
+            </div>
+                <div class="right-title"><span class="floatl">所有权限</span></div>
+            <div class="type_tab choose clearfix">
+                <ul >
+                	<th:block th:each="Modules : ${allModules}">
+                    <li th:data-right-id="${Modules.moduleId}"><i th:text="${Modules.moduleName}">会议资料</i></li>  
+                    </th:block>                 
+                </ul>
+            </div>
+            <div class='btn-box'>
+                   <button type="button" class="form-btn cancel-btn js-saveRight" >保存</button>
+            </div>
+        </div>
+    </section>
+    <div th:replace="~{layout/contextPath :: contextPath}"></div>
+    <script src="../../js/lib/jquery.js" th:src="@{/js/lib/jquery.js}"></script>
+    <script src="../../js/common.js" th:src="@{/js/common.js}"></script>
+    <script src="../../js/plug/httpPath.js" th:src="@{/js/plug/httpPath.js}"></script>
+    <script src="../../js/admin-meeting/creatMeetingRoleManage.js" th:src="@{/js/admin-meeting/creatMeetingRoleManage.js}"></script>
+    
+    
+    <script src="../../js/userinfo_validate.js" th:src="@{/js/userinfo_validate.js}"></script>   
+   	<script type="text/javascript" th:inline="javascript">
+    $(function(){
+   		$("#saveButton").click( function () { 
+   			var uploadFlag = false;	//标记用于判断角色名是否重复
+   			var roleName =	$("#mtrm_name").val();
+   			var moduleIds = [];
+		    $(".choosed li").each(function(){
+		    	moduleIds.push($(this).attr("data-right-id"));
+			});
+			//做角色名称校验的
+			if(!validate_empty("mtrm_name","角色名称")){return false;}
+			if(!validate_namelenth("mtrm_name","角色名称",30)){return false;}
+			if(!validate_arr(moduleIds)){return false;} 
+			//判断角色名是否重复
+			$.ajax({
+       		    url : contentpath + '/meeting/confimeRoleNameManage',
+       		 	data: "roleName="+roleName,
+       			type : 'POST',
+       			async:false,
+       			success : function(data) {       			
+       				if (data) {       					
+       					uploadFlag = false;      					
+						$.prompt("角色名重复！");
+       				}else {
+       				    //修改成功过后，返回角色列表         				
+     					uploadFlag = true;
+					}
+       			},
+  				error : function(data) {
+  					$.prompt("系统错误");
+  				}        		
+              });
+              
+        	if(!uploadFlag){return;}//用户名重复禁止创建角色
+   			//创建会议角色
+  		 	$.ajax({
+				url : contentpath + '/meeting/saveCreateMeetingAdmin',
+				type : 'POST',
+				data : JSON.stringify({"moduleIds":moduleIds,"roleName":roleName}),
+				contentType : 'application/json',
+				success : function(data) {
+						if (data) {
+							console.log(data);
+							$.prompt("添加角色成功!",function(){									
+							  window.location.href=contentpath+"/meeting/createMeetingAdmin/manage";								
+							});
+						}else {								
+							$.prompt("添加角色失败!");
+						}
+				},
+				error : function(data) {
+					$.prompt("系统错误");
+				}
+			})  	
+   	   });
+    })
+   	</script>
+
+</body>
+		
+</html>

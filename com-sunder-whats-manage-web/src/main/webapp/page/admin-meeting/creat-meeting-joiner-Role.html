@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <title>创建角色</title>
+    <link rel="stylesheet" href="../../css/style.css" th:href="@{/css/style.css}">
+</head>
+
+<body>
+    <section class="main-cantainer">
+        <div class="js-right-page1">
+       
+              <div class="form-group">
+                <label for="province" class="floatl">角色类型:</label>
+                <span class="floatr arrowImg"><img src="../../css/img/list_arrow.png"  th:src="@{/css/img/list_arrow.png}" alt=""></span>
+                <select class='form-input floatr' id="selectType">
+                     <option value="0" name="type">请选择</option>
+                     <option value="1" name="type">组织类型</option>
+                     <option value="2" name="type">个人类型</option>
+                 </select>
+             </div>
+            <div class="form-group">
+                <label for="province" class="floatl">角色名称:</label>
+                <span class="floatr arrowImg"><img src="../../css/img/list_arrow.png"  th:src="@{/css/img/list_arrow.png}" alt=""></span>
+                                 
+                <select class='form-input floatr' id="roleName">
+					 <option value="0" name="name">请选择</option>				
+                 </select>  
+             </div>
+            <script id="news_jsrender" type="text/x-jsrender">
+                     <option value="{{:id}}" name="name">{{:name}}</option>
+			</script>
+                        
+            <div class="form-group js-set-right">
+                <label for="" class="floatl">选择权限:</label>
+                <span class="floatr arrowImg"><img src="../../css/img/list_arrow.png" th:src="@{/css/img/list_arrow.png}"   alt=""></span>
+            </div>
+            <div class="form-group">
+                <label for="" class="floatl">会费:</label>
+                <input type="tel" class='form-input floatr' name="" id="meney" placeholder="请输入">
+            </div>
+            <div class="form-group" id="personNumberdiv">
+                <label for="" class="floatl">报名人数:</label>
+                <input type="tel" class='form-input floatr' name="" id="personNumber" placeholder="请输入">
+            </div>
+            <div class='btn-box'>
+                <button type="button" id="saveButton" class="form-btn cancel-btn js-saveRole">保存并创建</button>
+            </div>
+        </div>
+        <div class="js-right-page2 wt-bg" hidden>
+            <div class="right-title"><span class="floatl">已有权限</span></div>
+            <div class="type_tab choosed clearfix">
+                <ul>
+                    <!--<li><i>会议资料</i><span class="delBtn"></span></li>-->
+                </ul>
+            </div>
+                <div class="right-title"><span class="floatl">所有权限</span></div>
+            <div class="type_tab choose clearfix">
+                 <ul >
+                	<th:block th:each="Modules : ${allModules}">
+                    <li th:data-right-id="${Modules.moduleId}"><i th:text="${Modules.moduleName}">会议资料</i></li>  
+                    </th:block>                 
+                </ul>
+            </div>
+                 <div class='btn-box'>
+                        <button type="button" class="form-btn cancel-btn js-saveRight">保存</button>
+                    </div>
+        </div>
+    </section>
+    <div th:replace="~{layout/contextPath :: contextPath}"></div>
+    <script src="../../js/lib/jquery.js" th:src="@{/js/lib/jquery.js}"></script>
+    <script src="../../js/common.js" th:src="@{/js/common.js}"></script>
+    <script src="../../js/creatRole.js" th:src="@{/js/common.js}"></script>
+    <script src="../../js/plug/httpPath.js" th:src="@{/js/plug/httpPath.js}"></script>
+    <script src="../../js/jsrender.js" th:src="@{/js/jsrender.js}"></script>
+    <script src="../../js/admin-meeting/creatMeetingRolejoiner.js" th:src="@{/js/admin-meeting/creatMeetingRoleManage.js}"></script>
+    <script src="../../js/userinfo_validate.js" th:src="@{/js/userinfo_validate.js}"></script>  
+    <script type="text/javascript" th:inline="javascript">
+    $(function(){
+    	var  MemberTypeInfoPersonal =[[${MemberTypeInfoPersonal}]];
+    	var  MemberTypeInfoUnit =[[${MemberTypeInfoUnit}]];
+    	var tmpl = $.templates("#news_jsrender");//角色模板
+    	var html;
+        $('#selectType').on('change',function(){ //注册事件     
+        	var select = $("option[name='type']:selected").val();
+        	var option = " <option value='0' name='name'>请选择</option>";	
+        	 console.log($("#roleName").html());
+			if ( select==1 ) {
+				$("#personNumberdiv").show();
+			    html = tmpl.render(MemberTypeInfoUnit);		
+			    $("#roleName").html(option+html);			    
+			} else if(select == 2){	
+				$("#personNumberdiv").hide();
+				$("#personNumber").val("");
+				html = tmpl.render(MemberTypeInfoPersonal);
+				$("#roleName").html(option+html);
+			}else {	
+				$("#personNumberdiv").show();
+				$("#roleName").html(option);		
+			}        
+       });
+        
+   		$("#saveButton").click( function () { 
+    		var uploadFlag;	//标记用于判断角色名是否重复
+   			var roleName = $("option[name='name']:selected").text();
+   			var select = $("option[name='type']:selected").val();
+   			var member_type_id = $("option[name='name']:selected").val();
+   			var cost = $("#meney").val();
+   			var personNumber = $("#personNumber").val(); 
+   			var moduleIds = [];
+		    $(".choosed li").each(function(){
+		    	moduleIds.push($(this).attr("data-right-id"));
+			});
+		    
+			if (select==0||member_type_id==0) {
+				$.toastr("请选择角色名称或类型");
+				return false;
+			}
+			if(!validate_arr(moduleIds)){return false;} 
+			if(!validate_money("meney")){return false;}
+			if (select==1) {			
+			if(!validate_positive("personNumber","报名人数")){return false;}
+			if(!validate_length("personNumber",100000)){return false}
+			}
+			
+			//判断角色名是否重复
+			  $.ajax({
+         			url : contentpath + '/meeting/confimeRoleName',
+         			type : 'POST',
+         			data: "roleName="+roleName+"&type="+select,
+         			async:false,//同步做判断
+         			success : function(data) {
+         				if (data) {
+         					//修改成功过后，返回角色列表         				
+							$.prompt("角色名重复！"); 							
+         					uploadFlag = true;
+         				}else {
+         					uploadFlag = false;		
+						}
+         			},
+    				error : function(data) {
+    					$.prompt("系统错误");
+    				}        		
+                 });
+		     if(uploadFlag){return;}//用户名重复禁止创建角色
+   			//创建会议角色
+  		 	$.ajax({
+				url : contentpath + '/meeting/saveCreateMeetingJoinner',
+				type : 'POST',
+				data : JSON.stringify({"moduleIds":moduleIds,"cost":cost,"peopleNumber":personNumber,"member_type_id":member_type_id}),
+				contentType : 'application/json',
+				success : function(data) {
+						if (data) {
+							console.log(data);
+							$.prompt("添加角色成功!",function(){									
+							  window.location.href=contentpath+"/meeting/createMeetingAdmin/joiner";								
+							});
+						}else {								
+							$.prompt("添加角色失败!");
+						}
+				},
+				error : function(data) {
+					$.prompt("系统错误");
+				}
+			})  
+   		
+   	   });
+    })	
+   	</script>
+   	
+</body>
+
+</html>

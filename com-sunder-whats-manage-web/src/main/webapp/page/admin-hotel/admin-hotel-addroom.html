@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+	<meta name="format-detection" content="telephone=no">
+	<meta name="renderer" content="webkit">
+	<meta http-equiv="Cache-Control" content="no-siteapp" />
+	<title>房间信息</title>
+	<link rel="stylesheet" th:href="@{/css/style.css}" href="../../css/style.css">
+</head>
+<body>
+	<section class="main-cantainer navfixr">
+		<div class="htrm-title">
+			<a href="admin-hotelRoom-add.html" th:href="@{'/meetingHotel/toaddRoomPage/'+${hotelId}}"> 
+				<i class="icon">
+					<img src="../../css/img/menu_more_btn_normal.png" alt="" th:src="@{/css/img/menu_more_btn_normal.png}">
+				</i>添加房间类型
+			</a>
+		</div>
+		<div class="htrm-list">
+			<p class="htrm-tag">已添加的房间类型</p>
+			<ul id="roomInfo"></ul>
+		</div>
+	</section>
+	<script id="roomnews_jsrender" type="text/x-jsrender">
+	    <li class="htrm-item" onclick="selectroomInfoByid({{:roomId}});">
+	        <div class="htrm-info floatl">
+	            <p class="t1">房间类型:{{:roomType}}</p>
+	            <p class="t2">总数:{{:roomNumber}}</p>
+	        </div>
+	        <div class="htrm-price floatr">价格:{{:cost}}元/间</div>
+	    </li>
+	</script>
+	<!-- <button type='button' id="back" class='btm-btn fix-btm'>保存</button> -->
+	<!-- <div class="fix-btm flex-box"> -->
+	<button type='button' id="back" class='btm-btn fix-btm'>返回酒店列表</button>
+	<!-- <a class='btm-btn success-btn flex1' th:href="@{'/meetingInfo/'+${session.click_meeting.meeId}+'/'+${session.existMeeHall.hallId}}">返回会议主页</a>
+       <a class='btm-btn success-btn flex1' th:href="@{'/meetingHotel/selectHotelInfoByMeetingId/'+${session.click_meeting.meeId}}">返回酒店列表</a> -->
+	<!-- </div> -->
+	<div th:replace="~{layout/contextPath :: contextPath}"></div>
+	<script src="../../js/lib/jquery.js" th:src="@{/js/lib/jquery.js}"></script>
+	<script src="../../js/common.js" th:src="@{/js/common.js}"></script>
+	<script src="../../js/plug/httpPath.js" th:src="@{/js/plug/httpPath.js}"></script>
+	<script src="../../js/jsrender.js" th:src="@{/js/jsrender.js}"></script>
+	<script src="../../js/admin-hotel.js" th:src="@{/js/admin-hotel.js}"></script>
+</body>
+<script type="text/javascript" th:inline="javascript">
+	var tmpl = $.templates("#roomnews_jsrender");
+	var hotelId = [[${hotelId}]];
+	var meeId = [[${session.click_meeting.meeId}]];
+	$(function() {	
+		$.ajax({
+			url : contentpath + '/meetingHotel/selectroomInfo/'+hotelId,
+			type : 'GET',
+			success : function(data) {
+				if (data != null) {
+					var html = tmpl.render(data.list);
+					document.getElementById("roomInfo").innerHTML = html;
+				}
+			},
+			error : function(data) {
+				$.prompt("系统错误");
+			}
+		})
+	});
+	
+	$("#back").click(function(){
+		window.location.href = contentpath + "/meetingHotel/selectHotelInfoByMeetingId/"+meeId;
+	});
+	
+	function selectroomInfoByid(id){
+		window.location.href = contentpath + "/meetingHotel/selectroomInfoByid/" + id;
+	}
+	</script>
+</html>

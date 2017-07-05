@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <title>会议导读</title>
+    <link rel="stylesheet" href="../../css/style.css" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="../../css/lib/swiper.min.css" th:href="@{/css/lib/swiper.min.css}">
+    <link rel="stylesheet" href="../../css/lib/animate.css" th:href="@{/css/lib/animate.css}">
+</head>
+
+<body>
+    <div id='app' hidden="hidden">false</div>
+    <section class="main-cantainer">
+        <div class="article-list-main">
+            <ul class="article-list-body" th:each="material:${materials.list}">
+                <li class="article-item clearfix" th:data-article-id="${material.attachId}">
+	                <a href="article-details.html" th:href="${material.attachUrl}">
+	                    <span class="data-icon"> <img src="../../css/img/data.png" th:src="@{/css/img/data.png}" alt=""></span>
+	                    <div class="title-box">
+	                        <p class="article-list-title"  th:text="${material.attachName}">全国高职高专校长联席会议特别声明 全国高职高专校长联席会议特别声明
+	                        </p>
+	                    </div>
+	                    <div class="func-box pdl2">
+	                        <time th:text="${#dates.format(material.createTime, 'yyyy-MM-dd')}">2016-06-03</time>
+	                        <button class="btn-orgin  floatr js-modal-btn" th:if="${permissions}==permissions">删除</button>
+	                    </div>
+	                </a>
+	            </li>
+            </ul>    	
+        </div>	
+    </section>
+    		<!-- <div class="float-btn-box" id="menuMoreBtnNormal"  th:if="${permissions}==permissions">
+				<a href="upload-meetData.html" th:href="@{'/material/toUploadPage/1/'}">
+					<span class="float-btn">
+					<img src="../../css/img/menu_more_btn_normal.png"  th:src="@{'/css/img/menu_more_btn_normal.png'}" alt="上传会议导读" title="上传会议导读"></span>
+				</a> 
+			</div> -->
+			<div class="float-btn-box" id="menuMoreBtnNormal" th:if="${permissions}==permissions">
+		    <span class="float-btn"><img src="../../css/img/menu_more_btn_pressed.png" alt="" th:src="@{/css/img/menu_more_btn_pressed.png}"></span>
+		     <div class="float-menu-box animate fadeInUp" hidden>
+				<a class="float-menu" href="upload-meetData.html" th:href="@{'/material/toUploadPage/1/'}">上传会议导读</a> 
+			    <a class="float-menu" th:href="@{'/meetingInfo/'+${session.click_meeting.meeId}+'/'+${session.existMeeHall.hallId}}">返回会议主页</a>
+		    </div>
+	 		</div>
+         <div class='modal-main' hidden>
+        <div class="modal-bg"></div>
+        <div class='modal-contant'>
+            <div class="modal-body">
+                <p class="txt text-m">是否要删除该资料?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="yes">是</button>
+                <button type="button" class="no">否</button>
+            </div>
+        </div>
+   		 </div>
+	<div th:replace="~{layout/contextPath :: contextPath}"></div>	
+	<script src="../../js/lib/jquery.js" th:src="@{/js/lib/jquery.js}"></script>
+	<script src="../../js/common.js" th:src="@{/js/common.js}"></script>
+	<script src="../../js/lib/swiper.min.js" th:src="@{/js/lib/swiper.min.js}"></script>
+	<script src="../../js/plug/plug-form.js" th:src="@{/js/plug/plug-form.js}"></script>
+	<script src="../../js/plug/httpPath.js" th:src="@{/js/plug/httpPath.js}"></script>
+	<script src="../../js/jsrender.js" th:src="@{/js/jsrender.js}"></script>
+	<script src="../../js/dateFormate.js" th:src="@{/js/dateFormate.js}"></script>
+    <script src="../../js/weui.min.js" th:src="@{/js/weui.min.js}"></script>
+    <script src="../../js/meet-data.js" th:src="@{/js/meet-data.js}"></script>
+    <script type="text/javascript" th:inline="javascript">
+	    var permissions = [[${permissions}]];//有没有修改权限
+		  console.log(permissions);
+ 		  /* $(function(){
+ 			  if (permissions!="permissions") {
+ 		 		  //没有会议议程的模块的管理员或是与会人员没有修改权限		 
+ 				  $("#menuMoreBtnNormal").css("display","none");
+ 				  $("[class='delete-btn js-modal-btn']").css("display","none");
+ 				}
+ 		  });  */
+    </script>
+</body>
+
+</html>

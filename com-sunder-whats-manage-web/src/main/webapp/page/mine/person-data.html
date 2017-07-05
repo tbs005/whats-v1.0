@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <title>个人中心</title>
+    <link rel="stylesheet" href="css/style.css" th:href="@{/css/style.css}">
+</head>
+
+<body>
+	<div id='app' hidden="hidden">false</div>
+    <section class="main-cantainer navfixr">
+    	<form id="upload_form" action="#"  method="post" enctype="multipart/form-data">
+        <div class="form-group fileUpload">
+            <label for="userName" class="floatl">头像:</label>
+            <input type="file" id='file_upload'  onchange="showPreviewUserHead(this)" class='form-input floatr' name="file">
+            <i class="img-box">
+            	<img  id="js_uploadImg" th:src="@{${session.user.headimgurl}}"  alt="">
+            </i>
+        </div>
+        </form>
+        <div class="form-group js-meetTime">
+            <label class="floatl">真实姓名:</label>
+        	<span id="realName" class='form-input floatr'>[[${session.user.realName}]]</span>		
+        </div>
+        <div class="form-group js-meetTime">
+            <label class="floatl">昵称:</label>
+        	<span id="nickname" class='form-input floatr'>[[${session.user.nickname}]]</span>		
+        </div>         
+    </section>
+    <div class='modal-main' hidden="hidden" id="realNamediv">
+	        <div class="modal-bg"></div>
+	        <div class='modal-contant  modal-lg'>
+	            <div class="modal-body">
+	                <p class="modal-title">真实姓名</p>
+	                <div class=modal-input><input type="text" placeholder="请输入真实姓名" id="realNameInput"></div>
+	            </div>
+	            <div class="modal-footer">
+	                <button type="button" class="yes" id="saverealName">确定</button>
+	                <button type="button" class="no">取消</button>
+	            </div>
+	        </div>
+	  </div>
+	  <div class='modal-main' hidden="hidden" id="nickNamediv">
+	        <div class="modal-bg"></div>
+	        <div class='modal-contant  modal-lg'>
+	            <div class="modal-body">
+	                <p class="modal-title">昵称</p>
+	                <div class=modal-input><input type="text" placeholder="请输入昵称" id="nickNameInput"></div>
+	            </div>
+	            <div class="modal-footer">
+	                <button type="button" class="yes" id="savenickName">确定</button>
+	                <button type="button" class="no">取消</button>
+	            </div>
+	        </div>
+	  </div>
+	<div th:replace="~{layout/contextPath :: contextPath}"></div>	
+    <script src="../../js/lib/jquery.js" th:src="@{/js/lib/jquery.js}"></script>
+    <script src="../../js/common.js" th:src="@{/js/common.js}"></script>
+    <script src="../../js/plug/httpPath.js" th:src="@{/js/plug/httpPath.js}"></script>
+    <script src="../../js/userinfo_validate.js" th:src="@{/js/userinfo_validate.js}"></script>
+</body>
+<script type="text/javascript" th:inline="javascript">	
+	//读取图片并回显
+	function showPreviewUserHead(source) {
+		var file = source.files[0];
+		if (!/image\/\w+/.test(file.type)) {
+			$.prompt("请上传图片"); 
+		} else if (file.size > 5 * 1024 * 1024) {
+			$.prompt("你上传的文件太大了！")
+		} else {
+			if (window.FileReader) {
+				var formData = new FormData($("#upload_form")[0]);
+		    	$.ajax({
+		    		url:contentpath+'/userCenter/userHeadUpdate',
+		    		type:'post',
+		    		async:false,
+		    		contentType: false, //必须false才会避开jQuery对 formdata 的默认处理 XMLHttpRequest会对 formdata 进行正确的处理 
+		    		processData: false, //必须false才会自动加上正确的Content-Type 
+		    		data:formData,
+		    		success:function(data){
+		    			console.log(data);
+		    			if(data.errcode==1){
+		    				$.prompt("上传头像成功!",function(){						
+		   					 window.location.href=contentpath+"/userCenter/user";				
+		   					});
+			        	}else{
+			        		$.prompt("上传失败!");
+			        		return false;
+			        	}
+		    		}
+		    	});
+			    var fr = new FileReader();
+				fr.readAsDataURL(file);
+				fr.onloadend = function (e) {	
+					document.getElementById("js_uploadImg").src = e.target.result;
+				}; 
+			} else {			
+				$.prompt("您的设备不支持FileReader")
+			}
+		}
+	}
+	
+	//更新真实姓名
+	$("#realName").click(function(){
+		    $("#realNameInput").val($("#realName").text());	
+		    $("#realNamediv").show();			  	  		
+	});	
+	$("#saverealName").click(function(){
+		if(!validate_nameconfirm("realNameInput","realNamediv","真实姓名",30)){	
+			return false;
+		}
+		  $("#realNamediv").hide();   
+		var realName=$("#realNameInput").val().trim();
+		$.ajax({
+			url: contentpath + '/userCenter/userRealName',
+			type : 'POST',
+			data: "realName="+realName,
+			success : function(data) {
+				console.log(data.errcode);
+				if(data.errcode==1){
+				$.prompt("修改真实姓名成功!",function(){						
+  					 window.location.href=contentpath+"/userCenter/user";				
+  					});
+				} 				
+			},
+			error: function () {
+				$.prompt('请求失败');
+			}
+		});	
+	});
+	
+	
+	//修改用户昵称的
+	$("#nickname").click(function(){
+		$("#nickNameInput").val($("#nickname").text());	
+		$("#nickNamediv").show();
+	});
+	
+	$("#savenickName").click(function(){
+		/* if(!validate_nameconfirm("nickNameInput","nickNamediv","昵称",30)){	
+			return false;
+		} */
+		if (!checkLength("nickNameInput","nickNamediv")) {return false;}
+	     $("#nickNamediv").hide(); 
+		var nickName=$("#nickNameInput").val().trim();
+		$.ajax({
+			url: contentpath + '/userCenter/userNickName',
+			type : 'POST',
+			data: "nickName="+nickName,
+			success : function(data) {
+				console.log(data.errcode);
+				if(data.errcode==1){
+				$.prompt("修改昵称成功!",function(){						
+  					 window.location.href=contentpath+"/userCenter/user";				
+  					});
+				} 				
+			},
+			error: function () {
+				$.prompt('请求失败');
+			}
+		});	
+	});
+	
+</script>
+</html>

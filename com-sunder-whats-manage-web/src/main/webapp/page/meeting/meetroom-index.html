@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+<meta name="format-detection" content="telephone=no">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>[[${session.existMeeHall.hallName}]]-会议厅</title>
+<link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+<div id='app' hidden="hidden">false</div>
+	<section class="main-cantainer navfixr">
+		<section class="mtrm-idx-hd">
+			<div class="mtrm-idx-d1">
+				<div class="user-img floatl">
+					<img th:src="@{${session.existMeeHall.hallCover}}" alt="">
+					<!-- <img th:if="${''==session.existMeeHall.hallCover||null==session.existMeeHall.hallCover}" th:src="@{/css/img/user-img.jpeg}" alt=""> -->
+				</div>
+					<div class="user-info-box  floatl">
+						<p class="user-name" th:text="${session.existMeeHall.hallName}">会议厅名称</p>
+						<a th:href="@{/hallLinkUser/toFansList}">
+						<p class="user-fans">
+							<span id="fans-number"><img th:src="@{/css/img/conference_funs.png}"></span>
+						</p>
+						</a>
+					</div>			
+			</div>                      
+			<div id="permissionsdiv" th:if="${permissions=='permissions'||permissions1=='permissions1'}" ><!-- TODO -->
+		<!-- 	<script id="permissions" type="text/x-jsrender"> -->
+        		<!-- 权限判断开始 -->
+            <div class="mtrm-idx-d2">
+                <div class="mtrm-btn">
+					<a th:href="@{'/meetingHall/qrCode'}">
+					<i><img th:src="@{/css/img/check_code.png}" alt=""></i>
+                    <p>查看二维码</p>
+					</a>
+                </div>
+                <div class="mtrm-btn">
+					<a th:href="@{/meetingHall/tomanagepage}">
+					<i><img th:src="@{/css/img/setting.png}" alt=""></i>
+                    <p>设置会议厅</p>
+					</a>
+                </div>
+            </div>
+			<div id="role">
+				 <a class="creatMeet-btn success-btn" th:href="@{'/meetingInfo/toCreateMeeting?hallId='+${session.existMeeHall.hallId}}">创建会议</a>
+			</div>
+			</div>
+         	   <!-- 权限判断结束 -->
+       		<!-- </script> -->
+
+		</section>
+		<section class="meet-list-main">
+			<ul class="meet-list"  id="meet-list">
+			</ul>
+			  <p class="loading" hidden="true"><i><img src="../../css/img/loading_pic.png" th:src="@{/css/img/loading_pic.png}" alt=""></i><span>正在加载更多</span></p>
+		</section>
+			<script id="meeting_jsrender" type="text/x-jsrender">
+				 <li class="meet-item" >
+				<a href="" th:href="@{/meeting/selectSubMeeByParentId_mvc?meeId={{:meeId}}}">
+				<div class="left">
+					<img alt="meetimg" src="{{:meeCover}}">	
+				</div>
+				<div class="right">
+					<p class="meet-name">{{:meeName}}</p>	
+					<time>{{formateTimestamp:meeStartTime}} 
+					<span>-</span>
+					{{formateTimestamp:meeEndTime}}</time>
+				</div>
+			 	</a>	
+				</li>	
+		   </script>	   
+	</section>
+	<div class="float-btn-box">
+        <span class="js_backTop backtop-btn"><img src="../../css/img/top_pressed.png" th:src="@{/css/img/top_pressed.png}" alt=""></span>
+    </div>
+	<nav class="index-nav"
+		th:replace="layout/nav :: (${session.loginType eq 'app' }? appnav : nav)">
+	</nav>
+	<div th:replace="~{layout/contextPath :: contextPath}"></div>	
+	<script src="../../js/lib/jquery.js" th:src="@{/js/lib/jquery.js}"></script>
+	<script src="../../js/common.js" th:src="@{/js/common.js}"></script>
+	<script src="../../js/plug/httpPath.js" th:src="@{/js/plug/httpPath.js}"></script>
+	<script src="../../js/userinfo_validate.js" th:src="@{/js/userinfo_validate.js}"></script>
+	<script src="../../js/jsrender.js" th:src="@{/js/jsrender.js}"></script>
+	<script src="../../js/dateFormate.js" th:src="@{/js/dateFormate.js}"></script>
+	<script src="../../js/weui.min.js" th:src="@{/js/weui.min.js}"></script>
+
+</body>
+<script type="text/javascript" th:inline="javascript">
+   var tmpl = $.templates("#meeting_jsrender");//模板
+   var loading = false; //状态标记
+   var hasmore = true;
+   var meetingPage = 1;
+	$(function() {	
+		    //加载粉丝列表
+			$.ajax({
+				url : contentpath + '/hallLinkUser/count',
+				type : 'GET',
+				contentType : 'application/json',
+				success : function(data) {
+					$("#fans-number").append(data+" 人关注")
+				},
+				error : function(data) {
+					$.prompt("系统错误");
+				}
+			});
+			//首次进入加载会议厅下的主会议
+			$.ajax({
+				url : contentpath + '/meeting/selectmeetingInfoSlide',
+				type : 'POST',
+				data : JSON.stringify({"pageNum":meetingPage,"pageSize":10}),
+				contentType: 'application/json',
+				success : function(data) {
+					console.log(data);
+				    var html = tmpl.render(data.list);	
+					document.getElementById("meet-list").innerHTML = html;
+				},
+				error : function(data) {
+					$.prompt("系统错误");
+				}
+			})
+	  });
+	//会议主页滑动加载
+    $(".main-cantainer").infinite().on("infinite", function () {
+        if (loading) return;
+        loading = true;
+        //会议厅滑动加载
+    	if(hasmore){
+    		$(".loading").show();
+    		meetingPage += 1;	
+			$.ajax({
+				url : contentpath + '/meeting/selectmeetingInfoSlide',
+				type : 'POST',
+				data : JSON.stringify({"pageNum":meetingPage,"pageSize":10}),
+				contentType: 'application/json',
+				success : function(data) {
+					console.log(data);
+					if (data.list.length==0) {
+						hasmore=false;
+						$(".loading span").text("没有更多内容了!");
+					}else{
+						var html = tmpl.render(data.list);	
+						$("#meet-list").append(html);	
+					}
+					loading = false;
+				},
+				error : function(data) {
+					$.prompt("系统错误");
+				}
+			})
+    	}
+    }); 
+</script>
+
+</html>

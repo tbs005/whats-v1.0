@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <title>上传会议议程</title>
+    <link rel="stylesheet" href="../../css/style.css" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="../../css/progressbar.css" th:href="@{/css/progressbar.css}">
+</head>
+
+<body>
+	<div id='app' hidden="hidden">false</div>
+    <section class="main-cantainer">
+        <form id="upload_form" action="#" th:action="@{/material/upload}" method="post" enctype="multipart/form-data">
+<!--             <div class="form-group"> -->
+<!--                 <label for="realName" class="floatl">会议:</label> -->
+<!--                 <select class='form-input floatr' id="subMee_sel" name="submeeId"> -->
+<!--                 	<option value="0">主会场</option> --> 
+<!--                 </select> -->
+<!-- 			 </div> -->
+				            
+            <div class="form-group">
+                <label for="realName" class="floatl">议程名称:</label>
+                <input type="text" class='form-input floatr' name="attachName" id="attachName" placeholder="请输入">
+           		
+           		<input type="hidden" id="subMee_sel" name="submeeId" value="0">
+                <input type="hidden" class='form-input floatr' name="flag" id="flag" value="0" />
+                <input type="hidden" class='form-input floatr' name="attachType" id="attachType" value="0" />
+            </div>
+<!--             <div class="form-group"> -->
+<!--                 <progress max=100></progress> -->
+<!--     			<span id="progress_percent">0</span>% -->
+<!--             </div> -->
+            <div class="form-group fileUpload ht-t1">
+                <label for="userName" class="floatl">上传:</label>
+                <input type="file" class='form-input floatr' id="data_upload" name="file" accept="application/pdf,application/msword,image/gif,image.jpg,application/vnd.openxmlformats-officedocument.wordprocessingml.document"/>
+                <span class="floatr arrowImg"><img src="../../css/img/list_arrow.png" th:src="@{/css/img/list_arrow.png}" alt=""></span>
+                <span class='floatr form-text'>请上传</span>
+            </div>
+               <div class='btn-box'>
+                    <button type="button" id="intro_btn" class="form-btn cancel-btn">上传</button>
+                </div>
+              </form>
+    </section>
+	<div th:replace="~{layout/contextPath :: contextPath}"></div>	
+	<script src="../../js/lib/jquery.js" th:src="@{/js/lib/jquery.js}"></script>
+	<script src="../../js/common.js" th:src="@{/js/common.js}"></script>
+	<script src="../../js/plug/httpPath.js" th:src="@{/js/plug/httpPath.js}"></script>
+	<script src="../../js/userinfo_validate.js" th:src="@{/js/userinfo_validate.js}"></script>`
+    <script type="text/javascript" th:inline="javascript">
+    $(function(){
+    	$('#intro_btn').click(function(){
+    		var subMeeId=$('#subMee_sel').val();
+    		var uploadFlag = false;
+    		//用户做js校验的
+    		if(!validate_empty_nofocus("attachName","议程名称")){return false;}
+       		if(!validate_namelenth("attachName","议程名称",30)){return false;}	
+    		if($(".floatr.form-text").text()=='请上传'||$(".floatr.form-text").text()==''){
+    			$.toastr("请选择需要上传的议程文件");	
+    			return false;
+    		}
+    		$.ajax({
+    			url:contentpath+'/material/queryExists/0/0',
+	    		type:'post',
+	    		async:false,
+	    		success:function(data){
+	    			console.log(data);
+	    			if(data.errcode==0){
+	    				uploadFlag=true;
+		        	}else{
+		        		if(window.confirm("已经存在一份会议议程，是否覆盖！")){
+		        			$('#flag').val(1);
+		        			uploadFlag=true;
+		        		}else{
+		        			uploadFlag=false;
+		        		}
+		        	}
+	    		}
+    		});
+    		if(!uploadFlag){return;}
+    		var formData = new FormData($("#upload_form")[0]);
+	    	$.ajax({
+	    		url:contentpath+'/material/upload',
+	    		type:'post',
+	    		async:false,
+	    		contentType: false, //必须false才会避开jQuery对 formdata 的默认处理 XMLHttpRequest会对 formdata 进行正确的处理 
+	    		processData: false, //必须false才会自动加上正确的Content-Type
+	    		data:formData,
+	    		success:function(data){
+	    			console.log(data);
+	    			if(data.errcode==0){
+	    				$.prompt("上传成功",function(){
+	    					location.href=contentpath+"/material/queryPage/0";
+	    				});
+		        	}else{
+		        		$.prompt("上传失败!");
+		        	}
+	    		}
+	    	})
+    	})
+    })
+    </script>
+</body>
+
+</html>

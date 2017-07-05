@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <title>修改房间类型</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="../../css/style.css">
+</head>
+
+<body>
+    <section class="main-cantainer navfixr">
+        <div class='form-main'>
+            <form action="" id="formId" th:action="@{/meetingHotel/updataroomInfo}" method="post">
+            	<!-- 酒店id -->
+            	<input type="text" id="hotelId" name="hotelId" value="" th:value="${roomInfo.hotelId}" hidden="hidden"/>
+            	<!-- 房间id -->
+            	<input type="text" name="roomId" value="" th:value="${roomInfo.roomId}" hidden="hidden"/>
+                <div class="form-group">
+                    <label class="floatl">房间类型:</label>
+                    <input type="text" class='form-input floatr' name="roomType" value="单人间" th:value="${roomInfo.roomType}" placeholder="请输入" id="roomType">
+                </div>
+                <div class="form-group">
+                    <label class="floatl">价格:</label>
+                    <input type="tel" class='form-input font-red floatr' name="cost" value="￥230" th:value="${roomInfo.cost}" placeholder="请输入" id="cost">
+                </div>
+                <div class="form-group">
+                    <label class="floatl">数量:</label>
+                    <input type="text" class='form-input floatr'  name="roomNumber" value="20间" th:value="${roomInfo.roomNumber}"  placeholder="请输入" id="roomNumber">
+                </div>
+                <div class="form-group">
+                    <label for="realName" class="floatl">预留数量:</label>
+                    <input type="tel" class='form-input floatr'  name="roomSpare" value="10间" th:value="${roomInfo.roomSpare}"  placeholder="请输入" id="roomSpare" >
+                </div>
+                <div class="form-group">
+                    <label class="floatl">备注：</label>
+                </div>
+                <textarea class="form-txtarea1" name="dsp" th:text="${roomInfo.dsp}"  placeholder="请输入">留个大床房</textarea>
+               <!--  <button type="submit" class='btm-btn fix-btm'>保存</button> -->
+                <div class="fix-btm flex-box">
+		 		 <button type="button" class='btm-btn flex1' id="buttonId">保存房间类型</button>
+		         <a class='btm-btn success-btn flex1' th:href="@{'/meetingHotel/selectHotelInfoByMeetingId/'+${session.click_meeting.meeId}}">返回酒店列表</a>
+		    	</div>
+            </form>
+        </div>
+    </section>
+    <div th:replace="~{layout/contextPath :: contextPath}"></div>
+    <script src="../../js/lib/jquery.js" th:src="@{/js/lib/jquery.js}"></script>
+    <script src="../../js/common.js" th:src="@{/js/common.js}"></script>
+    <script src="../../js/plug/httpPath.js" th:src="@{/js/plug/httpPath.js}"></script>
+    <script src="../../js/userinfo_validate.js" th:src="@{/js/userinfo_validate.js}"></script>
+    <script type="text/javascript" th:inline="javascript">
+    	var roomNumber = [[${roomNumber}]];
+    	var roomhotelId = $("#hotelId").val();
+    	$("#buttonId").on("click",function(){
+    	   if(!validate_empty("roomType","房间类型")){return false;}
+   	 	   if(!validate_empty("cost","价格")){return false;}
+   	 	   if(!validate_money("cost")){return false;}
+   	 	   if(!validate_empty("roomNumber","数量")){return false;}
+   	 	   if(!validate_positive("roomNumber","数量")){return false;}
+   	 	   if(!validate_empty("roomSpare","预留数量")){return false;}
+   	 	   if(!validate_positive("roomSpare","预留数量")){return false;}	    	 	   
+   	 	   //$.prompt("酒店剩余数量为:"+roomNumber+ "确认修改吗!"); 	
+	   	 	$.affirm("酒店剩余数量为:"+roomNumber+ "确认修改吗!",function(){
+		    	  var form =   $("#formId").serialize();  
+		    	  $.ajax({
+		    		   type: "POST",
+		    		   url: contentpath+"/meetingHotel/updataroomInfo",
+		    		   data: form,
+		    		   success: function(data){
+		    	  		if (data=="6360") {
+		    		       window.location.href = contentpath+ "/meetingHotel/selectRooms?hotelId="+roomhotelId;									
+						}else{
+					       $.prompt("更新失败!");
+						}
+		    		   }
+		    		});   
+		   	   });
+    		
+    	});
+    	
+    </script>
+</body>
+	
+</html>

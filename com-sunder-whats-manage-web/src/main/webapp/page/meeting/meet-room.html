@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <title>[[${session.existMeeHall.hallName}]]-会议厅</title>
+	<link rel="stylesheet" href="../../css/lib/animate.min.css" th:href="@{/css/lib/animate.min.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="../../css/style.css">
+</head>
+<body>
+    <div id='app' hidden="hidden">true</div>
+    <section class="main-cantainer navfixr">
+        <header class="index-header">
+<!--             <div class="page-title meetRoom-title">
+                <span class='floatl'>会议厅</span>
+                 <a href="" th:href="@{/page/meeting/creat-meetRoom-type.html}"><span class='floatr add-icon' >+</span></a>
+            </div> -->
+            <div class="message-roll ">
+               <div class="message-icon"><img th:src="@{/css/img/notice.png}" src="../../css/img/notice.png" alt=""></div>
+               <p><span class="marquee">欢迎使用我是谁-上海企想会议管理系统！</span></p>
+            </div>
+        </header>
+        <section class="meetRoom-userInfo clearfix">
+           <div class="user-info clearfix">
+             <div class="user-img floatl">
+             	<img th:src="@{${session.existMeeHall.hallCover}}" alt="">
+				<!-- <img th:if="${''==session.existMeeHall.hallCover||null==session.existMeeHall.hallCover}" th:src="@{/css/img/user-img.jpeg}" alt=""> -->
+             </div>
+              <div class="user-name floatl" th:text="${session.existMeeHall.hallName}">会议厅名称</div>
+              <button type="button" class="cutMeetroom floatr" id="cut">切换会议厅</button>
+           </div>
+           <div class="userData">
+               <div class="fans floatl">
+               	<a href="fans-list.html" th:href="@{/hallLinkUser/toFansList}">
+                   <p class="data-num" id="fans-number" ></p>
+                   <p class="data-title">
+                       <img th:src="@{/css/img/funs@2x.png}" src="../../css/img/funs@2x.png" alt="">所有粉丝数
+                   </p>
+                   </a>
+               </div>
+               <div class="visit floatr">
+                   <p class="data-num" th:text="${session.existMeeHall.hallVisits}">访问量</p>
+                   <p class="data-title">
+                       <img th:src="@{/css/img/visited_number@2x.png}" src="../../css/img/visited_number@2x.png" alt="">访问量
+                   </p>
+               </div>
+           </div>
+        </section>
+       
+        <a class="creatMeet-btn success-btn"  th:if="${permissions=='permissions'||permissions1=='permissions1'}" href="creatMeet.html" th:href="@{'/meetingInfo/toCreateMeeting?hallId='+${session.existMeeHall.hallId}}">创建会议</a>
+        <div class="meetRoom-menu">
+            <a href="meetroom-index.html" th:href="@{'/meeting/selectMeeting_mvc'}">
+                <i><img th:src="@{/css/img/meet-room/main_page.png}" src="../../css/img/meet-room/main_page.png" alt=""></i>
+                会议厅主页
+            </a>
+              <a href="../admin-meetroom/admin-mtrm-administrator.html"  th:if="${permissions=='permissions'||permissions2=='permissions2'}" th:href="@{/meetingHall/tomanagepage}">
+                <i><img th:src="@{/css/img/meet-room/manage.png}" src="../../css/img/meet-room/manage.png" alt=""></i>
+                会议厅管理
+            </a>
+              <a href="javascript:;" class="js-service" >
+                <i><img th:src="@{/css/img/meet-room/consultation.png}" src="../../css/img/meet-room/consultation.png" alt=""></i>
+                客服咨询
+            </a>
+              <a href="http://fast.bizideal.cn/group1/M00/00/00/drLmAViBwOOAc0eVAD47P7oRaWc13.html">
+                <i><img th:src="@{/css/img/meet-room/tutorial.png}" src="../../css/img/meet-room/tutorial.png" alt=""></i>
+                使用教程
+            </a>
+              <a href="#">
+                <i><img th:src="@{/css/img/meet-room/data_statistics.png}" src="../../css/img/meet-room/data_statistics.png" alt=""></i>
+                数据统计
+            </a>
+        </div>
+    </section>  
+    <div class="modal-main" id="service-modal" hidden="hidden">
+        <div class="modal-bg"></div>
+        <div class="modal-contant">
+            <div class="modal-body htat">
+                <p class="text-m p-title">我是您的专属客服</p>
+                <div class="modal-code">
+                    <img src="../../css/img/server-code.png" th:src="@{/css/img/server-code.png}" alt="二维码">
+                </div>
+                <p class="text-m">长按识别二维码加好友，享受一对一服务</p>
+            </div>
+        </div>
+    </div>      
+    <nav class="index-nav" th:replace="layout/nav :: (${session.loginType eq 'app' }? appnav : nav)"></nav>
+	<div th:replace="~{layout/contextPath :: contextPath}"></div>	
+	<script src="../../js/lib/jquery.js" th:src="@{/js/lib/jquery.js}"></script>
+	<script src="../../js/common.js" th:src="@{/js/common.js}"></script>
+	<script src="../../js/plug/httpPath.js" th:src="@{/js/plug/httpPath.js}"></script>
+    <script th:src="@{/js/plug/plug-form.js}" src="../../js/plug/plug-form.js"></script>
+</body>
+  <script type="text/javascript">
+	//切换会议厅
+	$("#cut").click(function(){
+		window.location.href = contentpath + "/meetingHall/cutmeetingHall";	
+	});
+	
+	$(function() {	
+		$.ajax({
+			url : contentpath + '/hallLinkUser/count',
+			type : 'GET',
+			contentType : 'application/json',
+			success : function(data) {
+				$("#fans-number").append(data);
+			},
+			error : function(data) {
+				$.prompt("系统错误");
+			}
+		})
+	});
+	
+	  $(".js-service").on("click",function(){
+           $("#service-modal").show();
+       })
+
+  </script>
+</html>

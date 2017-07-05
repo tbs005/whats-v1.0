@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+<meta name="format-detection" content="telephone=no">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<!-- <title>会议报名</title> -->
+<link rel="stylesheet" type="" href="../../css/style.css" th:href="@{/css/style.css}">
+</head>
+
+<body>
+	<div id='app' hidden="hidden">false</div>
+	<section class="main-cantainer navfixr">
+		<div class='form-main' id='sign-main'>
+			<form action="sign-up-success.html" id="sign_up_main">
+				<div class='basic-info' v-show="formBox.basic">
+					<!-- <div class="form-title">
+						</span>会议报名
+					</div> -->
+					<div class="form-group" th:if="${#lists.contains(hasChoosedFieldIds,1)}">
+						<label for="realName" class="floatl">姓名:</label> 
+						<input type="text" th:readonly="${flag_realName}" th:value="${tempUser.realName}" class='form-input floatr' name="realName" id="realName" placeholder="请输入姓名">
+					</div>
+					<div class="form-group" th:if="${#lists.contains(hasChoosedFieldIds,2)}">
+						<input type="hidden" id="flag_sex" th:value="${flag_sex}">
+						<label for="sex" class="floatl">姓别:</label> 
+						<span class="floatr arrowImg"><img src="../../css/img/list_arrow.png" alt="" th:src="@{/css/img/list_arrow.png}"></span> 
+						<select th:disabled="${flag_sex}" class='form-input floatr' th:field="*{tempUser.sex}" name="sex" id="sex">
+							<option value="男">男</option>
+							<option value="女">女</option>
+						</select>
+					</div>
+					<div class="form-group" th:if="${#lists.contains(hasChoosedFieldIds,3)}">
+						<label for="phone" class="floatl">手机:</label> 
+						<input type="tel" readonly="readonly" class='form-input floatr' th:value="${tempUser.phone}" name="phone" id="phone" placeholder="请输入手机">
+					</div>
+					<div class="form-group" th:if="${#lists.contains(hasChoosedFieldIds,4)}">
+						<label for="userName" class="floatl">邮箱:</label> 
+						<input type="email" th:value="${flag_hasSigned==true?mySignUpInfo.email:tempUser.email}" class='form-input floatr' name="email" id="email" placeholder="请输入邮箱">
+					</div>
+	                <!--单位信息-->
+	                <div id="div_unit" class="form-group js-tiket" th:if="${#lists.contains(hasChoosedFieldIds,5)}" @click="selectUnit">
+                        <label class="floatl">单位:</label>
+                        <span class="floatr arrowImg"><img th:src="@{/css/img/list_arrow.png}" src="../../css/img/list_arrow.png" alt=""></span>
+                        <span class='floatr form-text' id="unit_span">{{itemText.unitTxt}}</span>
+                        <input type="hidden" th:value="${mySignUpInfo.unitId}" id="unitId" name="unitId" value="">
+                    </div>
+                    <!--身份信息-->
+					<div id="div_identity" class="form-group" th:if="${#lists.contains(hasChoosedFieldIds,6)}">
+                        <label for="dentity" class="floatl">身份:</label>
+                        <span class="floatr arrowImg"><img th:src="@{/css/img/list_arrow.png}" src="../../css/img/list_arrow.png" alt=""></span>
+                        <input id="hidden_identity" type="hidden" th:value="${mySignUpInfo.identityId}" value="">
+                        <select class='form-input floatr' name="identityId" id="identityId">
+		                </select>
+                    </div>
+					<div class="form-group" th:if="${#lists.contains(hasChoosedFieldIds,7)}">
+						<label for="post" class="floatl">职务:</label> 
+						<input type="text" class='form-input floatr' th:value="${mySignUpInfo.post}" name="post" id="post" placeholder="请输入职务">
+					</div>
+					<div class="form-group" th:if="${#lists.contains(hasChoosedFieldIds,9)}">
+						<label for="dietId" class="floatl">饮食:</label> 
+						<span class="floatr arrowImg"><img src="../../css/img/list_arrow.png" alt="" th:src="@{/css/img/list_arrow.png}"></span> 
+						<select class='form-input floatr' th:field="*{mySignUpInfo.dietId}" name="dietId" id="dietId">
+							<option th:each="diet:${diets}" th:value="${diet.dietId}" th:text="${diet.dietDisp}">请选择</option>
+						</select>
+					</div>
+                    <div th:if="${#lists.contains(hasChoosedFieldIds,10)}" id="hotel_module" class="form-group js-tiket" @click="selectHotel">
+                        <label class="floatl">选择酒店:</label>
+                        <input type="hidden" th:value="${myHotelLink.hotelId}" id="hotelId" name="hotelId">
+                        <input type="hidden" th:value="${myHotelLink.roomId}" id="roomId" name="roomId">
+                        <span class="floatr arrowImg"><img th:src="@{/css/img/list_arrow.png}" src="../../css/img/list_arrow.png" alt=""></span>
+                        <span class='floatr form-text' v-cloak>{{itemText.hotelTxt}}</span>
+                    </div>
+					<!--<div class="form-group js-tiket" @click="selectTiket">
+                        <label class="floatl">发票信息:</label>
+                        <span class="floatr arrowImg"><img src="../../css/img/list_arrow.png" alt=""></span>
+                        <span class='floatr form-text' v-cloak>{{itemText.tiketTxt}}</span>
+                    </div>-->
+					<!--<hr class="form-hr">-->
+					<div th:if="${#lists.contains(hasChoosedFieldIds,11)}" class="form-group" @click="selectMeet" id="subMeeting_module">
+						<label class="floatl">选择子会议：</label> <span class="floatr arrowImg">
+						<img src="../../css/img/list_arrow.png" alt="" th:src="@{/css/img/list_arrow.png}"></span> 
+						<span class='floatr form-text' v-cloak>{{itemText.meetTxt}}</span>
+					</div>
+					<div class="form-group" th:if="${#lists.contains(hasChoosedFieldIds,12)}" @click="selectRemark">
+						<label class="floatl">备注:</label> <span class="floatr arrowImg">
+						<img src="../../css/img/list_arrow.png" alt="" th:src="@{/css/img/list_arrow.png}"></span> 
+						<span class='floatr form-text' v-cloak>{{itemText.remarkTxt}}</span>
+					</div>
+					<hr class="form-hr">
+					<div class="form-group" th:if="${mySignUpInfo.isPend == '2'}">
+						<label class="floatl">已被管理员残忍拒绝，拒绝理由：</label>
+						<span class='floatr form-text' th:text="${mySignUpInfo.rejectReason}"></span>
+					</div>
+					<hr class="form-hr">
+					<hr class="form-hr">
+					<button type='button' id="signup_btn" th:text="${flag_hasSigned==true?'已报名':'提交报名'}" th:disabled="${flag_hasSigned || !flag_startSignUp || flag_endSignUp}" class='btm-btn fix-btm'>提交报名</button>
+				</div>
+				<!--单位信息-->
+                <div id="unit_hidden" class="js-dentity-info" th:if="${#lists.contains(hasChoosedFieldIds,5)}" v-show="formBox.unit">
+                    <div class="search-bar member-search clearfix">
+                        <div class="search-body">
+                            <div class="searchBox">
+                                <i class="search"><img th:src="@{/css/img/search_icon_wt.png}" src="../../css/img/search_icon_wt.png"  alt=""></i>
+                                <input oninput="f_searchUnit(this.value)" class="search-input" type="text" name="" value="" placeholder="单位名称">
+                                <i class="delete" id="search-delete"><img th:src="@{/css/img/connection_search_delete_wt.png}" src="../../css/img/connection_search_delete_wt.png" alt=""></i>
+                            </div>
+<!--                             <button class="search-btn" id="_unit_search" type="button">搜索</button> -->
+                        </div>
+                    </div>
+                    <div class="form-group" data-unitId="aa1"  @click="saveUnit($event)">
+                        <a href="javascript:;" >上海企想信息技术有限公司</a>
+                    </div>
+                </div>
+                <!--发票信息-->
+				<!--<div class="js-tiket-info" v-show="formBox.tiket">
+                     <div class="form-title" ><span @click="saveTiket" class="backBasic-btn"><img src="../../css/img/title_arrow_back.png" alt=""></span>发票信息</div>
+                    <div class="form-group">
+                        <label for="userName" class="floatl">发票抬头:</label>
+                        <input type="text" class='form-input floatr'  id="" placeholder="请输入">
+                    </div>
+                    <div class="form-group">
+                        <label for="userName" class="floatl">识别号:</label>
+                        <input type="text" class='form-input floatr'  id="" placeholder="请输入">
+                    </div>
+                    <div class="form-group">
+                        <label for="userName" class="floatl">开户地址:</label>
+                        <input type="text" class='form-input floatr'  id="" placeholder="请输入">
+                    </div>
+                    <div class="form-group">
+                        <label for="userName" class="floatl">开户行:</label>
+                        <input type="text" class='form-input floatr'  id="" placeholder="请输入">
+                    </div>
+                    <div class="form-group">
+                        <label for="userName" class="floatl">开户账号:</label>
+                        <input type="text" class='form-input floatr'  id="" placeholder="请输入">
+                    </div>
+                    <div class='btn-box'>
+                        <button type="button" class="form-btn cancel-btn" @click='saveTiket'>保存</button>
+                    </div>
+                </div>-->
+                <div class="js-hotel-info" th:if="${#lists.contains(hasChoosedFieldIds,10)}" v-cloak v-show="formBox.hotel">
+                    <!-- <div class="form-title"><span @click="saveTiket" class="backBasic-btn"><img th:src="@{/css/img/title_arrow_back.png}" src="../../css/img/title_arrow_back.png" alt=""></span>酒店信息</div> -->
+                    <div class="form-group">
+                        <label for="province" class="floatl">酒店名:</label>
+                        <span class="floatr arrowImg"><img th:src="@{/css/img/list_arrow.png}" src="../../css/img/list_arrow.png" alt=""></span>
+                 		<select class='form-input floatr' th:field="*{myHotelLink.hotelId}" id="hotel">
+		                     <option th:each="hotel:${hotelList}" th:value="${hotel.hotelId}" th:text="${hotel.hotelName}"></option>
+                 		</select>
+                    </div>
+                    <div class="form-group">
+                        <label for="province" class="floatl">房间类型:</label>
+                        <span class="floatr arrowImg"><img th:src="@{/css/img/list_arrow.png}" src="../../css/img/list_arrow.png" alt=""></span>
+                        <select class='form-input floatr' name="room" id="room">
+                 		</select>
+                    </div>
+                    <div class='btn-box'>
+                        <button type="button" class="form-btn cancel-btn" @click='saveHotel'>保存</button>
+                    </div>
+                </div>
+				<div class="js-meetlist-info" th:if="${#lists.contains(hasChoosedFieldIds,11)}" v-cloak v-show="formBox.meetlist">
+					<div class="form-title"><span @click="saveMeet" class="backBasic-btn"><img th:src="@{/css/img/title_arrow_back.png}" src="../../css/img/title_arrow_back.png" alt=""></span>
+						子会议
+                    </div>
+                    <div class="md-txtbtn"><span>请选择子会议:</span><button class="btn success-btn mgl2 js-addChmeet" type="button">添加</button></div>
+                    <ul class="selectChmeet">
+                        <p class="noinfo mgt2" hidden><i><img th:src="@{/css/img/no-meetRoom.png}" src="../../css/img/no-meetRoom.png" alt=""></i>您还没有选择分论坛</p>
+                    </ul>
+                    <div class='btn-box'>
+                        <button type="button" class="form-btn cancel-btn" @click='saveMeet'>保存</button>
+                    </div>
+				</div>
+				<div class="js-remark-info" th:if="${#lists.contains(hasChoosedFieldIds,12)}" v-cloak v-show="formBox.remark">
+					<!-- <div class="form-title">
+						<span @click="saveRemark" class="backBasic-btn">
+						<img src="../../css/img/title_arrow_back.png" alt="" th:src="@{/css/img/title_arrow_back.png}"></span>备注
+					</div> -->
+					<div class="form-textarea">
+						<textarea id='remarks_box' name="disp" placeholder="你想说点什么" th:field="*{mySignUpInfo.disp}" value="" maxlength="200" @input="remarkNum"></textarea>
+						<div class="textarea_counter">
+							<span id="text-num">0</span>/200
+						</div>
+					</div>
+					<div class='btn-box'>
+						<button type="button" class="form-btn cancel-btn" @click='saveRemark'>保存</button>
+					</div>
+				</div>
+			</form>
+			<div th:replace="~{layout/contextPath :: contextPath}"></div>
+		</div>
+	</section>
+	<div class="modal-main" th:if="${#lists.contains(hasChoosedFieldIds,11)}" id="chmeet-modal" hidden="hidden">
+        <div class="modal-bg"></div>
+        <div class="modal-contant modal-lg">
+            <div class="modal-header">
+                	分论坛信息
+            </div>
+            <div class="modal-body">
+                <div class="item" th:each="subMee:${subMeetingInfos}" th:data-chmeetId="${subMee.meeId}">
+                    <p class="title" th:text="${subMee.meeName}"></p>
+                    <time class="time">
+                    	<input type="hidden" name="submeetingId" th:value="${subMee.meeId}">
+                    	<i><img th:src="@{/css/img/clock.png}" src="../../css/img/clock.png" alt=""></i>
+                    	<i th:text="${#dates.format(subMee.meeStartTime,'yyyy-MM-dd HH:mm')}"></i>
+                    </time>
+                </div>
+            </div>
+        </div>
+    </div>
+	<div th:replace="~{layout/contextPath :: contextPath}"></div>	
+	<script src="../../js/lib/jquery.js" th:src="@{/js/lib/jquery.js}"></script>
+	<script src="../../js/common.js" th:src="@{/js/common.js}"></script>
+	<script src="../../js/plug/httpPath.js" th:src="@{/js/plug/httpPath.js}"></script>
+	<script src="../../js/plug/plug-form.js" th:src="@{/js/plug/plug-form.js}"></script>
+	<script src="../../js/lib/vue-1.0.28.js" th:src="@{/js/lib/vue-1.0.28.js}"></script>
+	<script src="../../js/signUp.js" th:src="@{/js/signUp.js}"></script>
+	<script src="../../js/userinfo_validate.js" th:src="@{/js/userinfo_validate.js}"></script>
+	<script src="../../js/user_signup/signUp.js" th:src="@{/js/user_signup/signUp.js}"></script>
+</body>
+<script type="text/javascript" th:inline="javascript">
+	// 报名子会议信息
+	var subMeetings=[[${mySignUpInfo.subMeetings}]];
+	var flag_hasSigned = [[${flag_hasSigned}]];
+	var hasChoosedFieldIds = [[${hasChoosedFieldIds}]];
+</script>
+</html>

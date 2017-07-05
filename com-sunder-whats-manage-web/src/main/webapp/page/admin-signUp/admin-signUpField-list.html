@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <title>我选择的报名字段</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="../../css/style.css">
+</head>
+
+<body>
+    <section class="main-cantainer">
+        <div class='form-main' id='sign-main'>
+            <form action="sign-up-success.html" id="sign_up_main">
+                <div class='basic-info'>
+                    <div class="form-group" data-field-id='0' th:if="${#lists.contains(hasChoosedFieldIds,1)}">
+                        <label class="floatl">姓名:</label>
+                    </div>
+                    <div class="form-group" data-field-id='1' th:if="${#lists.contains(hasChoosedFieldIds,2)}">
+                        <label class="floatl">性别:</label>
+                    </div>
+                    <div class="form-group" data-field-id='2' th:if="${#lists.contains(hasChoosedFieldIds,3)}">
+                        <label class="floatl">手机:</label>
+                    </div>
+                    <div class="form-group" data-field-id='3' th:if="${#lists.contains(hasChoosedFieldIds,4)}">
+                        <label class="floatl">邮箱:</label>
+                    </div>
+                    <div class="form-group" data-field-id='4' th:if="${#lists.contains(hasChoosedFieldIds,5)}">
+                        <label class="floatl">单位:</label>
+                    </div>
+                    <div class="form-group" data-field-id='4' th:if="${#lists.contains(hasChoosedFieldIds,6)}">
+                        <label class="floatl">身份:</label>
+                        <span class="floatr"><img id='identity_btn' th:src="@{/css/img/list_arrow.png}" src="../../css/img/list_arrow.png" alt=""/></span>
+                    </div>
+                    <div class="form-group" data-field-id='4' th:if="${#lists.contains(hasChoosedFieldIds,7)}">
+                        <label class="floatl">职务:</label>
+                    </div>
+                    <div class="form-group" data-field-id='7' th:if="${#lists.contains(hasChoosedFieldIds,9)}">
+                        <label class="floatl">饮食:</label>
+                    </div>
+                    <div class="form-group" data-field-id='8' th:if="${#lists.contains(hasChoosedFieldIds,10)}">
+                        <label class="floatl">酒店:</label>
+                    </div>
+                    <!-- <div class="form-group" data-field-id='9'>
+                        <label class="floatl">发票信息:</label>
+                        <span class="floatr deletImg js-modal-btn"><img src="../../css/img/edit_icon_delete.png" alt=""></span>
+                    </div> -->
+                    <!-- <div class="form-group" data-field-id='10'>
+                        <label class="floatl">分论坛信息:</label>
+                        <span class="floatr deletImg js-modal-btn"><img src="../../css/img/edit_icon_delete.png" alt=""></span>
+                    </div> -->
+                    <div class="form-group" data-field-id='11' th:if="${#lists.contains(hasChoosedFieldIds,12)}">
+                        <label class="floatl">备注:</label>
+                    </div>
+                    <hr class="form-hr">
+                    <hr class="form-hr">
+                    <hr class="form-hr">
+                </div>
+            </form>
+        </div>
+        </div>
+    </section>
+    <!-- 返回按钮 start -->
+    <div class="float-btn-box" id="menuMoreBtnNormal">
+    	<span class="float-btn"><img src="../../css/img/menu_more_btn_pressed.png" alt="" th:src="@{/css/img/menu_more_btn_pressed.png}"></span>
+     	<div class="float-menu-box animate fadeInUp" hidden>
+	    	<a class="float-menu" th:href="@{/signupField/toedit}">编辑字段</a>
+	    	<a class="float-menu" th:href="@{'/meetingInfo/'+${session.click_meeting.meeId}+'/'+${session.click_meeting.hallId}}">返回会议主页</a>
+    	</div>
+	</div>
+	<!-- 返回按钮 end -->
+    <div th:replace="~{layout/contextPath :: contextPath}"></div>
+    <script src="../../js/lib/jquery.js" th:src="@{/js/lib/jquery.js}"></script>
+	<script src="../../js/common.js" th:src="@{/js/common.js}"></script>
+	<script src="../../js/plug/httpPath.js" th:src="@{/js/plug/httpPath.js}"></script>
+    <script src="../../js/admin-edit-signUp.js" th:src="@{/js/admin-edit-signUp.js}"></script>
+    <script type="text/javascript">
+    	$(function(){
+    		$('#identity_btn').click(function(){
+    			location.href=contentpath+"/signupField/identityList"
+    		})
+    	})
+    </script>
+</body>
+
+</html>

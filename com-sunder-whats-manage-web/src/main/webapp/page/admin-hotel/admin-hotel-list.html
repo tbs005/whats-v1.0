@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <title>酒店信息</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/lib/animate.css" th:href="@{/css/lib/animate.css}">
+</head>
+<body>
+    <section class="main-cantainer">
+        <div class="hotel-list-main">
+            <ul class="">
+                <li class="info-item" th:each="hotellist:${hotelListQuery}">
+                    <div class="info-body">
+                        <p class="t1" th:text="${hotellist.hotelName}"></p>
+                        <p class="t3" th:text="'房间总数：'+${hotellist.roomSum}"></p>
+                        <p class="t4"> <span class="icon floatl"><img src="../../css/img/map.png" alt="酒店地址" th:src="@{/css/img/map.png}"></span ><span class="text floatl" th:text="${hotellist.address}"></span></p>
+                        <p class="t4"> <span class="icon floatl"><img src="../../css/img/people.png" alt="联系人" th:src="@{/css/img/people.png}"></span><span class="text floatl" th:text="${hotellist.person}+':'"></span>
+                            <span class="text floatl" th:text="${hotellist.tel}"></span>
+                        </p>
+                    </div>
+                    <div class="item-operate clearfix">
+                        <i class="floatl">
+                        	<a href="admin-hotelRoom-list.html" th:href="@{'/meetingHotel/selectRooms?hotelId='+${hotellist.hotelId}}">
+                        		房间信息
+                        	</a>
+                        </i>
+                        <span class="floatr">
+                        	<a href="" class="js-delHotel" th:href="@{'javascript:deleteHotelRoom(' + ${hotellist.hotelId} + ')'}">
+                        		<img src="../../css/img/delete_pressed.png" alt="删除" th:src="@{/css/img/delete_pressed.png}">
+                        	</a>
+                        </span>
+                        <span class="floatr">
+                        	<a href="admin-hotel-edit.html" th:href="@{'/meetingHotel/selectHotelInfoByHotelId/'+${hotellist.hotelId}}">
+                        		<img src="../../css/img/edit_pressed.png" alt="修改" th:src="@{/css/img/edit_pressed.png}">
+                        	</a>
+                        </span>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    <div th:replace="~{layout/contextPath :: contextPath}"></div>
+    </section>
+    <div class="float-btn-box">
+        <span class="float-btn"><img src="../../css/img/menu_more_btn_normal.png" alt="" th:src="@{/css/img/menu_more_btn_normal.png}"></span>
+        <div class="float-menu-box animate fadeInUp" hidden="hidden">
+            <a class="float-menu" href="admin-hotel-add.html" th:href="@{/meetingHotel/toaddhotelPage}">添加酒店信息</a>
+            <a class="float-menu" th:href="@{'/meetingInfo/'+${session.click_meeting.meeId}+'/'+${session.existMeeHall.hallId}}">返回会议主页</a>
+        </div> 
+    </div>
+     
+    <script src="../../js/lib/jquery.js" th:src="@{/js/lib/jquery.js}"></script>
+    <script src="../../js/common.js" th:src="@{/js/common.js}"></script>
+    <script src="../../js/admin-hotel.js" th:src="@{/js/admin-hotel.js}"></script>
+	<script src="../../js/plug/httpPath.js" th:src="@{/js/plug/httpPath.js}"></script>
+</body>
+</html>

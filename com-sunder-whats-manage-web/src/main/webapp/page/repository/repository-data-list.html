@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <title>知识库</title>
+    <link rel="stylesheet" href="../../css/style.css" th:href="@{/css/style.css}">
+</head>
+
+<body>
+    <section class="main-cantainer wt">
+        <ul class="repository-data-list">
+            <li class="repository-item clearfix" th:each="file:${fileList.list}">
+                <a href="#" th:if="${file.suffix=='url'}" th:href="@{'play/'+${file.id}}">
+                    <span class="data-icon"> <img src="../../css/img/data.png" th:src="@{/css/img/data.png}" alt=""></span>
+                    <div class="title-box">
+                        <p class="repository-title" th:text="${file.name}">全国高职高专校长联席会议特别声明 全国高职高专校长联席会议特别声明
+                        </p>
+                    </div>
+                    <div class="func-box pdl2">
+                       <time th:text="${'上传时间：'+#dates.format(file.createTime, 'yyyy-MM-dd')}">2016-06-03</time>
+                        <i th:if="${file.isCollected==true}" class='func-btn collect-data' select="true" th:file="${file.id}" th:mee="${file.meeId}"></i>
+                        <i th:if="${file.isCollected==false}" class='func-btn uncollect-data' select="true" th:file="${file.id}" th:mee="${file.meeId}"></i>
+                    </div>
+                </a>
+                <a href="#" th:if="${file.suffix!='url'}" th:href="@{${fastdfsurl}+${file.url}}">
+                    <span class="data-icon"> <img src="../../css/img/data.png" th:src="@{/css/img/data.png}" alt=""></span>
+                    <div class="title-box">
+                        <p class="repository-title" th:text="${file.name}">全国高职高专校长联席会议特别声明 全国高职高专校长联席会议特别声明
+                        </p>
+                    </div>
+                    <div class="func-box pdl2">
+                       <time th:text="${'上传时间：'+#dates.format(file.createTime, 'yyyy-MM-dd')}">2016-06-03</time>
+                        <i th:if="${file.isCollected==true}" class='func-btn collect-data' select="true" th:file="${file.id}" th:mee="${file.meeId}"></i>
+                        <i th:if="${file.isCollected==false}" class='func-btn uncollect-data' select="true" th:file="${file.id}" th:mee="${file.meeId}"></i>
+                        <i th:if="${file.isDown!='1'}" down="down" class='func-btn download-data' th:fastdfsurl="${fastdfsurl}" th:url="${file.isDown}"></i>
+                        <i th:if="${file.isDown=='1'}" class='func-btn download-data' th:fastdfsurl="${fastdfsurl}" th:url="${file.isDown}"></i>
+                    </div>
+                </a>
+            </li>
+        </ul>
+    <script src="../../js/lib/jquery.js" th:src="@{/js/lib/jquery.js}"></script>
+    <script src="../../js/common.js" th:src="@{/js/common.js}"></script>
+    <script src="../../js/knowledgebase/collection-respository.js" th:src="@{/js/knowledgebase/collection-respository.js}"></script>
+</body>
+<script>
+
+</script>
+
+</html>

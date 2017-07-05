@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+<meta name="format-detection" content="telephone=no">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>会议角色</title>
+<link rel="stylesheet" href="../../css/style.css" th:href="@{/css/style.css}">
+<link rel="stylesheet" href="../../css/lib/animate.css" th:href="@{/css/lib/animate.css}">
+<link rel="stylesheet" href="../../css/lib/animate.min.css" th:href="@{/css/lib/animate.min.css}">
+</head>
+
+<body>
+	<div id='app' hidden="hidden">false</div>
+	<section class="main-cantainer">
+		<section class="mtrm-list-main">
+			<div class="mtrm-list-hd">
+					<p class="floatl">管理者角色</p>
+					<i class="floatr arrowicon rotate1"><img
+					src="../../css/img/arrow_up.png" alt=""
+					th:src="@{/css/img/arrow_up.png}"></i> <a href="#" class="creat-role-btn floatr" th:href="@{/meeting/creatMeetingRole}">创建角色</a>
+			</div>	
+			<div class="mtrm-list js-role-admin">
+				<th:block th:each="roleManage:${roleManageList}">
+				<div class="form-group no-pd" th:data-role-id='${roleManage.roleId}'>
+                    <label class="floatl">[[${roleManage.roleName}]]</label>
+                      <!-- <a href="creat-Role.html" th:if="${roleManage.roleStatus!='default'}" class="creat-role-btn uptate" th:href="@{/meeting/upodateCreateMeetingmanage(roleId=${roleManage.roleId})}" >修改角色</a>
+                    <span class="floatr deletImg js-delete-role r0" th:if="${roleManage.roleStatus!='default'}"><img src="../../css/img/edit_icon_delete.png" th:src="@{/css/img/edit_icon_delete.png}" alt=""></span> -->
+                
+	             <div class="floatr">
+	                        <a href="meet-info.html" class="btn-line" th:if="${roleManage.roleStatus!='default'}" th:href="@{/meeting/upodateCreateMeetingmanage(roleId=${roleManage.roleId})}">修改</a>
+	                        <a class="btn-orgin js-delete-role " th:if="${roleManage.roleStatus!='default'}">删除</a>
+	              </div>
+	                
+                
+                </div>
+                </th:block>
+			</div>
+		</section>
+	</section>
+	<span class="float-btn"><img src="../../css/img/menu_more_btn_normal.png" alt="" th:src="@{/css/img/menu_more_btn_normal.png}"></span>
+    <div class="float-menu-box animate fadeInUp" hidden>
+         <a class="float-menu" href="link-network.html" th:href="@{/meeting/meetingAdmin/manage}">返回</a>
+    </div>
+	<div class='modal-main' id="delete-modal" hidden>
+		<div class="modal-bg"></div>
+		<div class='modal-contant'>
+			<div class="modal-body">
+				<p class="txt text-m">是否要删除该角色?</p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="yes">是</button>
+				<button type="button" class="no">否</button>
+			</div>
+		</div>
+	</div>
+	 <div th:replace="~{layout/contextPath :: contextPath}"></div>
+	<script src="../../js/lib/jquery.js" th:src="@{/js/lib/jquery.js}"></script>
+	<script src="../../js/common.js" th:src="@{/js/common.js}"></script>
+	<script src="../../js/plug/httpPath.js" th:src="@{/js/plug/httpPath.js}"></script>
+	<script src="../../js/admin-meeting/creatMeetingRoleManage.js" th:src="@{/js/admin-meeting/creatMeetingRoleManage.js}"></script>
+</body>
+
+</html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <title>我关注的会议</title>
+    <link rel="stylesheet" href="../../css/style.css" th:href="@{/css/style.css}">
+</head>
+
+<body>
+	<div id='app' hidden="hidden">false</div>
+    <section class="main-cantainer navfixr">
+	        
+        <section class="index-tab">
+            <button class="index-tab-btn active js_nostart_btn">未结束</button>
+            <button class="index-tab-btn js_start_btn">已结束</button>
+        </section>
+        
+        <section class="meet-list-main">
+        
+            <ul class="meet-list" id="nostarted_list"></ul>
+            <script id="future_jsrender" type="text/x-jsrender">
+				<li class="meet-item">
+                    <a href="" th:href="@{/meetingInfo/{{:meeId}}/{{:hallId}}}"> 
+                        <div class="left"><img src="{{fastDFSurl:meeCover}}" alt=""></div>
+                        <div class="right">
+                            <p class="meet-name">{{:meeName}}</p>
+                            <time>{{formateTimestamp:meeStartTime}} - {{formateTimestamp:meeEndTime}}</time>
+                        </div>
+                    </a>
+                </li>
+			</script>
+			
+            <ul class="meet-list" id="started_list" hidden="hidden"></ul>
+            <script id="over_jsrender" type="text/x-jsrender">
+				<li class="meet-item">
+                   <a href="" th:href="@{/meetingInfo/{{:meeId}}/{{:hallId}}}"> 
+                        <div class="left"><img src="{{fastDFSurl:meeCover}}" alt=""></div>
+                        <div class="right">
+                            <p class="meet-name">{{:meeName}}</p>
+                            <time>{{formateTimestamp:meeStartTime}} - {{formateTimestamp:meeEndTime}}</time>
+                        </div>
+                    </a>
+                </li>
+			</script>
+			
+        </section>
+    </section>
+
+    <div th:replace="~{layout/contextPath :: contextPath}"></div>	
+	<script src="../../js/lib/jquery.js" th:src="@{/js/lib/jquery.js}"></script>
+	<script src="../../js/common.js" th:src="@{/js/common.js}"></script>
+	<script src="../../js/plug/httpPath.js" th:src="@{/js/plug/httpPath.js}"></script>
+	<script src="../../js/lib/swiper.min.js" th:src="@{/js/lib/swiper.min.js}"></script>
+	<script src="../../js/plug/plug-form.js" th:src="@{/js/plug/plug-form.js}"></script>
+	<script src="../../js/meetIndex.js" th:src="@{/js/meetIndex.js}"></script>
+	<script src="../../js/mee_hall/meeting-hall.js" th:src="@{/js/mee_hall/meeting-hall.js}"></script>
+	<script src="../../js/jsrender.js" th:src="@{/js/jsrender.js}"></script>
+	<script src="../../js/dateFormate.js" th:src="@{/js/dateFormate.js}"></script>
+	<script src="../../js/weui.min.js" th:src="@{/js/weui.min.js}"></script>
+    <script src="../../js/person-focusMeet.js" th:src="@{/js/person-focusMeet.js}"></script>
+	
+</body>
+
+</html>

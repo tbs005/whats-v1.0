@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <title>管理报名</title>
+    <link rel="stylesheet" href="../../css/style.css" th:href="@{/css/style.css}">
+</head>
+
+<body>
+    <section class="main-cantainer bl-bg">
+         <div class="sl-btn-list">
+             <a class="wt-btn" th:href="@{/signupField/list}" href="javascript:f_prompt()"><span><img src="../../css/img/check.png" alt="" th:src="@{/css/img/check.png}"></span>编辑报名字段</a>
+             <a class="wt-btn" th:href="@{/signup/list}" href="admin-user-list.html"><span><img src="../../css/img/check.png" alt="" th:src="@{/css/img/check.png}"></span>参会人员报名信息</a>
+             <a class="ts-btn" href="javascript:f_prompt()"><span><img src="../../css/img/export.png" alt="" th:src="@{/css/img/export.png}"></span>导出总表</a>
+         </div>
+    </section>
+    <script src="../../js/lib/jquery.js" th:src="@{/js/lib/jquery.js}"></script>
+    <script src="../../js/common.js" th:src="@{/js/common.js}"></script>
+    <script type="text/javascript">
+    function f_prompt(){
+    	$.prompt('功能开发中！');
+    }
+    </script>
+</body>
+
+</html>

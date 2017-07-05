@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <title>会议报名</title>
+ <link rel="stylesheet" href="../css/style.css" th:href="@{/css/style.css}">
+</head>
+
+<body>
+	<div id='app' hidden="hidden">false</div>
+	<!--主会议ID-->
+    <input type="hidden" name="meeId" id="meeId" th:value="${meetingInfo.meeId}">
+    <!--会议厅ID-->
+    <input type="hidden" name="hallId" id="hallId"  th:value="${meetingInfo.hallId}">
+    <section class="main-cantainer">
+        <div class="success-main">
+            <div class="successImg">
+                <img src="../css/img/success@2x.png" th:src="@{/css/img/success@2x.png}" alt="">
+            </div>
+            <p>会议创建成功!</p>
+            <a href="meetroom-index.html" th:href="@{'/meeting/selectMeeting_mvc'}" type="button" class="cancel-btn ">
+            返回查看主会议</a>
+        </div>
+    </section>
+</body>
+</html>

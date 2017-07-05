@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+<meta name="format-detection" content="telephone=no">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>编辑会议动态</title>
+<link rel="stylesheet" href="../../css/style.css"
+	th:href="@{/css/style.css}">
+</head>
+
+<body>
+	<div id='app' hidden="hidden">false</div>
+	<section class="main-cantainer">
+		<form>
+			<div class="form-group">
+				<label for="realName" class="floatl">会议标题:</label> <input
+					type="text" class='form-input floatr' name="dynamicTitle"
+					id="dynamicTitle" placeholder="4-25个字" onchange="changeTitle()" />
+			</div>
+			<div class="form-group">
+				<label for="realName" class="floatl">作者:</label> <input type="text"
+					class='form-input floatr' name="createUser" id="createUser"
+					placeholder="请输入" onchange="changeCreateUser()" />
+			</div>
+			<div class="editormain">
+				<div class="editor-btnBox">
+					<input type="text" name="random" id="ShortUuid" hidden="hidden" />
+					<span><img src="../../css/img/picture_normal.png" alt=""
+						th:src="@{/css/img/picture_normal.png}"> <input
+						class="filebtn" type="file" name="file" id="imageUpload" /></span>
+				</div>
+				<div id="content" class="editor-body"></div>
+			</div>
+			<button type="button" class="btm-btn" onclick="addDynamic()">完成</button>
+		</form>
+	</section>
+
+	<div th:replace="~{layout/contextPath :: contextPath}"></div>	
+	<script src="../../js/lib/jquery.js" th:src="@{/js/lib/jquery.js}"></script>
+	<script src="../../js/common.js" th:src="@{/js/common.js}"></script>
+	<script src="../../js/plug/httpPath.js" th:src="@{/js/plug/httpPath.js}"></script>
+	<script src="../../js/lib/artEditor.min.js" th:src="@{/js/lib/artEditor.min.js}"></script>
+	<script src="../../js/userinfo_validate.js" th:src="@{/js/userinfo_validate.js}"></script>
+	<script type="text/javascript" th:inline="javascript">
+	
+		$(function(){
+			$('#ShortUuid').val(sessionStorage.getItem('ShortUuid'));
+			$('#dynamicTitle').val(sessionStorage.getItem('dynamicTitle'));
+			$('#createUser').val(sessionStorage.getItem('createUser'));
+			document.getElementById("content"). innerHTML = sessionStorage.getItem('content');
+		}); 
+		//更新content图片
+		 $('#content').artEditor({
+			imgTar : '#imageUpload',
+			limitSize : 5, // 兆
+			showServer : true,
+			uploadUrl : contentpath + '/meetingDynamic/uploadImage',
+			uploadField : 'image',
+			placeholader : '<p>请输入文章正文内容</p>',
+			validHtml : [ "br" ],
+			uploadSuccess : function(res) {
+				// return img url
+				sessionStorage.setItem("ShortUuid", res.ShortUuid);
+				$('#ShortUuid').val(res.ShortUuid);
+				return res.msg;
+			},
+			saveSuccess : function(res) {
+				// return img url
+				sessionStorage.setItem("content", res);
+				return;
+			},
+			uploadError : function(res) {
+				// something error
+				console.log(res);
+			}
+		}); 
+			$('#content').bind('DOMNodeInserted', function(e) {
+				sessionStorage.setItem("content", $('#content').html());
+			});
+		 //记录会议标题
+		 function changeTitle(){
+				sessionStorage.setItem("dynamicTitle", $('#dynamicTitle').val());
+			}
+		 //记录创建者
+		 function changeCreateUser(){
+				sessionStorage.setItem("createUser", $('#createUser').val());
+			}
+		//提交信息
+		function addDynamic(){
+			//获取用户id
+			var userId = [[${session.user.userId}]];
+			//获取会议id
+			var meetingId = [[${meetingId}]];
+			//获取会议厅id
+			var meetHallId = [[${meetHallId}]];
+			//获取会议标题
+			var dynamicTitle = $("#dynamicTitle").val();
+			//获取作者名
+			var createUser = $("#createUser").val();
+			//获取会议动态内容
+			var content = $("#content").html();
+			//封转json
+			data = {
+					"dynamicTitle":dynamicTitle,
+					"createUser":createUser,
+					"content":content,
+					"userId":userId,
+					"meetingId":meetingId,
+					"meetHallId":meetHallId
+			};
+			//进行表单验证
+			if(!validate_empty("dynamicTitle","会议标题")){return false;}		
+			if(!validate_meetingCoordinatorName("dynamicTitle","会议标题")){return false;}
+			if(!validate_empty("createUser","作者")){return false;}
+	   		if(!validate_namelenth("createUser","作者",30)){return false;}	
+			if(content.trim()==""||content.trim().substring(0,3)=="<p>"){
+				$.toastr("会议动态内容不能为空!");
+				return false;
+			}
+			$.ajax({
+ 				url: contentpath + '/meetingDynamic/addDynamic',
+ 				data: JSON.stringify(data),
+ 				type: "POST",
+ 				contentType: 'application/json',
+ 				success: function (data) {
+ 					if (data.code == 0) {
+ 						window.location.href= contentpath +"/meetingDynamic/selectallDynamic/";
+ 					} else {
+ 						$.prompt(data.msg);
+ 					}
+ 				},
+ 				error: function () {
+ 					$.prompt('请求失败');
+ 				}
+ 		});
+	}		
+		
+</script>
+</body>
+
+</html>

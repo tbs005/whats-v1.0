@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <title>会议宣传</title>
+    <link rel="stylesheet" href="../../css/style.css" th:href="@{/css/style.css}">
+</head>
+
+<body>
+    <section class="main-cantainer">
+        <form id="meetingLeaflet" action="">
+            <div class="form-group">
+                <label for="" class="floatl">宣传页名称:</label>
+                <input id="leafletName" name="leafletName" type="text" class='form-input floatr' placeholder="请输入" th:value="${leafletName}">
+            </div>
+            <div class="form-group">
+                <label for="" class="floatl">url地址:</label>
+                <input id="url" name="url" type="text" class='form-input floatr' placeholder="请填写" th:value="${url}">
+            </div>
+            <div class="info-title">
+                <p>备注</p>
+            </div>
+            <textarea name="remark" class="info-txt-box" placeholder="请输入备注信息" th:value="${remark}"></textarea>
+            <div class='btn-box'>
+                <button id="subButton" type="button" class="form-btn cancel-btn">保存</button>
+            </div>
+        </form>
+    </section>
+    <script src="../../js/lib/jquery.js" th:src="@{/js/lib/jquery.js}"></script>
+    <script src="../../js/common.js" th:src="@{/js/common.js}"></script>
+</body>
+	<script type="text/javascript">
+	$("#subButton").click(function(){
+		//校验数据
+		if ($("#leafletName").val()==null||$("#leafletName").val()=="") {
+			$.toastr("宣传页名称不能为空");
+		}else if (!(/^[\u4E00-\u9FA5A-Za-z0-9_]+$/.test($("#leafletName").val()))) {
+			$.toastr("宣传页名称含有非法字符");
+		}else if ($("#url").val()==null||$("#url").val()=="") {
+			$.toastr("url地址不能为空");
+		}else if (!/^(http|ftp|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&:/~\+#]*[\w\-\@?^=%&/~\+#])?$/.test($("#url").val())) {
+			$.toastr("url地址输入错误");
+		}else {
+			//ajax提交宣传页添加
+			$.ajax({
+				url:"/whoami/meetingLeaflets/add",
+				type:"POST",
+				data:$('#meetingLeaflet').serialize(),
+				dataType:"text",
+				success:function(data){
+					if("0"!=data){
+						$.prompt("宣传页添加成功",function(){
+							location.href='/whoami/meetingInfo/'+[[${session.click_meeting.meeId}]]+'/'+[[${session.existMeeHall.hallId}]];
+						});
+					}else{
+						$.toastr("添加宣传页失败，请重试");
+					}
+				},
+				error:function(){
+					$.toastr("系统异常，请稍后再试");
+				}
+			});
+		}
+	});
+	</script>
+</html>

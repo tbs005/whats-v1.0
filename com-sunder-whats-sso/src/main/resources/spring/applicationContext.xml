@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc" xmlns:jee="http://www.springframework.org/schema/jee"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
+		http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-3.2.xsd
+		http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-3.2.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.2.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.2.xsd"
+	default-lazy-init="true">
+	<description>Spring公共配置</description>
+	<!-- 使用annotation 自动注册bean, 并保证@Required、@Autowired的属性被注入 -->
+	<context:component-scan base-package="com.sunder.xie.whats.sso.*">
+        <context:exclude-filter type="regex" expression=".*\\.(dp)\\..*" />
+    </context:component-scan>
+
+    <aop:aspectj-autoproxy />
+	<!-- <bean class="com.cpic.claim.web.InstantiationTracingBeanPostProcessor"/> -->
+	
+	<import resource="classpath*:spring/security-context.xml" />
+	<import resource="classpath*:spring/spring-mybatis.xml" />
+	<import resource="classpath*:spring/applicationContext-tx.xml" />
+	<!--<import resource="classpath*:spring/spring-cas.xml" />-->
+    <import resource="classpath*:spring/whats-sso-servlet.xml" />
+    <!-- Exception处理过滤器，利用AOP自动处理Exception -->
+	<bean id="exceptionInterceptor" class="com.cpic.caf.core.exception.ExceptionInterceptor"></bean>
+	<aop:config>
+		<aop:pointcut expression="(execution(public * *..*.service.*Service.*(..)))" id="servicePointcut" />
+		<aop:aspect id="serviceAspect" ref="exceptionInterceptor">
+			<aop:around method="handleException" pointcut-ref="servicePointcut" />
+		</aop:aspect>
+	</aop:config>
+
+
+    <!-- production环境 dataSource -->
+    <bean id="dataSource" class="com.sunder.xie.whats.common.datasource.DynamicDataSource">
+        <property name="targetDataSources">
+            <map key-type="java.lang.String">
+                <entry key="production" value-ref="productionDataSource"/>
+                <entry key="query" value-ref="queryDataSource"/>
+                <entry key="archive" value-ref="archiveDataSource"/>
+            </map>
+        </property>
+        <property name="defaultTargetDataSource" ref="productionDataSource"/>
+    </bean>    
+
+	<!-- local development环境 dataSource -->
+	<beans profile="development">
+		<context:property-placeholder
+			ignore-resource-not-found="true"
+			location="classpath:properties/jdbc.properties" />
+
+		<!-- DBCP连接池 -->
+		<bean id="productionDataSource" class="com.alibaba.druid.pool.DruidDataSource"
+			destroy-method="close">
+			<property name="driverClassName" value="${jdbc.driver}" />
+			<property name="url" value="${jdbc.url}" />
+			<property name="username" value="${jdbc.username}" />
+			<property name="password" value="${jdbc.password}" />
+			<property name="defaultAutoCommit" value="false" />
+			<!-- 初始化连接大小 -->
+			<property name="initialSize" value="${jdbc.initialSize}"></property>
+			<!-- 连接池最大数量 -->
+			<property name="maxActive" value="${jdbc.maxActive}"></property>
+			<!-- 连接池最大空闲 -->
+			<property name="maxIdle" value="${jdbc.maxIdle}"></property>
+			<!-- 连接池最小空闲 -->
+			<property name="minIdle" value="${jdbc.minIdle}"></property>
+			<!-- 获取连接最大等待时间 -->
+			<property name="maxWait" value="${jdbc.maxWait}"></property>
+		</bean>
+		
+		<bean id="queryDataSource" class="com.alibaba.druid.pool.DruidDataSource"
+			destroy-method="close">
+			<property name="driverClassName" value="${jdbc.driver}" />
+			<property name="url" value="${jdbc.query.url}" />
+			<property name="username" value="${jdbc.query.username}" />
+			<property name="password" value="${jdbc.query.password}" />
+			<property name="defaultAutoCommit" value="false" />
+			<!-- 初始化连接大小 -->
+			<property name="initialSize" value="${jdbc.initialSize}"></property>
+			<!-- 连接池最大数量 -->
+			<property name="maxActive" value="${jdbc.maxActive}"></property>
+			<!-- 连接池最大空闲 -->
+			<property name="maxIdle" value="${jdbc.maxIdle}"></property>
+			<!-- 连接池最小空闲 -->
+			<property name="minIdle" value="${jdbc.minIdle}"></property>
+			<!-- 获取连接最大等待时间 -->
+			<property name="maxWait" value="${jdbc.maxWait}"></property>
+		</bean>
+		
+		<bean id="archiveDataSource" class="com.alibaba.druid.pool.DruidDataSource"
+			destroy-method="close">
+			<property name="driverClassName" value="${jdbc.driver}" />
+			<property name="url" value="${jdbc.archive.url}" />
+			<property name="username" value="${jdbc.archive.username}" />
+			<property name="password" value="${jdbc.archive.password}" />
+			<property name="defaultAutoCommit" value="false" />
+			<!-- 初始化连接大小 -->
+			<property name="initialSize" value="${jdbc.initialSize}"></property>
+			<!-- 连接池最大数量 -->
+			<property name="maxActive" value="${jdbc.maxActive}"></property>
+			<!-- 连接池最大空闲 -->
+			<property name="maxIdle" value="${jdbc.maxIdle}"></property>
+			<!-- 连接池最小空闲 -->
+			<property name="minIdle" value="${jdbc.minIdle}"></property>
+			<!-- 获取连接最大等待时间 -->
+			<property name="maxWait" value="${jdbc.maxWait}"></property>
+		</bean>
+						
+	</beans>
+
+	<!-- 功能测试环境 -->
+<!--	<beans profile="functional">
+		<context:property-placeholder
+			ignore-resource-not-found="true"
+			location="classpath:/application.properties,
+          			  classpath:/application.functional.properties" />
+          			  
+		<bean id="productionDataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+            <property name="jndiName" value="${jdbc.jndiName}" /> 
+        </bean>
+        <bean id="queryDataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+            <property name="jndiName" value="${jdbc.query.jndiName}" />
+        </bean>
+        <bean id="archiveDataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+            <property name="jndiName" value="${jdbc.archive.jndiName}" />
+        </bean>        
+	</beans>-->
+
+	<!-- 集成test环境 -->
+<!--	<beans profile="test">
+		<context:property-placeholder
+			ignore-resource-not-found="true"
+			location="classpath:/application.properties,
+						classpath:/application.test.properties" />
+
+		<bean id="productionDataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+            <property name="jndiName" value="${jdbc.jndiName}" />
+        </bean>
+        <bean id="queryDataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+            <property name="jndiName" value="${jdbc.query.jndiName}" />
+        </bean>
+        <bean id="archiveDataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+            <property name="jndiName" value="${jdbc.archive.jndiName}" />
+        </bean>
+	</beans>-->
+</beans>

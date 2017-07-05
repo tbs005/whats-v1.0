@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+<meta name="format-detection" content="telephone=no">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>会议厅邀请卡</title>
+<link rel="stylesheet" href="../../css/style.css"
+	th:href="@{/css/style.css}">
+
+<link rel="stylesheet" href="../../css/lib/animate.min.css"
+	th:href="@{/css/lib/animate.min.css}">
+</head>
+
+<body>
+	<section class="main-cantainer">
+		<div class="invite-main">
+			<div class="invite-picBox">
+				<img src="../../css/img/invite/coference_invite_word.png" alt="" th:src="@{/css/img/invite/coference_hall_invite_word.png}">
+			</div>
+			<p class="invite-text">来自：[[${user.realName}]]的会议厅</p>
+			<div class="invitecodeBox" id="smallcode"></div>
+			<p class="invite-tag">扫一扫二维码即可进入会议厅</p>
+			<button class="invite-btn" type="button">查看二维码</button>
+		</div>
+	</section>
+	<div class="modal-main" id="code-modal" hidden>
+		<div class="modal-bg"></div>
+		<div class="modal-contant  fadeInDown animated">
+			<div class="modal-body htat">
+				<div class="modal-code" id="bigcode"></div>
+			</div>
+		</div>
+		<script src="../../js/lib/jquery.js" th:src="@{/js/lib/jquery.js}"></script>
+		<script src="../../js/common.js" th:src="@{/js/common.js}"></script>
+		<script src="../../js/qrcode.min.js" th:src="@{/js/qrcode.min.js}"></script>
+		<script type="text/javascript" th:inline="javascript">
+            $(".invite-btn").click(function () {
+                $("#code-modal").show();
+            });
+            var url = [[${url}]];
+            var meetHall = [[${meetHall}]];
+            var user = [[${user}]];
+        	
+            $(function () {
+	  var bigqrcode = new QRCode("bigcode");
+    bigqrcode.makeCode(url);
+    var smallcode = new QRCode("smallcode");
+    smallcode.makeCode(url);
+     
+ 
+});
+        </script>
+</body>
+
+</html>

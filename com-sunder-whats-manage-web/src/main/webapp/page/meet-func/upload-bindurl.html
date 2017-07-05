@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <title>绑定其它链接</title>
+    <link rel="stylesheet" href="../../css/style.css" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="../../css/progressbar.css" th:href="@{/css/progressbar.css}">
+</head>
+
+<body>
+	<div id='app' hidden="hidden">false</div>
+      <section class="creat-meetroom" id="creat-meetroom">
+      	<form id="url_form" action="#" method="post">
+            <div class="form-group">
+                <label for="realName" class="floatl">资料名称:</label>
+                <input type="text" class='form-input floatr' name="attachName" id="attachName" placeholder="请输入">
+                <input type="hidden" class='form-input floatr' name="flag" id="flag" value="0" />
+                <input type="hidden" class='form-input floatr' name="attachType" id="attachType" value="2" />
+            </div>
+            <div class="form-group">
+                <label for="userName" class="floatl">资料链接:</label>
+                <input type="text" oninput="fun_checkurl(this.value);" class='form-input floatr' name="attachUrl" id="attachUrl" placeholder="请输入">
+            </div>
+            <div class="form-group">
+                <label class="floatl">备注：</label>
+            </div>
+            <textarea class="form-txtarea1" name="remarks" placeholder="请输入"></textarea>
+            <div class='btn-box'>
+            	<button id="url_btn" type="button" class="form-btn cancel-btn">提交</button>
+            </div>
+        </form>
+    </section>
+    
+	<div th:replace="~{layout/contextPath :: contextPath}"></div>	
+	<!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+	<script src="../../js/lib/jquery.js" th:src="@{/js/lib/jquery.js}"></script>
+	<script src="../../js/common.js" th:src="@{/js/common.js}"></script>
+	<script src="../../js/plug/httpPath.js" th:src="@{/js/plug/httpPath.js}"></script>
+	<script src="../../js/plug/plug-form.js" th:src="@{/js/plug/plug-form.js}"></script>
+    <script src="../../js/userinfo_validate.js" th:src="@{/js/userinfo_validate.js}"></script>
+    <script src="../../js/meetMaterial/bindurl.js" th:src="@{/js/meetMaterial/bindurl.js}" ></script>
+</body>
+
+</html>

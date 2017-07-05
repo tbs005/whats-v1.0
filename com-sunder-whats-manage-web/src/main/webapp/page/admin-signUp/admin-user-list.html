@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <title>参会人员</title>
+        <link rel="stylesheet" href="../../css/lib/swiper.min.css" th:href="@{/css/lib/swiper.min.css}">
+    <link rel="stylesheet" href="../../css/style.css" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="../../css/lib/animate.css" th:href="@{/css/lib/animate.css}">
+</head>
+
+<body>
+    <section class="main-cantainer">
+        <div class="search-bar clearfix">
+            <div class="search-body">
+                <div class="searchBox">
+                    <i class="search"><img th:src="@{/css/img/search_icon.png}" src="../../css/img/search_icon.png" alt=""></i>
+                    <input id="search_input" class="search-input" type="text" name="name" th:value="${searchValue}" value="" placeholder="姓名/性别/手机">
+                    <i class="delete" id="search-delete"><img th:src="@{/css/img/connection_search_delete.png}" src="../../css/img/connection_search_delete.png" alt=""></i>
+                </div>
+               	<button id="search_btn" class="search-btn success-btn" type="button">搜索</button>
+            </div>
+        </div>
+        <ul class="user-list">
+        	<p class="loading" hidden="true"><i><img src="../../css/img/loading_pic.png" th:src="@{/css/img/loading_pic.png}" alt=""></i><span>正在加载更多</span></p>
+        </ul>
+    </section>
+    <div class="float-btn-box" id="menuMoreBtnNormal">
+		<span class="float-btn"><img src="../../css/img/menu_more_btn_pressed.png" alt="" th:src="@{/css/img/menu_more_btn_pressed.png}"></span>
+		<div class="float-menu-box animate fadeInUp" hidden="hidden">
+		    <a class="float-menu" th:href="@{'/meetingInfo/'+${session.click_meeting.meeId}+'/'+${session.click_meeting.hallId}}">返回会议主页</a>
+		</div>
+	</div>
+	<div th:replace="~{layout/contextPath :: contextPath}"></div>	
+	<script id="news_jsrender" type="text/x-jsrender">
+		
+            <li class="user-item">
+                <a th:href="@{/signup/toedit/{{:userId}}}" href="admin-user-info.html">
+                 <div class="userinfo-box floatl">
+                     <p class="user-name">{{:realName}}</p>
+                     <p class="user-info">
+	                     <i><img th:src="@{/css/img/gender-red.png}" src="../../css/img/gender-red.png" alt=""></i>
+	                     {{:sex}}
+	                     <i><img th:src="@{/css/img/cellphone.png}" src="../../css/img/cellphone.png" alt=""></i>
+	                     {{:phone}}
+                     </p>
+                 </div>
+                 <span class="floatr"><img th:src="@{/css/img/list_arrow.png}" src="../../css/img/list_arrow.png" alt=""></span>
+					{{if remark=='1'}}
+				 	<span class="floatr state">审核通过</span>
+					{{else remark=='2'}}
+					<span class="floatr state">未通过审核</span>
+					{{else}}
+					<span class="floatr state">待审核</span>
+					{{/if}}
+                </a>
+            </li>
+	</script>
+    <script src="../../js/lib/jquery.js" th:src="@{/js/lib/jquery.js}"></script>
+    <script src="../../js/common.js" th:src="@{/js/common.js}"></script>
+    <script src="../../js/lib/swiper.min.js" th:src="@{/js/lib/swiper.min.js}"></script>
+   	<script src="../../js/plug/plug-form.js" th:src="@{/js/plug/plug-form.js}"></script>
+	<script src="../../js/plug/httpPath.js" th:src="@{/js/plug/httpPath.js}"></script>
+	<script src="../../js/jsrender.js" th:src="@{/js/jsrender.js}"></script>
+	<script src="../../js/dateFormate.js" th:src="@{/js/dateFormate.js}"></script>
+    <script src="../../js/weui.min.js" th:src="@{/js/weui.min.js}"></script>
+    <script src="../../js/admin-edit-signUp.js" th:src="@{/js/admin-edit-signUp.js}"></script>
+    <script src="../../js/user_signup/admin-user-list.js" th:src="@{/js/user_signup/admin-user-list.js}"></script>
+    <script type="text/javascript" th:inline="javascript">
+    var isPend = [[${isPend}]];
+    </script>
+</body>
+
+</html>

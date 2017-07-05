@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+<meta name="format-detection" content="telephone=no">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>会议报名</title>
+<link rel="stylesheet" th:href="@{/css/style.css}" href="../../css/style.css">
+</head>
+<body>
+	<section class="main-cantainer">
+		<div class='form-main' id='sign-main'>
+			<form action="" id="" th:action="@{/meetingUserRoom/useraddHotelInfo}" method="post">
+				<input type="text" name="userId" value="" th:value="${session.user.userId}" hidden="hidden">
+				<input type="text" name="meetingId" value="" th:value="${session.click_meeting.meeId}" hidden="hidden">
+				<input type="text" name="meetingHallId" value="" th:value="${session.existMeeHall.hallId}" hidden="hidden">
+				<div class="form-group">
+					<label for="dietId" class="floatl">选择酒店:</label>
+					<span class="floatr arrowImg">
+						<img src="../../css/img/list_arrow.png" alt="" th:src="@{/css/img/list_arrow.png}">
+					</span>
+					<select class='form-input floatr' name="hotelId" id="hotelName"> </select>
+				</div>
+				<div class="form-group">
+					<label for="dietId" class="floatl">房间类型:</label>
+					<span class="floatr arrowImg">
+						<img src="../../css/img/list_arrow.png" alt="" th:src="@{/css/img/list_arrow.png}">
+					</span>
+					<select class='form-input floatr' name="roomId" id="roomType">
+						<option value="0" selected>请选择</option>
+					</select>
+				</div>
+				<div id="hotel"></div>
+				<div class='btn-box'>
+					<button type="submit" class="form-btn cancel-btn">保存</button>
+				</div>
+			</form>
+		</div>
+	</section>
+		<!--房间类型  -->
+	<script id="room_jsrender" type="text/x-jsrender">
+			<option value="{{:roomId}}">{{:roomType}}</option>
+    </script>
+	<!--酒店基本信息  -->
+	<script id="hotel_jsrender" type="text/x-jsrender">
+			<div id="d">
+				<div class="form-group" >
+						<label class="floatl">酒店地址:</label> <span class='floatr form-text'
+							id="addr">{{:address}}</span>
+					</div>
+					<div class="form-group">
+						<label class="floatl">酒店联系人:</label> <span
+							class='floatr form-text' id="person">{{:person}}</span>
+					</div>
+					<div class="form-group">
+						<label class="floatl">酒店联系电话:</label> <span
+							class='floatr form-text' id="phone">{{:tel}}</span>
+			    </div>
+			<div>
+    </script>
+	<div th:replace="~{layout/contextPath :: contextPath}"></div>
+	<script src="../../js/jsrender.js" th:src="@{/js/jsrender.js}"></script>
+	<script src="../../js/jsrenderTemplates.js" th:src="@{/js/jsrenderTemplates.js}"></script>
+	<script src="../../js/lib/jquery.js" th:src="@{/js/lib/jquery.js}"></script>
+	<script src="../../js/plug/httpPath.js" th:src="@{/js/plug/httpPath.js}"></script>
+</body>
+<script type="text/javascript" th:inline="javascript">
+	
+	var tmpl = renderTmpl("room_jsrender");
+	var hoteltmpl = renderTmpl("hotel_jsrender");
+	//会议id
+	var meeid = [[${session.click_meeting.meeId}]];
+	$(function() {	
+		$.ajax({
+			url : contentpath + '/meetingUserRoom/selectHotelInfo/'+meeid,
+			type : 'GET',
+			success : function(data) {
+				if (data != null) {
+					var html;
+					for(var i=0; i<data.length; i++){
+					 	html = "<option value="+data[i].hotelId+">"+data[i].hotelName+"</option>";
+					}
+					var h = "<option value='0' selected>请选择</option>";
+					$("#hotelName").append(h+html);
+				}
+			}
+		});
+		$("#hotelName").on("change",function(){
+				var id = $(this).val();
+				$.ajax({
+					url : contentpath + '/meetingUserRoom/selectallRoomInfo/'+id,
+					type : 'GET',
+					success : function(data) {
+				 		if (data != null) {
+							$("#roomType").find("option").remove();
+							var html = tmpl.render(data.list);
+							var h = "<option value='0' selected>请选择</option>";
+							$("#roomType").append(h+html);
+							//根据酒店id查询酒店信息
+							$.ajax({
+								url : contentpath + '/meetingUserRoom/selectHotelinfoByid/'+id,
+								type : 'GET',
+								success : function(data) {
+							 		if (data != null) {
+										$("#d").remove();
+										var htl = hoteltmpl.render(data.hotelInfo);
+										$("#hotel").append(htl);
+										}
+									}  
+								})
+							}
+						}  
+				})
+			})
+	}) 
+	</script>
+</html>

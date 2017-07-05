@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+<meta name="format-detection" content="telephone=no">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+ <title>会议厅创建成功</title>
+<link rel="stylesheet" href="../../css/style.css" th:href="@{/css/style.css}">
+</head>
+
+<body>
+	<div id='app' hidden="hidden">false</div>
+	<section class="main-cantainer">
+		<div class="success-main">
+			<div class="successImg">
+				<img src="../../css/img/success@2x.png" th:src="@{/css/img/success@2x.png}" alt="">
+			</div>
+			<p>会议厅创建成功!</p>
+			<a href="" th:href="@{'/meetingHall/'+ ${createMeetHallId}}" id="queryByIdMeeHall" type="button" class="cancel-btn ">返回会议厅查看</a>
+		</div>
+	</section>
+</body>
+	<div th:replace="~{layout/contextPath :: contextPath}"></div>	
+	<script src="../../js/lib/jquery.js" th:src="@{/js/lib/jquery.js}"></script>
+	<script src="../../js/common.js" th:src="@{/js/common.js}"></script>
+	<script src="../../js/plug/httpPath.js" th:src="@{/js/plug/httpPath.js}"></script>
+    <script src="../../js/lib/swiper.min.js" th:src="@{/js/lib/swiper.min.js}"></script>
+    <script src="../../js/mee_hall/meeting-hall.js" th:src="@{/js/mee_hall/meeting-hall.js}"></script>
+        
+</html>

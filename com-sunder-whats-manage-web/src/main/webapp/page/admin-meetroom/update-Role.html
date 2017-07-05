@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <title>修改角色</title>
+    <link rel="stylesheet" href="../../css/style.css" th:href="@{/css/style.css}">
+</head>
+
+<body>
+    <section class="main-cantainer">     
+        <div class="js-right-page2 wt-bg">
+            <div class="right-title"><span class="floatl">已有权限</span></div>
+            <div class="type_tab choosed clearfix">
+                <ul>
+                	<th:block th:each="HallFunctionNo:${hallFunctionsNo}">
+                    <li th:data-right-Id="${HallFunctionNo.functionId}"><i>[[${HallFunctionNo.functionName}]]</i><span class="delBtn"></span></li>             
+                	</th:block> 
+                </ul>
+            </div>
+                <div class="right-title"><span class="floatl">所有权限</span></div>
+            <div class="type_tab choose clearfix">
+                <ul>
+                	<th:block th:each="HallFunction:${allHallFunction}">
+                    <li  th:data-right-Id="${HallFunction.functionId}"><i>[[${HallFunction.functionName}]]</i></li>              
+                	</th:block>
+                </ul>
+            </div>
+             <div class='btn-box'>
+                    <button type="button" class="form-btn cancel-btn " id="saveButton" >保存</button>
+             </div>
+        </div>
+    </section>
+    <div th:replace="~{layout/contextPath :: contextPath}"></div>
+    <script src="../../js/lib/jquery.js" th:src="@{/js/lib/jquery.js}"></script>
+    <script src="../../js/common.js" th:src="@{/js/common.js}"></script>
+    <script src="../../js/creatRole.js" th:src="@{/js/common.js}"></script>
+    <script src="../../js/plug/httpPath.js" th:src="@{/js/plug/httpPath.js}"></script>
+    <script src="../../js/admin-meetroom/updateRole.js" th:src="@{/js/admin-meetroom/updateRole.js}"></script>
+    <script src="../../js/userinfo_validate.js" th:src="@{/js/userinfo_validate.js}"></script>           
+   	<script type="text/javascript" th:inline="javascript">
+ 		//传人角色Id
+   		var roleId = [[${roleId}]];
+   		$("#saveButton").click( function () {   			
+   			var functionIds = [];
+		    $(".choosed li").each(function(){
+		    	functionIds.push($(this).attr("data-right-id"));
+			});
+			if(!validate_arr(functionIds)){return false;}    	
+   			//创建会议角色
+  		 	$.ajax({
+				url : contentpath + '/meetingHall/upodateCreateMeetingRole',
+				type : 'POST',
+				data : JSON.stringify({"functionIds":functionIds,"roleId":roleId}),
+				contentType : 'application/json',
+				success : function(data) {
+						if (data) {
+							console.log(data);
+							 $.prompt("修改角色成功!",function(){									
+							  window.location.href=contentpath+"/meetingHall/selectcreatRole";								
+							}); 
+						}else {								
+							$.prompt("修改角色失败!");
+						}
+				},
+				error : function(data) {
+					$.prompt("系统错误");
+				}
+			})  
+   		
+   	   });
+   	
+   	</script>
+
+</body>
+		
+</html>
